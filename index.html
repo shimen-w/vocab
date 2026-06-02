@@ -3163,9 +3163,15 @@ function setFilter(f) {
 }
 function buildFilteredWords() {
   const cat=currentCategory();
+  const prevWord=filteredWords.length>0 ? filteredWords[filteredIdx] : null;
   filteredWords = cardFilter==='all' ? [...cat.words] : cat.words.filter(w=>w.status===cardFilter);
-  filteredIdx = 0;
-  currentWordIndex = filteredWords.length>0 ? cat.words.indexOf(filteredWords[0]) : 0;
+  // Keep position on current word if it's still in filtered list
+  if(prevWord && filteredWords.includes(prevWord)){
+    filteredIdx=filteredWords.indexOf(prevWord);
+  }else{
+    filteredIdx=0;
+  }
+  currentWordIndex = filteredWords.length>0 ? cat.words.indexOf(filteredWords[filteredIdx]) : 0;
 }
 
 // ============ CARD RENDERING ============
