@@ -4,847 +4,332 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>安徽专升本 · 词汇记忆系统</title>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Noto+Serif+SC:wght@400;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<meta name="description" content="安徽专升本英语词汇记忆系统，涵盖词根词缀法、高频单词、必备单词三大板块，支持闪卡记忆与列表浏览双模式。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400&family=Noto+Serif+SC:wght@400;500;600;700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg-deep: #0a0f1a;
-  --bg-surface: #141b2b;
-  --bg-card: #1a2338;
-  --bg-card-back: #1c2541;
-  --bg-sidebar: #0d1322;
-  --amber: #e2a847;
-  --amber-light: #f0c96d;
-  --amber-dim: #8b6914;
-  --gold-glow: rgba(226, 168, 71, 0.15);
+  --bg-deep:      #09101e;
+  --bg-mid:       #0e1829;
+  --bg-surface:   #131f35;
+  --bg-card:      #18243d;
+  --bg-card-hov:  #1c2942;
+  --bg-sidebar:   #0b1120;
+  --gold:         #e2a847;
+  --gold-bright:  #f5c96d;
+  --gold-dim:     #8b6820;
+  --gold-glow:    rgba(226,168,71,0.16);
+  --gold-border:  rgba(226,168,71,0.2);
+  --gold-border2: rgba(226,168,71,0.42);
   --text-primary: #ede4d3;
-  --text-secondary: #a89e8c;
-  --text-muted: #6b6458;
-  --border-subtle: rgba(226, 168, 71, 0.12);
-  --border-active: rgba(226, 168, 71, 0.4);
-  --success: #6b9e7a;
-  --success-bg: rgba(107, 158, 122, 0.12);
-  --danger: #c4686b;
-  --danger-bg: rgba(196, 104, 107, 0.12);
-  --radius-sm: 6px;
-  --radius-md: 12px;
-  --radius-lg: 20px;
-  --font-display: 'Cormorant Garamond', 'Noto Serif SC', serif;
-  --font-ui: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-  --font-mono: 'JetBrains Mono', 'SF Mono', monospace;
-  --transition-flip: 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-  --transition-smooth: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  --shadow-card: 0 4px 24px rgba(0, 0, 0, 0.4), 0 0 0 1px var(--border-subtle);
-  --shadow-glow: 0 0 40px var(--gold-glow);
-}
-
-* { margin: 0; padding: 0; box-sizing: border-box; }
-
-body {
-  font-family: var(--font-ui);
-  background: var(--bg-deep);
-  color: var(--text-primary);
-  min-height: 100vh;
-  overflow: hidden;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-}
-
-body::before {
-  content: '';
-  position: fixed;
-  inset: 0;
-  background:
-    radial-gradient(ellipse 80% 60% at 20% 50%, rgba(226, 168, 71, 0.04) 0%, transparent 60%),
-    radial-gradient(ellipse 60% 80% at 80% 20%, rgba(226, 168, 71, 0.03) 0%, transparent 60%),
-    radial-gradient(ellipse 40% 40% at 50% 80%, rgba(200, 180, 150, 0.02) 0%, transparent 60%);
-  pointer-events: none;
-  z-index: 0;
-}
-
-body::after {
-  content: '';
-  position: fixed;
-  inset: 0;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
-  background-repeat: repeat;
-  pointer-events: none;
-  z-index: 0;
-}
-
-.app-container {
-  display: flex;
-  height: 100vh;
-  position: relative;
-  z-index: 1;
-}
-
-/* ============= SIDEBAR ============= */
-.sidebar {
-  width: 300px;
-  min-width: 300px;
-  background: var(--bg-sidebar);
-  border-right: 1px solid var(--border-subtle);
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
-  overflow: hidden;
-}
-
-.sidebar-header {
-  padding: 24px 24px 16px;
-  border-bottom: 1px solid var(--border-subtle);
-}
-
-.sidebar-header h1 {
-  font-family: var(--font-display);
-  font-size: 20px;
-  font-weight: 700;
-  color: var(--amber-light);
-  letter-spacing: 0.02em;
-  line-height: 1.3;
-}
-
-.sidebar-header .subtitle {
-  font-size: 11px;
-  color: var(--text-muted);
-  margin-top: 3px;
-  letter-spacing: 0.06em;
-}
-
-/* Progress section */
-.progress-section {
-  padding: 14px 24px;
-  border-bottom: 1px solid var(--border-subtle);
-}
-
-.progress-label {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 8px;
-  font-size: 12px;
-  color: var(--text-secondary);
-  letter-spacing: 0.04em;
-}
-
-.progress-label span:last-child {
-  font-family: var(--font-mono);
-  color: var(--amber-light);
-  font-size: 13px;
-}
-
-.progress-bar {
-  height: 3px;
-  background: rgba(255,255,255,0.06);
-  border-radius: 2px;
-  overflow: hidden;
-}
-
-.progress-bar-fill {
-  height: 100%;
-  background: linear-gradient(90deg, var(--amber-dim), var(--amber-light));
-  border-radius: 2px;
-  transition: width 0.5s ease;
-}
-
-.stats-row {
-  display: flex;
-  gap: 16px;
-  margin-top: 12px;
-}
-
-.stat-item {
-  text-align: center;
-  flex: 1;
-}
-
-.stat-value {
-  font-family: var(--font-mono);
-  font-size: 18px;
-  font-weight: 500;
-  color: var(--amber-light);
-}
-
-.stat-label {
-  font-size: 10px;
-  color: var(--text-muted);
-  letter-spacing: 0.05em;
-  margin-top: 2px;
-}
-
-/* Category list */
-.category-nav {
-  flex: 1;
-  overflow-y: auto;
-  padding: 8px 0;
-}
-
-.category-nav::-webkit-scrollbar { width: 3px; }
-.category-nav::-webkit-scrollbar-track { background: transparent; }
-.category-nav::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.06); border-radius: 2px; }
-
-.category-group { margin-bottom: 4px; }
-
-.category-group-title {
-  padding: 12px 24px 6px;
-  font-size: 10px;
-  letter-spacing: 0.08em;
-  color: var(--text-muted);
-  font-weight: 600;
-}
-
-.category-item {
-  display: flex;
-  align-items: center;
-  padding: 9px 24px;
-  cursor: pointer;
-  transition: all var(--transition-smooth);
-  border-left: 2px solid transparent;
-  gap: 10px;
-  font-size: 13px;
-  color: var(--text-secondary);
-}
-
-.category-item:hover {
-  background: rgba(226, 168, 71, 0.04);
-  color: var(--text-primary);
-}
-
-.category-item.active {
-  background: rgba(226, 168, 71, 0.08);
-  border-left-color: var(--amber);
-  color: var(--amber-light);
-}
-
-.category-item .root-icon {
-  width: 32px; height: 32px;
-  border-radius: var(--radius-sm);
-  background: rgba(226, 168, 71, 0.1);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: var(--font-mono);
-  font-size: 11px;
-  color: var(--amber-light);
-  flex-shrink: 0;
-}
-
-.category-item .root-info { flex: 1; min-width: 0; }
-
-.category-item .root-name {
-  font-weight: 600;
-  font-family: var(--font-mono);
-  font-size: 12px;
-}
-
-.category-item .root-meaning {
-  font-size: 10px;
-  color: var(--text-muted);
-  margin-top: 1px;
-}
-
-.category-item .word-count {
-  font-size: 11px;
-  color: var(--text-muted);
-  font-family: var(--font-mono);
-}
-
-/* ============= MAIN ============= */
-.main-content {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-}
-
-/* Section tabs */
-.section-tabs {
-  display: flex;
-  gap: 6px;
-  padding: 14px 24px;
-  border-bottom: 1px solid var(--border-subtle);
-  background: var(--bg-surface);
-}
-
-.section-tab {
-  padding: 8px 18px;
-  border: 1px solid var(--border-subtle);
-  background: transparent;
-  color: var(--text-secondary);
-  font-size: 13px;
-  cursor: pointer;
-  border-radius: 20px;
-  transition: all var(--transition-smooth);
-  font-family: var(--font-ui);
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  white-space: nowrap;
-}
-
-.section-tab:hover {
-  border-color: var(--border-active);
-  color: var(--text-primary);
-}
-
-.section-tab.active {
-  background: rgba(226, 168, 71, 0.12);
-  border-color: var(--amber);
-  color: var(--amber-light);
-}
-
-.section-tab .tab-icon { font-size: 15px; }
-
-/* Breadcrumb bar */
-.breadcrumb-bar {
-  padding: 12px 24px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  border-bottom: 1px solid var(--border-subtle);
-}
-
-.breadcrumb {
-  font-size: 14px;
-  color: var(--text-muted);
-}
-
-.breadcrumb .br-sep {
-  margin: 0 8px;
-  color: var(--text-muted);
-  opacity: 0.4;
-}
-
-.breadcrumb .br-section {
-  color: var(--text-secondary);
-}
-
-.breadcrumb .br-category {
-  color: var(--amber-light);
-  font-weight: 600;
-}
-
-.mode-tabs {
-  display: flex;
-  gap: 4px;
-  background: var(--bg-surface);
-  padding: 3px;
-  border-radius: var(--radius-sm);
-}
-
-.mode-tab {
-  padding: 6px 14px;
-  border: none;
-  background: transparent;
-  color: var(--text-secondary);
-  font-size: 12px;
-  cursor: pointer;
-  border-radius: 4px;
-  transition: all var(--transition-smooth);
-  font-family: var(--font-ui);
-}
-
-.mode-tab:hover { color: var(--text-primary); }
-.mode-tab.active {
-  background: rgba(226, 168, 71, 0.15);
-  color: var(--amber-light);
-}
-
-/* Fade transition */
-.study-content {
-  flex: 1;
-  position: relative;
-  overflow: hidden;
-}
-
-.study-content.fade-out { opacity: 0; transform: translateY(6px); }
-.study-content.fade-in { opacity: 1; transform: translateY(0); transition: all 0.25s ease; }
-
-/* Study area */
-.study-area {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 32px;
-  perspective: 1200px;
-}
-
-/* Card */
-.card-container {
-  width: 420px;
-  height: 280px;
-  position: relative;
-  cursor: pointer;
-}
-
-.card-inner {
-  width: 100%; height: 100%;
-  position: relative;
-  transform-style: preserve-3d;
-  transition: transform var(--transition-flip);
-}
-
-.card-inner.flipped { transform: rotateY(180deg); }
-
-.card-face {
-  position: absolute;
-  inset: 0;
-  backface-visibility: hidden;
-  border-radius: var(--radius-lg);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 32px;
-}
-
-.card-front {
-  background: var(--bg-card);
-  border: 1px solid var(--border-subtle);
-  box-shadow: var(--shadow-card), var(--shadow-glow);
-}
-
-.card-back {
-  background: var(--bg-card-back);
-  border: 1px solid var(--border-subtle);
-  box-shadow: var(--shadow-card);
-  transform: rotateY(180deg);
-}
-
-.card-word {
-  font-family: var(--font-display);
-  font-size: 48px;
-  font-weight: 700;
-  color: var(--amber-light);
-  letter-spacing: 0.02em;
-  line-height: 1;
-}
-
-.card-phonetic {
-  font-family: var(--font-mono);
-  font-size: 14px;
-  color: var(--text-muted);
-  margin-top: 8px;
-  letter-spacing: 0.04em;
-  min-height: 20px;
-}
-
-.card-hint {
-  font-size: 12px;
-  color: var(--text-muted);
-  margin-top: 16px;
-  letter-spacing: 0.05em;
-  opacity: 0.6;
-}
-
-.card-meaning {
-  font-family: var(--font-display);
-  font-size: 22px;
-  color: var(--text-primary);
-  text-align: center;
-  line-height: 1.6;
-}
-
-.card-root-ref {
-  font-size: 13px;
-  color: var(--amber-dim);
-  margin-top: 12px;
-  font-family: var(--font-mono);
-  text-align: center;
-}
-
-.card-example {
-  font-size: 14px;
-  color: var(--text-secondary);
-  margin-top: 16px;
-  text-align: center;
-  font-style: italic;
-  line-height: 1.5;
-}
-
-/* Card navigation */
-.card-nav {
-  display: flex;
-  align-items: center;
-  gap: 24px;
-  margin-top: 32px;
-}
-
-.nav-btn {
-  width: 44px; height: 44px;
-  border-radius: 50%;
-  border: 1px solid var(--border-subtle);
-  background: var(--bg-surface);
-  color: var(--text-secondary);
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all var(--transition-smooth);
-  font-size: 18px;
-}
-
-.nav-btn:hover {
-  border-color: var(--border-active);
-  color: var(--amber-light);
-  background: rgba(226, 168, 71, 0.08);
-}
-
-.nav-btn:active { transform: scale(0.95); }
-
-.card-counter {
-  font-family: var(--font-mono);
-  font-size: 13px;
-  color: var(--text-muted);
-  min-width: 80px;
-  text-align: center;
-}
-
-/* Action buttons */
-.action-row {
-  display: flex;
-  gap: 12px;
-  margin-top: 20px;
-}
-
-.action-btn {
-  padding: 10px 20px;
-  border-radius: 20px;
-  border: 1px solid var(--border-subtle);
-  background: var(--bg-surface);
-  color: var(--text-secondary);
-  cursor: pointer;
-  font-size: 13px;
-  transition: all var(--transition-smooth);
-  font-family: var(--font-ui);
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.action-btn:hover {
-  border-color: var(--border-active);
-  color: var(--text-primary);
-}
-
-.action-btn.know {
-  border-color: rgba(107, 158, 122, 0.3);
-  color: var(--success);
-}
-
-.action-btn.know:hover {
-  background: var(--success-bg);
-  border-color: var(--success);
-}
-
-.action-btn.dunno {
-  border-color: rgba(196, 104, 107, 0.3);
-  color: var(--danger);
-}
-
-.action-btn.dunno:hover {
-  background: var(--danger-bg);
-  border-color: var(--danger);
-}
-
-/* Kbd hints */
-.kbd-hints {
-  display: flex;
-  gap: 10px;
-  margin-top: 14px;
-  justify-content: center;
-  flex-wrap: wrap;
-}
-
-.kbd-hint {
-  font-size: 10px;
-  color: var(--text-muted);
-  letter-spacing: 0.03em;
-}
-
-.kbd-hint kbd {
-  display: inline-block;
-  padding: 1px 5px;
-  border-radius: 3px;
-  border: 1px solid var(--text-muted);
-  font-family: var(--font-mono);
-  font-size: 10px;
-}
-
-/* ============= GRID VIEW ============= */
-.word-grid {
-  position: absolute;
-  inset: 0;
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 12px;
-  padding: 16px 24px;
-  overflow-y: auto;
-  align-content: start;
-}
-
-.word-grid::-webkit-scrollbar { width: 3px; }
-.word-grid::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.06); border-radius: 2px; }
-
-.grid-card {
-  background: var(--bg-card);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-md);
-  padding: 18px;
-  cursor: pointer;
-  transition: all var(--transition-smooth);
-  position: relative;
-  animation: gridFadeIn 0.4s ease both;
-}
-
-@keyframes gridFadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-.grid-card:hover {
-  border-color: var(--border-active);
-  background: var(--bg-card-back);
-  transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(0,0,0,0.3);
-}
-
-.grid-card .word {
-  font-family: var(--font-display);
-  font-size: 20px;
-  font-weight: 600;
-  color: var(--amber-light);
-}
-
-.grid-card .phonetic {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  color: var(--text-muted);
-  margin-top: 2px;
-  min-height: 16px;
-}
-
-.grid-card .meaning-zh {
-  font-size: 13px;
-  color: var(--text-secondary);
-  margin-top: 8px;
-  line-height: 1.5;
-  letter-spacing: 0.02em;
-}
-
-.grid-card .status-dot {
-  position: absolute;
-  top: 12px; right: 12px;
-  width: 8px; height: 8px;
-  border-radius: 50%;
-}
-
-.status-dot.known { background: var(--success); }
-.status-dot.learning { background: var(--amber); }
-.status-dot.new { background: transparent; border: 1px solid var(--text-muted); }
-
-/* ============= TOAST ============= */
-.toast {
-  position: fixed;
-  bottom: 32px;
-  left: 50%;
-  transform: translateX(-50%) translateY(100px);
-  background: var(--bg-card);
-  border: 1px solid var(--border-active);
-  padding: 12px 24px;
-  border-radius: 24px;
-  font-size: 13px;
-  color: var(--amber-light);
-  opacity: 0;
-  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  z-index: 100;
-  pointer-events: none;
-}
-
-.toast.show {
-  transform: translateX(-50%) translateY(0);
-  opacity: 1;
-}
-
-/* ============= MOBILE FAB ============= */
-.mobile-menu-btn {
-  display: none;
-  position: fixed;
-  bottom: 20px; right: 20px;
-  width: 48px; height: 48px;
-  border-radius: 50%;
-  background: var(--amber);
-  color: var(--bg-deep);
-  border: none;
-  font-size: 22px;
-  cursor: pointer;
-  z-index: 200;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.5);
-  transition: all var(--transition-smooth);
-}
-
-.mobile-menu-btn:active { transform: scale(0.9); }
-
-.sidebar-overlay {
-  display: none;
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.6);
-  z-index: 150;
-}
-
-.sidebar-overlay.open { display: block; }
-
-/* ============= RESPONSIVE ============= */
-@media (max-width: 768px) {
-  .sidebar { width: 260px; min-width: 260px; }
-  .card-container { width: 320px; height: 220px; }
-  .card-word { font-size: 36px; }
-  .card-meaning { font-size: 18px; }
-  .section-tabs { padding: 10px 16px; }
-  .section-tab { padding: 6px 14px; font-size: 12px; }
-  .breadcrumb-bar { padding: 10px 16px; }
-  .word-grid { padding: 12px 16px; grid-template-columns: 1fr; }
-  .study-area { padding: 20px; }
-}
-
-@media (max-width: 560px) {
-  .sidebar {
-    position: fixed;
-    left: -300px;
-    top: 0;
-    z-index: 160;
-    transition: left 0.3s ease;
-    width: 280px;
-    min-width: 280px;
-    height: 100vh;
-  }
-  .sidebar.open { left: 0; }
-  .mobile-menu-btn { display: flex; align-items: center; justify-content: center; }
-  .card-container { width: 280px; height: 200px; }
-  .card-word { font-size: 30px; }
-  .section-tab { padding: 5px 10px; font-size: 11px; }
-  .section-tab .tab-label { display: none; }
-  .section-tab .tab-icon { font-size: 18px; }
-  .breadcrumb { font-size: 12px; }
-}
+  --text-sec:     #a89e8c;
+  --text-muted:   #64605a;
+  --green:        #6bc48a;
+  --green-bg:     rgba(107,196,138,0.12);
+  --red:          #e07070;
+  --red-bg:       rgba(224,112,112,0.12);
+  --r-sm: 6px; --r-md: 12px; --r-lg: 20px; --r-xl: 28px;
+  --ff-display: 'Lora','Noto Serif SC',Georgia,serif;
+  --ff-ui: 'Inter',-apple-system,system-ui,sans-serif;
+  --ff-mono: 'JetBrains Mono','Consolas',monospace;
+  --t-s: 0.25s cubic-bezier(0.4,0,0.2,1);
+  --t-flip: 0.55s cubic-bezier(0.4,0.2,0.2,1);
+  --t-b: 0.4s cubic-bezier(0.34,1.56,0.64,1);
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+body{font-family:var(--ff-ui);background:var(--bg-deep);color:var(--text-primary);height:100vh;overflow:hidden;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 65% 55% at 12% 50%,rgba(226,168,71,0.055) 0%,transparent 55%),radial-gradient(ellipse 45% 65% at 88% 12%,rgba(70,130,200,0.035) 0%,transparent 55%);pointer-events:none;z-index:0}
+
+/* ---- LAYOUT ---- */
+.app{display:flex;height:100vh;position:relative;z-index:1}
+
+/* ---- SIDEBAR ---- */
+.sidebar{width:290px;min-width:290px;background:var(--bg-sidebar);border-right:1px solid var(--gold-border);display:flex;flex-direction:column;height:100vh;overflow:hidden;flex-shrink:0}
+.sb-header{padding:18px 18px 14px;border-bottom:1px solid var(--gold-border)}
+.sb-logo{display:flex;align-items:center;gap:10px;margin-bottom:2px}
+.sb-logo-icon{width:32px;height:32px;background:linear-gradient(135deg,var(--gold-dim),var(--gold));border-radius:var(--r-sm);display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;box-shadow:0 2px 12px rgba(226,168,71,0.3)}
+.sb-title{font-family:var(--ff-display);font-size:16px;font-weight:700;color:var(--gold-bright);letter-spacing:.02em;line-height:1.3}
+.sb-sub{font-size:10px;color:var(--text-muted);margin-top:2px;letter-spacing:.07em;text-transform:uppercase}
+
+.prog-box{padding:12px 18px;border-bottom:1px solid var(--gold-border)}
+.prog-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.prog-lbl{font-size:10.5px;color:var(--text-muted);letter-spacing:.05em}
+.prog-pct{font-family:var(--ff-mono);font-size:12px;color:var(--gold-bright);font-weight:500}
+.prog-track{height:4px;background:rgba(255,255,255,0.06);border-radius:2px;overflow:hidden;position:relative}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(--gold-dim),var(--gold),var(--gold-bright));border-radius:2px;transition:width .6s ease;position:relative}
+.prog-fill::after{content:'';position:absolute;right:0;top:-1px;width:6px;height:6px;border-radius:50%;background:var(--gold-bright);box-shadow:0 0 6px var(--gold)}
+.stats-row{display:flex;gap:6px;margin-top:10px}
+.stat-pill{flex:1;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:var(--r-sm);padding:7px 4px;text-align:center;transition:border-color var(--t-s)}
+.stat-pill:hover{border-color:var(--gold-border)}
+.stat-val{font-family:var(--ff-mono);font-size:17px;font-weight:500;color:var(--gold-bright);line-height:1}
+.stat-lbl{font-size:9px;color:var(--text-muted);letter-spacing:.06em;margin-top:2px}
+
+.sb-search{padding:8px 18px;border-bottom:1px solid var(--gold-border)}
+.search-wrap{position:relative}
+.search-wrap::before{content:'⌕';position:absolute;left:9px;top:50%;transform:translateY(-50%);color:var(--text-muted);font-size:13px;pointer-events:none}
+.search-inp{width:100%;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:var(--r-sm);padding:6px 9px 6px 26px;color:var(--text-primary);font-family:var(--ff-ui);font-size:12px;outline:none;transition:all var(--t-s)}
+.search-inp::placeholder{color:var(--text-muted)}
+.search-inp:focus{border-color:var(--gold-border2);background:rgba(226,168,71,0.04)}
+
+.cat-nav{flex:1;overflow-y:auto;padding:4px 0;scroll-behavior:smooth}
+.cat-nav::-webkit-scrollbar{width:3px}
+.cat-nav::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.07);border-radius:2px}
+.cat-group{margin-bottom:1px}
+.cat-grp-hdr{display:flex;align-items:center;padding:9px 18px 4px;font-size:9px;letter-spacing:.1em;color:var(--text-muted);font-weight:600;text-transform:uppercase;cursor:pointer;user-select:none}
+.cat-grp-hdr:hover{color:var(--text-sec)}
+.cat-grp-chevron{margin-left:auto;font-size:8px;transition:transform var(--t-s);opacity:.5}
+.cat-group.collapsed .cat-grp-chevron{transform:rotate(-90deg)}
+.cat-group.collapsed .cat-grp-items{display:none}
+.cat-item{display:flex;align-items:center;padding:7px 18px;cursor:pointer;transition:all var(--t-s);border-left:2px solid transparent;gap:9px;position:relative}
+.cat-item:hover{background:rgba(226,168,71,0.04)}
+.cat-item.active{border-left-color:var(--gold);background:rgba(226,168,71,0.07)}
+.cat-icon{width:30px;height:30px;border-radius:var(--r-sm);background:rgba(226,168,71,0.07);border:1px solid var(--gold-border);display:flex;align-items:center;justify-content:center;font-family:var(--ff-mono);font-size:9px;color:var(--gold);flex-shrink:0;transition:all var(--t-s);letter-spacing:-.02em;overflow:hidden}
+.cat-item.active .cat-icon,.cat-item:hover .cat-icon{background:rgba(226,168,71,0.14);border-color:var(--gold);color:var(--gold-bright)}
+.cat-info{flex:1;min-width:0}
+.cat-name{font-weight:600;font-family:var(--ff-mono);font-size:11px;color:var(--text-sec);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cat-item.active .cat-name,.cat-item:hover .cat-name{color:var(--gold-bright)}
+.cat-meaning{font-size:9.5px;color:var(--text-muted);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cat-bar{height:2px;background:rgba(255,255,255,0.05);border-radius:1px;margin-top:3px;display:flex;overflow:hidden}
+.cat-bar-k{background:var(--green);border-radius:1px}
+.cat-bar-l{background:var(--gold-dim);border-radius:1px}
+.cat-count{font-size:9.5px;color:var(--text-muted);font-family:var(--ff-mono);background:rgba(255,255,255,0.05);border-radius:9px;padding:1px 5px;flex-shrink:0}
+.cat-item.active .cat-count{background:rgba(226,168,71,0.14);color:var(--gold)}
+
+/* ---- MAIN ---- */
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden;background:var(--bg-mid)}
+.sec-tabs{display:flex;gap:5px;padding:10px 22px;border-bottom:1px solid var(--gold-border);background:var(--bg-surface);align-items:center}
+.sec-tab{display:flex;align-items:center;gap:6px;padding:6px 14px;border:1px solid rgba(255,255,255,0.08);background:transparent;color:var(--text-muted);font-family:var(--ff-ui);font-size:12px;cursor:pointer;border-radius:18px;transition:all var(--t-s);white-space:nowrap}
+.sec-tab:hover{border-color:var(--gold-border);color:var(--text-sec)}
+.sec-tab.active{background:rgba(226,168,71,0.12);border-color:var(--gold);color:var(--gold-bright);box-shadow:0 0 10px rgba(226,168,71,0.1)}
+.tab-icon{font-size:13px;line-height:1}
+
+.toolbar{padding:9px 22px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--gold-border);gap:10px}
+.breadcrumb{font-size:12.5px;color:var(--text-muted);flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bc-sep{margin:0 7px;opacity:.3}
+.bc-section{color:var(--text-sec)}
+.bc-cat{color:var(--gold-bright);font-weight:500}
+.mode-tabs{display:flex;gap:2px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);padding:3px;border-radius:var(--r-sm);flex-shrink:0}
+.mode-tab{padding:4px 12px;border:none;background:transparent;color:var(--text-muted);font-family:var(--ff-ui);font-size:11.5px;cursor:pointer;border-radius:4px;transition:all var(--t-s)}
+.mode-tab:hover{color:var(--text-primary)}
+.mode-tab.active{background:rgba(226,168,71,0.15);color:var(--gold-bright)}
+
+/* ---- STUDY AREA ---- */
+.study-content{flex:1;position:relative;overflow:hidden;transition:opacity .2s ease,transform .2s ease}
+.study-content.fading{opacity:0;transform:translateY(6px)}
+
+/* ---- FLASHCARD ---- */
+.fc-area{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;gap:20px;perspective:1400px}
+.filter-tabs{display:flex;gap:5px}
+.filter-tab{padding:3px 11px;border-radius:11px;border:1px solid rgba(255,255,255,0.08);background:transparent;color:var(--text-muted);font-size:10.5px;cursor:pointer;font-family:var(--ff-ui);transition:all var(--t-s)}
+.filter-tab:hover{border-color:var(--gold-border);color:var(--text-sec)}
+.filter-tab.active{background:rgba(226,168,71,0.12);border-color:var(--gold);color:var(--gold-bright)}
+
+.card-wrap{width:440px;max-width:100%}
+.card-container{width:100%;height:275px;position:relative;cursor:pointer;transform-style:preserve-3d;transition:transform .15s ease-out;will-change:transform}
+.card-inner{width:100%;height:100%;position:relative;transform-style:preserve-3d;transition:transform var(--t-flip)}
+.card-inner.flipped{transform:rotateY(180deg)}
+.card-face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:var(--r-xl);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 36px;transition:box-shadow var(--t-s)}
+.card-front{background:linear-gradient(145deg,var(--bg-card),#1a2740);border:1px solid var(--gold-border);box-shadow:0 8px 32px rgba(0,0,0,0.5),0 0 0 1px var(--gold-border),0 0 50px var(--gold-glow)}
+.card-back{background:linear-gradient(145deg,var(--bg-card-hov),#1e2c48);border:1px solid var(--gold-border);box-shadow:0 8px 32px rgba(0,0,0,0.5),0 0 0 1px var(--gold-border);transform:rotateY(180deg)}
+.card-container:hover .card-face{box-shadow:0 16px 48px rgba(0,0,0,0.6),0 0 0 1px var(--gold-border2),0 0 60px var(--gold-glow)}
+.card-front::before{content:'';position:absolute;top:0;left:0;width:75px;height:75px;background:radial-gradient(circle at 0 0,var(--gold-glow),transparent 70%);border-radius:var(--r-xl) 0 0 0;pointer-events:none}
+.card-status-dot{position:absolute;top:16px;right:16px;width:8px;height:8px;border-radius:50%}
+.card-status-dot.known{background:var(--green);box-shadow:0 0 6px rgba(107,196,138,0.5)}
+.card-status-dot.learning{background:var(--gold);box-shadow:0 0 6px rgba(226,168,71,0.5)}
+.card-status-dot.new{border:1px solid rgba(255,255,255,0.15)}
+.card-word{font-family:var(--ff-display);font-size:50px;font-weight:700;color:var(--gold-bright);letter-spacing:.02em;line-height:1;text-align:center;text-shadow:0 2px 18px rgba(226,168,71,0.22)}
+.card-ph-row{display:flex;align-items:center;gap:7px;margin-top:9px}
+.card-phonetic{font-family:var(--ff-mono);font-size:13px;color:var(--text-muted);letter-spacing:.04em;min-height:18px}
+.speak-btn{background:none;border:none;cursor:pointer;color:var(--text-muted);font-size:13px;padding:2px;border-radius:4px;transition:all var(--t-s);display:flex;align-items:center}
+.speak-btn:hover{color:var(--gold);background:rgba(226,168,71,0.1)}
+.speak-btn.speaking{color:var(--gold);animation:pulse .6s ease-in-out infinite alternate}
+@keyframes pulse{from{opacity:.55}to{opacity:1}}
+.card-hint{font-size:10.5px;color:var(--text-muted);margin-top:18px;letter-spacing:.06em;opacity:.5}
+.card-meaning{font-family:var(--ff-display);font-size:22px;color:var(--text-primary);text-align:center;line-height:1.65;max-width:100%}
+.card-root-ref{font-size:12px;color:var(--gold-dim);margin-top:12px;font-family:var(--ff-mono);text-align:center;background:rgba(226,168,71,0.07);border:1px solid var(--gold-border);padding:3px 11px;border-radius:18px}
+.card-example{font-size:12.5px;color:var(--text-muted);margin-top:12px;text-align:center;font-style:italic;line-height:1.55;max-width:88%}
+
+.card-nav{display:flex;align-items:center;gap:18px}
+.nav-btn{width:40px;height:40px;border-radius:50%;border:1px solid var(--gold-border);background:var(--bg-surface);color:var(--text-sec);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:16px;transition:all var(--t-b)}
+.nav-btn:hover{border-color:var(--gold);color:var(--gold-bright);background:rgba(226,168,71,0.1);transform:scale(1.08)}
+.nav-btn:active{transform:scale(0.92)}
+.nav-btn.pressed{animation:btnPress .18s ease}
+@keyframes btnPress{0%{transform:scale(1)}50%{transform:scale(.88);background:rgba(226,168,71,0.18)}100%{transform:scale(1)}}
+.card-counter{font-family:var(--ff-mono);font-size:12.5px;color:var(--text-muted);min-width:65px;text-align:center}
+
+.action-row{display:flex;gap:9px}
+.action-btn{padding:9px 18px;border-radius:20px;border:1px solid rgba(255,255,255,0.08);background:rgba(255,255,255,0.03);color:var(--text-sec);cursor:pointer;font-size:12.5px;font-family:var(--ff-ui);transition:all var(--t-s);display:flex;align-items:center;gap:6px}
+.action-btn.know{border-color:rgba(107,196,138,0.3);color:var(--green)}
+.action-btn.know:hover{background:var(--green-bg);border-color:var(--green);transform:translateY(-2px);box-shadow:0 5px 14px rgba(107,196,138,0.14)}
+.action-btn.dunno{border-color:rgba(224,112,112,0.3);color:var(--red)}
+.action-btn.dunno:hover{background:var(--red-bg);border-color:var(--red);transform:translateY(-2px);box-shadow:0 5px 14px rgba(224,112,112,0.14)}
+
+.kbd-hints{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+.kbd-hint{font-size:10px;color:var(--text-muted);display:flex;align-items:center;gap:3px}
+kbd{display:inline-block;padding:1px 5px;border-radius:4px;border:1px solid rgba(255,255,255,0.14);background:rgba(255,255,255,0.05);font-family:var(--ff-mono);font-size:9.5px;color:var(--text-sec);transition:all .12s ease}
+kbd.active-key{border-color:var(--gold);background:rgba(226,168,71,0.15);color:var(--gold-bright);box-shadow:0 0 7px rgba(226,168,71,0.2)}
+
+/* ---- GRID ---- */
+.grid-area{position:absolute;inset:0;display:none;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:11px;padding:14px 22px;overflow-y:auto;align-content:start}
+.grid-area.visible{display:grid;animation:gReveal .3s ease both}
+@keyframes gReveal{from{opacity:0}to{opacity:1}}
+.grid-area::-webkit-scrollbar{width:3px}
+.grid-area::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.08);border-radius:2px}
+.grid-search-bar{grid-column:1/-1;display:flex;gap:7px;align-items:center;flex-wrap:wrap}
+.gsw{position:relative;flex:1;min-width:160px}
+.gsw::before{content:'⌕';position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--text-muted);font-size:15px;pointer-events:none;z-index:1}
+.grid-sinp{width:100%;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:var(--r-sm);padding:7px 12px 7px 32px;color:var(--text-primary);font-family:var(--ff-ui);font-size:12.5px;outline:none;transition:all var(--t-s)}
+.grid-sinp:focus{border-color:var(--gold-border2);background:rgba(226,168,71,0.04)}
+.gfbtn{padding:6px 12px;border-radius:var(--r-sm);border:1px solid rgba(255,255,255,0.08);background:transparent;color:var(--text-muted);font-size:11px;cursor:pointer;font-family:var(--ff-ui);transition:all var(--t-s)}
+.gfbtn:hover{border-color:var(--gold-border);color:var(--text-sec)}
+.gfbtn.active{background:rgba(226,168,71,0.12);border-color:var(--gold);color:var(--gold-bright)}
+.grid-card{background:var(--bg-card);border:1px solid var(--gold-border);border-radius:var(--r-md);padding:16px;cursor:pointer;transition:all var(--t-s);position:relative;animation:cFadeIn .3s ease both}
+@keyframes cFadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.grid-card:hover{border-color:var(--gold-border2);background:var(--bg-card-hov);transform:translateY(-3px);box-shadow:0 9px 26px rgba(0,0,0,0.35),0 0 0 1px var(--gold-border2)}
+.gword{font-family:var(--ff-display);font-size:20px;font-weight:600;color:var(--gold-bright)}
+.gph{font-family:var(--ff-mono);font-size:10.5px;color:var(--text-muted);margin-top:2px;min-height:15px}
+.gmeaning{font-size:12.5px;color:var(--text-sec);margin-top:7px;line-height:1.5}
+.gbd{font-size:10px;color:var(--gold-dim);margin-top:5px;font-family:var(--ff-mono)}
+.g-dot{position:absolute;top:12px;right:12px;width:8px;height:8px;border-radius:50%}
+.g-dot.known{background:var(--green);box-shadow:0 0 5px rgba(107,196,138,0.4)}
+.g-dot.learning{background:var(--gold);box-shadow:0 0 5px rgba(226,168,71,0.4)}
+.g-dot.new{border:1px solid rgba(255,255,255,0.12)}
+
+/* ---- TOAST ---- */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(70px);background:var(--bg-card);border:1px solid var(--gold-border2);padding:10px 20px;border-radius:22px;font-size:12.5px;color:var(--gold-bright);opacity:0;transition:all .4s cubic-bezier(0.34,1.56,0.64,1);z-index:200;pointer-events:none;backdrop-filter:blur(8px);box-shadow:0 6px 20px rgba(0,0,0,0.4);white-space:nowrap}
+.toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+
+/* ---- MOBILE ---- */
+.mobile-btn{display:none;position:fixed;bottom:18px;right:18px;width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,var(--gold-dim),var(--gold));color:var(--bg-deep);border:none;font-size:20px;cursor:pointer;z-index:200;box-shadow:0 4px 18px rgba(226,168,71,0.4);transition:all var(--t-s)}
+.mobile-btn:hover{transform:scale(1.08)}
+.sb-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:150;backdrop-filter:blur(2px)}
+.sb-overlay.open{display:block}
+
+@media(max-width:700px){.sidebar{width:260px;min-width:260px}.card-word{font-size:38px}.card-meaning{font-size:19px}}
+@media(max-width:560px){.sidebar{position:fixed;left:-300px;top:0;z-index:160;transition:left .3s ease;width:278px;min-width:278px;height:100vh}.sidebar.open{left:0}.mobile-btn{display:flex;align-items:center;justify-content:center}.card-word{font-size:32px}.card-face{padding:22px}.sec-tab .tab-lbl{display:none}.sec-tab{padding:6px 9px}}
 </style>
 </head>
 <body>
-
-<div class="app-container">
+<div class="app">
+  <!-- SIDEBAR -->
   <aside class="sidebar" id="sidebar">
-    <div class="sidebar-header">
-      <h1 id="sidebarTitle">词根词缀法</h1>
-      <div class="subtitle" id="sidebarSubtitle">通过词根词缀系统记忆</div>
+    <div class="sb-header">
+      <div class="sb-logo">
+        <div class="sb-logo-icon">📚</div>
+        <div>
+          <div class="sb-title" id="sidebarTitle">词根词缀法</div>
+        </div>
+      </div>
+      <div class="sb-sub" id="sidebarSubtitle">通过词根词缀系统记忆</div>
     </div>
-    <div class="progress-section">
-      <div class="progress-label">
-        <span>当前板块进度</span>
-        <span id="progressPercent">0%</span>
+    <div class="prog-box">
+      <div class="prog-row">
+        <span class="prog-lbl">当前板块进度</span>
+        <span class="prog-pct" id="progressPct">0%</span>
       </div>
-      <div class="progress-bar">
-        <div class="progress-bar-fill" id="progressFill" style="width:0%"></div>
-      </div>
+      <div class="prog-track"><div class="prog-fill" id="progressFill" style="width:0%"></div></div>
       <div class="stats-row">
-        <div class="stat-item">
-          <div class="stat-value" id="statKnown">0</div>
-          <div class="stat-label">已掌握</div>
-        </div>
-        <div class="stat-item">
-          <div class="stat-value" id="statLearning">0</div>
-          <div class="stat-label">学习中</div>
-        </div>
-        <div class="stat-item">
-          <div class="stat-value" id="statTotal">0</div>
-          <div class="stat-label">总计</div>
-        </div>
+        <div class="stat-pill"><div class="stat-val" id="statKnown">0</div><div class="stat-lbl">已掌握</div></div>
+        <div class="stat-pill"><div class="stat-val" id="statLearning">0</div><div class="stat-lbl">学习中</div></div>
+        <div class="stat-pill"><div class="stat-val" id="statTotal">0</div><div class="stat-lbl">总计</div></div>
       </div>
     </div>
-    <nav class="category-nav" id="categoryNav"></nav>
+    <div class="sb-search">
+      <div class="search-wrap">
+        <input class="search-inp" id="sidebarSearch" type="text" placeholder="搜索分类..." autocomplete="off">
+      </div>
+    </div>
+    <nav class="cat-nav" id="categoryNav"></nav>
   </aside>
+  <div class="sb-overlay" id="sbOverlay" onclick="toggleSidebar()"></div>
 
-  <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
-
-  <main class="main-content">
-    <nav class="section-tabs" id="sectionTabs">
-      <button class="section-tab active" data-section="roots_affixes" onclick="switchSection('roots_affixes')">
-        <span class="tab-icon">&#9670;</span>
-        <span class="tab-label">词根词缀法</span>
+  <!-- MAIN -->
+  <main class="main">
+    <nav class="sec-tabs" id="sectionTabs">
+      <button class="sec-tab active" id="tab-roots_affixes" data-section="roots_affixes" onclick="switchSection('roots_affixes')">
+        <span class="tab-icon">◆</span><span class="tab-lbl">词根词缀法</span>
       </button>
-      <button class="section-tab" data-section="high_frequency" onclick="switchSection('high_frequency')">
-        <span class="tab-icon">&#9733;</span>
-        <span class="tab-label">高频单词</span>
+      <button class="sec-tab" id="tab-high_frequency" data-section="high_frequency" onclick="switchSection('high_frequency')">
+        <span class="tab-icon">★</span><span class="tab-lbl">高频单词</span>
       </button>
-      <button class="section-tab" data-section="essential" onclick="switchSection('essential')">
-        <span class="tab-icon">&#9830;</span>
-        <span class="tab-label">必备单词</span>
+      <button class="sec-tab" id="tab-essential" data-section="essential" onclick="switchSection('essential')">
+        <span class="tab-icon">◇</span><span class="tab-lbl">必备单词</span>
       </button>
     </nav>
-
-    <div class="breadcrumb-bar">
+    <div class="toolbar">
       <div class="breadcrumb" id="breadcrumb">
-        <span class="br-section">词根词缀法</span>
-        <span class="br-sep">/</span>
-        <span class="br-category">pre- (前, 预先)</span>
+        <span class="bc-section">词根词缀法</span><span class="bc-sep">/</span><span class="bc-cat">pre- (前, 预先)</span>
       </div>
       <div class="mode-tabs">
         <button class="mode-tab active" data-mode="flashcard" onclick="switchMode('flashcard')">卡片记忆</button>
         <button class="mode-tab" data-mode="grid" onclick="switchMode('grid')">列表浏览</button>
       </div>
     </div>
-
     <div class="study-content" id="studyContent">
-      <div class="study-area" id="flashcardArea">
-        <div style="text-align:center;">
+      <!-- FLASHCARD -->
+      <div class="fc-area" id="flashcardArea">
+        <div class="filter-tabs" id="filterTabs">
+          <button class="filter-tab active" data-filter="all" onclick="setFilter('all')">全部</button>
+          <button class="filter-tab" data-filter="new" onclick="setFilter('new')">新词</button>
+          <button class="filter-tab" data-filter="learning" onclick="setFilter('learning')">学习中</button>
+          <button class="filter-tab" data-filter="known" onclick="setFilter('known')">已掌握</button>
+        </div>
+        <div class="card-wrap">
           <div class="card-container" id="cardContainer" onclick="flipCard()">
             <div class="card-inner" id="cardInner">
               <div class="card-face card-front">
+                <div class="card-status-dot new" id="dotFront"></div>
                 <div class="card-word" id="cardWord">preview</div>
-                <div class="card-phonetic" id="cardPhonetic">/pri:vju:/</div>
+                <div class="card-ph-row">
+                  <div class="card-phonetic" id="cardPhonetic">/ˈpriːvjuː/</div>
+                  <button class="speak-btn" id="speakBtn" onclick="speakWord(event)" title="朗读">🔊</button>
+                </div>
                 <div class="card-hint">点击翻转查看释义</div>
               </div>
               <div class="card-face card-back">
+                <div class="card-status-dot new" id="dotBack"></div>
                 <div class="card-meaning" id="cardMeaning">n./v. 预览；预习</div>
                 <div class="card-root-ref" id="cardRootRef">pre- (前) + view (看)</div>
                 <div class="card-example" id="cardExample">Preview the chapter before class.</div>
               </div>
             </div>
           </div>
-          <div class="card-nav">
-            <button class="nav-btn" onclick="prevCard(event)" title="上一个">&#8592;</button>
-            <span class="card-counter" id="cardCounter">1 / 8</span>
-            <button class="nav-btn" onclick="nextCard(event)" title="下一个">&#8594;</button>
-          </div>
-          <div class="action-row">
-            <button class="action-btn dunno" onclick="markWord('learning', event)">
-              <span>&#8635;</span> 还不熟
-            </button>
-            <button class="action-btn know" onclick="markWord('known', event)">
-              <span>&#10003;</span> 已掌握
-            </button>
-          </div>
-          <div class="kbd-hints">
-            <span class="kbd-hint"><kbd>&#8592;</kbd><kbd>&#8594;</kbd> 切换</span>
-            <span class="kbd-hint"><kbd>Space</kbd> 翻转</span>
-            <span class="kbd-hint"><kbd>1</kbd> 掌握 <kbd>2</kbd> 学习中</span>
-            <span class="kbd-hint"><kbd>Ctrl+1/2/3</kbd> 板块</span>
-          </div>
+        </div>
+        <div class="card-nav">
+          <button class="nav-btn" id="prevBtn" onclick="prevCard(event)">&#8592;</button>
+          <span class="card-counter" id="cardCounter">1 / 8</span>
+          <button class="nav-btn" id="nextBtn" onclick="nextCard(event)">&#8594;</button>
+        </div>
+        <div class="action-row">
+          <button class="action-btn dunno" onclick="markWord('learning',event)"><span>&#8635;</span> 还不熟</button>
+          <button class="action-btn know" onclick="markWord('known',event)"><span>&#10003;</span> 已掌握</button>
+        </div>
+        <div class="kbd-hints">
+          <span class="kbd-hint"><kbd id="kL">&#8592;</kbd><kbd id="kR">&#8594;</kbd> 切换</span>
+          <span class="kbd-hint"><kbd id="kSp">Space</kbd> 翻转</span>
+          <span class="kbd-hint"><kbd id="k1">1</kbd> 掌握 <kbd id="k2">2</kbd> 学习中</span>
         </div>
       </div>
-      <div class="word-grid" id="gridArea" style="display:none;"></div>
+      <!-- GRID -->
+      <div class="grid-area" id="gridArea">
+        <div class="grid-search-bar">
+          <div class="gsw">
+            <input class="grid-sinp" id="gridSearch" type="text" placeholder="搜索单词..." autocomplete="off" oninput="renderGrid()">
+          </div>
+          <button class="gfbtn active" data-status="all" onclick="setGridFilter('all')">全部</button>
+          <button class="gfbtn" data-status="new" onclick="setGridFilter('new')">新词</button>
+          <button class="gfbtn" data-status="learning" onclick="setGridFilter('learning')">学习中</button>
+          <button class="gfbtn" data-status="known" onclick="setGridFilter('known')">已掌握</button>
+        </div>
+      </div>
     </div>
   </main>
 </div>
-
-<button class="mobile-menu-btn" id="mobileMenuBtn" onclick="toggleSidebar()" title="菜单">&#9776;</button>
+<button class="mobile-btn" onclick="toggleSidebar()">&#9776;</button>
 <div class="toast" id="toast"></div>
 
 <script>
-
-// ============ DATA ============
 const sections = {
   roots_affixes: {
     id: 'roots_affixes',
@@ -3505,275 +2990,357 @@ const sections = {
 ]}
 };
 
+
+
 // ============ STATE ============
 let currentSection = 'roots_affixes';
 let currentCategoryIndex = 0;
 let currentWordIndex = 0;
 let currentMode = 'flashcard';
 let wordStatuses = {};
+let cardFilter = 'all';
+let gridFilter = 'all';
+let filteredWords = [];
+let filteredIdx = 0;
 
-function currentCategory() {
-  return sections[currentSection].categories[currentCategoryIndex];
-}
+function currentCategory() { return sections[currentSection].categories[currentCategoryIndex]; }
 
+// ============ STORAGE ============
 function loadStatuses() {
-  var v2 = localStorage.getItem('vocab_statuses_v2');
+  const v2 = localStorage.getItem('vocab_statuses_v2');
   if (v2) { wordStatuses = JSON.parse(v2); return; }
-  var v1 = JSON.parse(localStorage.getItem('vocab_statuses') || '{}');
-  if (Object.keys(v1).length > 0) {
-    wordStatuses = { roots_affixes: v1, high_frequency: {}, essential: {} };
-  } else {
-    wordStatuses = { roots_affixes: {}, high_frequency: {}, essential: {} };
-  }
+  const v1 = JSON.parse(localStorage.getItem('vocab_statuses') || '{}');
+  wordStatuses = Object.keys(v1).length > 0
+    ? { roots_affixes: v1, high_frequency: {}, essential: {} }
+    : { roots_affixes: {}, high_frequency: {}, essential: {} };
   saveStatuses();
 }
-
 function saveStatuses() {
-  var ids = Object.keys(sections);
-  for (var si = 0; si < ids.length; si++) {
-    var sid = ids[si];
+  for (const sid of Object.keys(sections)) {
     if (!wordStatuses[sid]) wordStatuses[sid] = {};
-    var cats = sections[sid].categories;
-    for (var ci = 0; ci < cats.length; ci++) {
-      var words = cats[ci].words;
-      for (var wi = 0; wi < words.length; wi++) {
-        wordStatuses[sid][words[wi].word] = words[wi].status;
-      }
-    }
+    for (const cat of sections[sid].categories)
+      for (const w of cat.words) wordStatuses[sid][w.word] = w.status;
   }
   localStorage.setItem('vocab_statuses_v2', JSON.stringify(wordStatuses));
 }
-
 function initStatuses() {
-  var ids = Object.keys(sections);
-  for (var si = 0; si < ids.length; si++) {
-    var sid = ids[si];
+  for (const sid of Object.keys(sections)) {
     if (!wordStatuses[sid]) wordStatuses[sid] = {};
-    var cats = sections[sid].categories;
-    for (var ci = 0; ci < cats.length; ci++) {
-      var words = cats[ci].words;
-      for (var wi = 0; wi < words.length; wi++) {
-        var w = words[wi];
-        if (!(w.word in wordStatuses[sid])) {
-          wordStatuses[sid][w.word] = w.status || 'new';
-        }
+    for (const cat of sections[sid].categories)
+      for (const w of cat.words) {
+        if (!(w.word in wordStatuses[sid])) wordStatuses[sid][w.word] = w.status || 'new';
         w.status = wordStatuses[sid][w.word];
       }
-    }
   }
 }
 
-function getCategoryStats(cat) {
-  var known = 0, learning = 0;
-  for (var i = 0; i < cat.words.length; i++) {
-    if (cat.words[i].status === 'known') known++;
-    else if (cat.words[i].status === 'learning') learning++;
-  }
-  return { known: known, learning: learning, total: cat.words.length, newCount: cat.words.length - known - learning };
+// ============ STATS ============
+function getCatStats(cat) {
+  let known=0,learning=0;
+  for(const w of cat.words){if(w.status==='known')known++;else if(w.status==='learning')learning++;}
+  return {known,learning,total:cat.words.length};
+}
+function getSectionStats(sid) {
+  let known=0,learning=0,total=0;
+  for(const cat of sections[sid].categories){const s=getCatStats(cat);known+=s.known;learning+=s.learning;total+=s.total;}
+  return {known,learning,total};
+}
+function updateStats() {
+  const s=getSectionStats(currentSection);
+  const pct=s.total>0?Math.round(s.known/s.total*100):0;
+  document.getElementById('progressPct').textContent=pct+'%';
+  document.getElementById('progressFill').style.width=pct+'%';
+  document.getElementById('statKnown').textContent=s.known;
+  document.getElementById('statLearning').textContent=s.learning;
+  document.getElementById('statTotal').textContent=s.total;
+  if(pct===100&&s.total>0) triggerConfetti();
 }
 
-function getSectionStats(sectionId) {
-  var section = sections[sectionId];
-  var known = 0, learning = 0, total = 0;
-  for (var i = 0; i < section.categories.length; i++) {
-    var s = getCategoryStats(section.categories[i]);
-    known += s.known; learning += s.learning; total += s.total;
-  }
-  return { known: known, learning: learning, total: total };
-}
-
-var sidebarConfig = {
-  roots_affixes: { groupLabels: { prefix: '前缀', root: '词根', suffix: '后缀' }, groupOrder: ['prefix','root','suffix'] },
-  high_frequency: { groupLabels: { frequency: '频次分组' }, groupOrder: ['frequency'] },
-  essential: { groupLabels: { essential: '字母分区' }, groupOrder: ['essential'] }
-};
+// ============ SIDEBAR ============
+const GRP_LABELS = { prefix:'前缀', root:'词根', suffix:'后缀', frequency:'频次分组', essential:'字母分区' };
+const grpCollapsed = {};
 
 function renderSidebar() {
-  var nav = document.getElementById('categoryNav');
-  var config = sidebarConfig[currentSection];
-  var cats = sections[currentSection].categories;
-  var html = '';
-  var currentType = '';
-  for (var idx = 0; idx < cats.length; idx++) {
-    var cat = cats[idx];
-    if (cat.type !== currentType) {
-      currentType = cat.type;
-      html += '<div class="category-group"><div class="category-group-title">' + (config.groupLabels[currentType] || currentType) + '</div>';
+  const nav = document.getElementById('categoryNav');
+  const sv = document.getElementById('sidebarSearch').value.toLowerCase().trim();
+  const cats = sections[currentSection].categories;
+  let html='', curType='';
+  for(let i=0;i<cats.length;i++){
+    const cat=cats[i];
+    if(sv && !cat.root.toLowerCase().includes(sv) && !cat.meaning.toLowerCase().includes(sv)) continue;
+    if(cat.type!==curType){
+      if(curType) html+='</div></div>';
+      curType=cat.type;
+      const gid='g_'+currentSection+'_'+curType;
+      const col=grpCollapsed[gid]?'collapsed':'';
+      html+=`<div class="cat-group ${col}" id="${gid}">`;
+      html+=`<div class="cat-grp-hdr" onclick="toggleGrp('${gid}')"><span>${GRP_LABELS[curType]||curType}</span><span class="cat-grp-chevron">▾</span></div>`;
+      html+=`<div class="cat-grp-items">`;
     }
-    var stats = getCategoryStats(cat);
-    html += '<div class="category-item ' + (idx === currentCategoryIndex ? 'active' : '') + '" onclick="selectCategory(' + idx + ')">';
-    html += '<div class="root-icon">' + (cat.root || '?').replace(/[-/]/g, '').substring(0, 4) + '</div>';
-    html += '<div class="root-info"><div class="root-name">' + cat.root + '</div>';
-    html += '<div class="root-meaning">' + cat.meaning + '</div></div>';
-    html += '<div class="word-count">' + stats.total + '</div></div>';
+    const st=getCatStats(cat);
+    const active=i===currentCategoryIndex;
+    const icon=(cat.root||'?').replace(/[-\/]/g,'').substring(0,4);
+    const kp=st.total>0?st.known/st.total*100:0;
+    const lp=st.total>0?st.learning/st.total*100:0;
+    html+=`<div class="cat-item ${active?'active':''}" onclick="selectCategory(${i})">
+      <div class="cat-icon">${icon}</div>
+      <div class="cat-info">
+        <div class="cat-name">${cat.root}</div>
+        <div class="cat-meaning">${cat.meaning}</div>
+        <div class="cat-bar"><div class="cat-bar-k" style="width:${kp}%"></div><div class="cat-bar-l" style="width:${lp}%"></div></div>
+      </div>
+      <div class="cat-count">${st.total}</div>
+    </div>`;
   }
-  nav.innerHTML = html + '</div>';
+  if(curType) html+='</div></div>';
+  nav.innerHTML=html;
+  // scroll active into view
+  const el=nav.querySelector('.cat-item.active');
+  if(el) el.scrollIntoView({behavior:'smooth',block:'nearest'});
 }
 
+function toggleGrp(gid) {
+  const el=document.getElementById(gid);
+  el.classList.toggle('collapsed');
+  grpCollapsed[gid]=el.classList.contains('collapsed');
+}
 function updateSidebarHeader() {
-  var sec = sections[currentSection];
-  document.getElementById('sidebarTitle').textContent = sec.label;
-  document.getElementById('sidebarSubtitle').textContent = sec.description;
+  const sec=sections[currentSection];
+  document.getElementById('sidebarTitle').textContent=sec.label;
+  document.getElementById('sidebarSubtitle').textContent=sec.description;
 }
-
-function updateStats() {
-  var stats = getSectionStats(currentSection);
-  var pct = stats.total > 0 ? Math.round((stats.known / stats.total) * 100) : 0;
-  document.getElementById('progressPercent').textContent = pct + '%';
-  document.getElementById('progressFill').style.width = pct + '%';
-  document.getElementById('statKnown').textContent = stats.known;
-  document.getElementById('statLearning').textContent = stats.learning;
-  document.getElementById('statTotal').textContent = stats.total;
-}
-
 function updateBreadcrumb() {
-  var sec = sections[currentSection];
-  var cat = currentCategory();
-  document.getElementById('breadcrumb').innerHTML =
-    '<span class="br-section">' + sec.label + '</span>' +
-    '<span class="br-sep">/</span>' +
-    '<span class="br-category">' + cat.root + ' (' + cat.meaning + ')</span>';
+  const cat=currentCategory();
+  const sec=sections[currentSection];
+  document.getElementById('breadcrumb').innerHTML=
+    `<span class="bc-section">${sec.label}</span><span class="bc-sep">/</span><span class="bc-cat">${cat.root} (${cat.meaning})</span>`;
 }
 
-function renderCard() {
-  var cat = currentCategory();
-  var word = cat.words[currentWordIndex];
-  document.getElementById('cardInner').classList.remove('flipped');
-  document.getElementById('cardWord').textContent = word.word;
-  document.getElementById('cardPhonetic').textContent = word.phonetic || '';
-  document.getElementById('cardMeaning').textContent = word.meaning || '释义待补充';
-  var label = currentSection === 'roots_affixes' ? '' : '分类: ';
-  document.getElementById('cardRootRef').textContent = word.breakdown ? label + word.breakdown : '';
-  document.getElementById('cardExample').textContent = word.example || '';
-  document.getElementById('cardCounter').textContent = (currentWordIndex + 1) + ' / ' + cat.words.length;
-}
-
-function renderGrid() {
-  var cat = currentCategory();
-  var grid = document.getElementById('gridArea');
-  var label = currentSection === 'roots_affixes' ? '' : '分类: ';
-  var html = '';
-  for (var i = 0; i < cat.words.length; i++) {
-    var w = cat.words[i];
-    var sc = w.status === 'known' ? 'known' : w.status === 'learning' ? 'learning' : 'new';
-    var delay = Math.min(i * 0.01, 0.5);
-    html += '<div class="grid-card" style="animation-delay:' + delay + 's" onclick="currentWordIndex=' + i + '; switchMode(&quot;flashcard&quot;); renderCard();">';
-    html += '<div class="status-dot ' + sc + '"></div>';
-    html += '<div class="word">' + w.word + '</div>';
-    if (w.phonetic) html += '<div class="phonetic">' + w.phonetic + '</div>';
-    if (w.meaning) html += '<div class="meaning-zh">' + w.meaning + '</div>';
-    if (w.breakdown) html += '<div style="font-size:11px;color:var(--amber-dim);margin-top:6px;font-family:var(--font-mono)">' + label + ' ' + w.breakdown + '</div>';
-    html += '</div>';
-  }
-  grid.innerHTML = html;
-}
-
-function switchMode(mode) {
-  currentMode = mode;
-  var tabs = document.querySelectorAll('.mode-tab');
-  for (var i = 0; i < tabs.length; i++) tabs[i].classList.remove('active');
-  document.querySelector('[data-mode="' + mode + '"]').classList.add('active');
-  document.getElementById('flashcardArea').style.display = mode === 'flashcard' ? 'flex' : 'none';
-  document.getElementById('gridArea').style.display = mode === 'grid' ? 'grid' : 'none';
-  if (mode === 'flashcard') renderCard();
-  if (mode === 'grid') renderGrid();
-}
-
+// ============ SECTION / CATEGORY SWITCH ============
 function switchSection(sectionId) {
-  if (currentSection === sectionId) return;
-  currentSection = sectionId;
-  currentCategoryIndex = 0;
-  currentWordIndex = 0;
-  var tabs = document.querySelectorAll('.section-tab');
-  for (var i = 0; i < tabs.length; i++) tabs[i].classList.remove('active');
-  document.querySelector('[data-section="' + sectionId + '"]').classList.add('active');
-  var content = document.getElementById('studyContent');
-  content.classList.add('fade-out');
-  setTimeout(function() {
-    updateSidebarHeader();
-    renderSidebar();
-    updateStats();
-    updateBreadcrumb();
-    if (currentMode === 'flashcard') renderCard();
-    if (currentMode === 'grid') renderGrid();
-    content.classList.remove('fade-out');
-    content.classList.add('fade-in');
-    setTimeout(function() { content.classList.remove('fade-in'); }, 300);
-  }, 150);
+  if(currentSection===sectionId) return;
+  currentSection=sectionId;
+  currentCategoryIndex=0;
+  currentWordIndex=0;
+  document.querySelectorAll('.sec-tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('tab-'+sectionId).classList.add('active');
+  const sc=document.getElementById('studyContent');
+  sc.classList.add('fading');
+  setTimeout(()=>{
+    updateSidebarHeader();renderSidebar();updateStats();updateBreadcrumb();
+    buildFilteredWords();
+    if(currentMode==='flashcard') renderCard();
+    if(currentMode==='grid') renderGrid();
+    sc.classList.remove('fading');
+  },180);
 }
-
 function selectCategory(idx) {
-  currentCategoryIndex = idx;
-  currentWordIndex = 0;
-  updateBreadcrumb();
-  renderSidebar();
-  if (currentMode === 'flashcard') renderCard();
-  if (currentMode === 'grid') renderGrid();
+  currentCategoryIndex=idx;
+  currentWordIndex=0;
+  buildFilteredWords();
+  updateBreadcrumb();renderSidebar();
+  if(currentMode==='flashcard') renderCard();
+  if(currentMode==='grid') renderGrid();
 }
 
-function flipCard() {
-  document.getElementById('cardInner').classList.toggle('flipped');
+// ============ MODE SWITCH ============
+function switchMode(mode) {
+  currentMode=mode;
+  document.querySelectorAll('.mode-tab').forEach(t=>t.classList.remove('active'));
+  document.querySelector(`[data-mode="${mode}"]`).classList.add('active');
+  const fa=document.getElementById('flashcardArea');
+  const ga=document.getElementById('gridArea');
+  if(mode==='flashcard'){fa.style.display='';ga.classList.remove('visible');renderCard();}
+  else{fa.style.display='none';ga.classList.add('visible');renderGrid();}
 }
 
-function prevCard(e) {
-  e.stopPropagation();
-  var cat = currentCategory();
-  currentWordIndex = (currentWordIndex - 1 + cat.words.length) % cat.words.length;
+// ============ FILTER ============
+function setFilter(f) {
+  cardFilter=f;
+  document.querySelectorAll('.filter-tab').forEach(b=>b.classList.toggle('active',b.dataset.filter===f));
+  buildFilteredWords();
   renderCard();
 }
-
-function nextCard(e) {
-  e.stopPropagation();
-  var cat = currentCategory();
-  currentWordIndex = (currentWordIndex + 1) % cat.words.length;
-  renderCard();
+function buildFilteredWords() {
+  const cat=currentCategory();
+  filteredWords = cardFilter==='all' ? [...cat.words] : cat.words.filter(w=>w.status===cardFilter);
+  filteredIdx = 0;
+  currentWordIndex = filteredWords.length>0 ? cat.words.indexOf(filteredWords[0]) : 0;
 }
 
-function markWord(status, e) {
-  e.stopPropagation();
-  var word = currentCategory().words[currentWordIndex];
-  word.status = status;
-  saveStatuses();
-  updateStats();
-  renderSidebar();
-  showToast(status === 'known' ? '\u2713 \"' + word.word + '\" 已标记为掌握' : '\u27f3 \"' + word.word + '\" 标记为学习中');
-}
-
-function showToast(msg) {
-  var toast = document.getElementById('toast');
-  toast.textContent = msg;
-  toast.classList.add('show');
-  clearTimeout(toast._timeout);
-  toast._timeout = setTimeout(function() { toast.classList.remove('show'); }, 2000);
-}
-
-function toggleSidebar() {
-  document.getElementById('sidebar').classList.toggle('open');
-  document.getElementById('sidebarOverlay').classList.toggle('open');
-}
-
-document.addEventListener('keydown', function(e) {
-  if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
-  if (e.ctrlKey || e.metaKey) {
-    if (e.key === '1') { e.preventDefault(); switchSection('roots_affixes'); return; }
-    if (e.key === '2') { e.preventDefault(); switchSection('high_frequency'); return; }
-    if (e.key === '3') { e.preventDefault(); switchSection('essential'); return; }
+// ============ CARD RENDERING ============
+function renderCard() {
+  if(filteredWords.length===0){
+    document.getElementById('cardWord').textContent='无单词';
+    document.getElementById('cardPhonetic').textContent='';
+    document.getElementById('cardMeaning').textContent='本分类下无符合条件的单词';
+    document.getElementById('cardRootRef').style.display='none';
+    document.getElementById('cardExample').textContent='';
+    document.getElementById('cardCounter').textContent='0 / 0';
+    document.getElementById('dotFront').className='card-status-dot new';
+    document.getElementById('dotBack').className='card-status-dot new';
+    document.getElementById('cardInner').classList.remove('flipped');
+    return;
   }
-  if (e.key === 'ArrowLeft') prevCard(e);
-  else if (e.key === 'ArrowRight') nextCard(e);
-  else if (e.key === ' ') { e.preventDefault(); flipCard(); }
-  else if (e.key === '1') markWord('known', e);
-  else if (e.key === '2') markWord('learning', e);
+  const word=filteredWords[filteredIdx];
+  document.getElementById('cardInner').classList.remove('flipped');
+  document.getElementById('cardWord').textContent=word.word;
+  document.getElementById('cardPhonetic').textContent=word.phonetic||'';
+  document.getElementById('cardMeaning').textContent=word.meaning||'释义待补充';
+  const ref=document.getElementById('cardRootRef');
+  if(word.breakdown){ref.textContent=word.breakdown;ref.style.display='';}else{ref.style.display='none';}
+  document.getElementById('cardExample').textContent=word.example||'';
+  document.getElementById('cardCounter').textContent=(filteredIdx+1)+' / '+filteredWords.length;
+  const sc=word.status==='known'?'known':word.status==='learning'?'learning':'new';
+  document.getElementById('dotFront').className='card-status-dot '+sc;
+  document.getElementById('dotBack').className='card-status-dot '+sc;
+}
+function flipCard() { document.getElementById('cardInner').classList.toggle('flipped'); }
+// Card parallax tilt
+(function(){
+  var card=document.getElementById('cardContainer');
+  if(!card) return;
+  card.addEventListener('mousemove',function(e){
+    var rect=card.getBoundingClientRect();
+    var x=(e.clientX-rect.left)/rect.width-.5;
+    var y=(e.clientY-rect.top)/rect.height-.5;
+    card.style.transform='perspective(1200px) rotateY('+(x*8)+'deg) rotateX('+(-y*5)+'deg)';
+  });
+  card.addEventListener('mouseleave',function(){card.style.transform='perspective(1200px) rotateY(0) rotateX(0)';});
+})();
+function prevCard(e){e&&e.stopPropagation();if(filteredWords.length===0)return;flashBtn('prevBtn');filteredIdx=(filteredIdx-1+filteredWords.length)%filteredWords.length;renderCard();}
+function nextCard(e){e&&e.stopPropagation();if(filteredWords.length===0)return;flashBtn('nextBtn');filteredIdx=(filteredIdx+1)%filteredWords.length;renderCard();}
+function flashBtn(id){const b=document.getElementById(id);if(!b)return;b.classList.add('pressed');setTimeout(()=>b.classList.remove('pressed'),200);}
+
+// ============ MARK WORD ============
+function markWord(status,e) {
+  e&&e.stopPropagation();
+  if(filteredWords.length===0) return;
+  const word=filteredWords[filteredIdx];
+  word.status=status;
+  if(!wordStatuses[currentSection]) wordStatuses[currentSection]={};
+  wordStatuses[currentSection][word.word]=status;
+  saveStatuses();updateStats();renderSidebar();
+  buildFilteredWords();renderCard();
+  showToast(status==='known'?`✓ "${word.word}" 已标记为掌握`:`↻ "${word.word}" 标记为学习中`);
+}
+
+// ============ GRID ============
+function setGridFilter(s){gridFilter=s;document.querySelectorAll('.gfbtn').forEach(b=>b.classList.toggle('active',b.dataset.status===s));renderGrid();}
+function renderGrid(){
+  const cat=currentCategory();
+  const grid=document.getElementById('gridArea');
+  const sv=(document.getElementById('gridSearch')?.value||'').toLowerCase().trim();
+  const bar=grid.querySelector('.grid-search-bar');
+  const barHTML=bar?bar.outerHTML:'';
+  let html='';let d=0;
+  for(let i=0;i<cat.words.length;i++){
+    const w=cat.words[i];
+    if(gridFilter!=='all'&&w.status!==gridFilter) continue;
+    if(sv&&!w.word.toLowerCase().includes(sv)&&!w.meaning.toLowerCase().includes(sv)) continue;
+    const sc=w.status==='known'?'known':w.status==='learning'?'learning':'new';
+    const ad=Math.min(d*0.035,0.45);
+    html+=`<div class="grid-card" style="animation-delay:${ad}s" onclick="jumpToCard(${i})">
+      <div class="g-dot ${sc}"></div>
+      <div class="gword">${w.word}</div>
+      ${w.phonetic?`<div class="gph">${w.phonetic}</div>`:''}
+      ${w.meaning?`<div class="gmeaning">${w.meaning}</div>`:''}
+      ${w.breakdown?`<div class="gbd">${w.breakdown}</div>`:''}
+    </div>`;
+    d++;
+  }
+  grid.innerHTML=barHTML+html;
+  const gi=document.getElementById('gridSearch');
+  if(gi) gi.oninput=renderGrid;
+}
+function jumpToCard(wordIdx) {
+  const cat=currentCategory();
+  filteredWords=[cat.words[wordIdx]];filteredIdx=0;
+  switchMode('flashcard');renderCard();
+}
+
+// ============ TTS ============
+function speakWord(e){
+  e&&e.stopPropagation();
+  if(filteredWords.length===0) return;
+  const word=filteredWords[filteredIdx];
+  if(!word||!word.word) return;
+  if('speechSynthesis' in window){
+    window.speechSynthesis.cancel();
+    const u=new SpeechSynthesisUtterance(word.word);
+    u.lang='en-US';u.rate=0.85;
+    const btn=document.getElementById('speakBtn');
+    btn.classList.add('speaking');
+    u.onend=()=>btn.classList.remove('speaking');
+    u.onerror=()=>btn.classList.remove('speaking');
+    window.speechSynthesis.speak(u);
+  }
+}
+
+// ============ TOAST ============
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.classList.add('show');
+  clearTimeout(t._t);
+  t._t=setTimeout(()=>t.classList.remove('show'),2200);
+}
+
+// ============ CONFETTI ============
+function triggerConfetti(){
+  let wrap=document.getElementById('confetti');
+  if(!wrap){wrap=document.createElement('div');wrap.id='confetti';wrap.style.cssText='position:fixed;inset:0;pointer-events:none;z-index:300;overflow:hidden';document.body.appendChild(wrap);}
+  wrap.innerHTML='';
+  const colors=['#f5c96d','#6bc48a','#70a8e0','#e07070','#e2a847','#ffffff'];
+  for(let i=0;i<70;i++){
+    const p=document.createElement('div');
+    const c=colors[Math.floor(Math.random()*colors.length)];
+    const sz=4+Math.random()*7;
+    p.style.cssText=`position:absolute;width:${sz}px;height:${sz*(Math.random()>.5?.5:1)}px;background:${c};left:${Math.random()*100}%;top:-10px;border-radius:${Math.random()>.5?'50%':'2px'};animation:cf ${2+Math.random()*2}s ${Math.random()}s ease-in forwards;`;
+    wrap.appendChild(p);
+  }
+  if(!document.getElementById('cfStyle')){
+    const s=document.createElement('style');s.id='cfStyle';
+    s.textContent='@keyframes cf{0%{transform:translateY(0) rotate(0);opacity:1}100%{transform:translateY(100vh) rotate(720deg);opacity:0}}';
+    document.head.appendChild(s);
+  }
+  setTimeout(()=>{wrap.innerHTML=''},4500);
+  showToast('🎉 恭喜！本板块全部掌握！');
+}
+
+// ============ SIDEBAR SEARCH ============
+document.getElementById('sidebarSearch').addEventListener('input',renderSidebar);
+
+// ============ MOBILE ============
+function toggleSidebar(){document.getElementById('sidebar').classList.toggle('open');document.getElementById('sbOverlay').classList.toggle('open');}
+
+// ============ KEYBOARD ============
+const KMAP={ArrowLeft:'kL',ArrowRight:'kR',' ':'kSp','1':'k1','2':'k2'};
+function flashKbd(key){const id=KMAP[key];if(!id)return;const el=document.getElementById(id);if(!el)return;el.classList.add('active-key');setTimeout(()=>el.classList.remove('active-key'),250);}
+document.addEventListener('keydown',function(e){
+  if(e.target.tagName==='INPUT'||e.target.tagName==='TEXTAREA') return;
+  if(e.ctrlKey||e.metaKey){
+    if(e.key==='1'){e.preventDefault();switchSection('roots_affixes');}
+    else if(e.key==='2'){e.preventDefault();switchSection('high_frequency');}
+    else if(e.key==='3'){e.preventDefault();switchSection('essential');}
+    return;
+  }
+  flashKbd(e.key);
+  if(e.key==='ArrowLeft') prevCard(e);
+  else if(e.key==='ArrowRight') nextCard(e);
+  else if(e.key===' '){e.preventDefault();flipCard();}
+  else if(e.key==='1') markWord('known',e);
+  else if(e.key==='2') markWord('learning',e);
 });
 
+// ============ INIT ============
 loadStatuses();
 initStatuses();
 updateSidebarHeader();
 renderSidebar();
 updateStats();
 updateBreadcrumb();
+buildFilteredWords();
 renderCard();
-
 </script>
 </body>
 </html>
