@@ -1,0 +1,1206 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>词根词缀 · 安徽专升本高频词汇</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Noto+Serif+SC:wght@400;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-deep: #0a0f1a;
+  --bg-surface: #141b2b;
+  --bg-card: #1a2338;
+  --bg-card-back: #1c2541;
+  --bg-sidebar: #0d1322;
+  --amber: #e2a847;
+  --amber-light: #f0c96d;
+  --amber-dim: #8b6914;
+  --gold-glow: rgba(226, 168, 71, 0.15);
+  --text-primary: #ede4d3;
+  --text-secondary: #a89e8c;
+  --text-muted: #6b6458;
+  --border-subtle: rgba(226, 168, 71, 0.12);
+  --border-active: rgba(226, 168, 71, 0.4);
+  --success: #6b9e7a;
+  --success-bg: rgba(107, 158, 122, 0.12);
+  --danger: #c4686b;
+  --danger-bg: rgba(196, 104, 107, 0.12);
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+  --font-display: 'Cormorant Garamond', 'Noto Serif SC', serif;
+  --font-ui: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', 'SF Mono', monospace;
+  --transition-flip: 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-smooth: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --shadow-card: 0 4px 24px rgba(0, 0, 0, 0.4), 0 0 0 1px var(--border-subtle);
+  --shadow-glow: 0 0 40px var(--gold-glow);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: var(--font-ui);
+  background: var(--bg-deep);
+  color: var(--text-primary);
+  min-height: 100vh;
+  overflow: hidden;
+}
+
+/* Ambient background texture */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 80% 60% at 20% 50%, rgba(226, 168, 71, 0.04) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 80% at 80% 20%, rgba(226, 168, 71, 0.03) 0%, transparent 60%),
+    radial-gradient(ellipse 40% 40% at 50% 80%, rgba(200, 180, 150, 0.02) 0%, transparent 60%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Noise overlay for texture */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.app-container {
+  display: flex;
+  height: 100vh;
+  position: relative;
+  z-index: 1;
+}
+
+/* ============= SIDEBAR ============= */
+.sidebar {
+  width: 300px;
+  min-width: 300px;
+  background: var(--bg-sidebar);
+  border-right: 1px solid var(--border-subtle);
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.sidebar-header {
+  padding: 28px 24px 20px;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.sidebar-header h1 {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--amber-light);
+  letter-spacing: 0.02em;
+  line-height: 1.3;
+}
+
+.sidebar-header .subtitle {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: 4px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* Progress section */
+.progress-section {
+  padding: 16px 24px;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.progress-label {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+  font-size: 12px;
+  color: var(--text-secondary);
+  letter-spacing: 0.04em;
+}
+
+.progress-label span:last-child {
+  font-family: var(--font-mono);
+  color: var(--amber-light);
+  font-size: 13px;
+}
+
+.progress-bar {
+  height: 3px;
+  background: rgba(255,255,255,0.06);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--amber-dim), var(--amber-light));
+  border-radius: 2px;
+  transition: width 0.5s ease;
+}
+
+.stats-row {
+  display: flex;
+  gap: 16px;
+  margin-top: 12px;
+}
+
+.stat-item {
+  text-align: center;
+  flex: 1;
+}
+
+.stat-value {
+  font-family: var(--font-mono);
+  font-size: 18px;
+  font-weight: 500;
+  color: var(--amber-light);
+}
+
+.stat-label {
+  font-size: 10px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-top: 2px;
+}
+
+/* Category list */
+.category-nav {
+  flex: 1;
+  overflow-y: auto;
+  padding: 8px 0;
+}
+
+.category-nav::-webkit-scrollbar {
+  width: 3px;
+}
+
+.category-nav::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.category-nav::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.06);
+  border-radius: 2px;
+}
+
+.category-group {
+  margin-bottom: 4px;
+}
+
+.category-group-title {
+  padding: 12px 24px 6px;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.category-item {
+  display: flex;
+  align-items: center;
+  padding: 10px 24px;
+  cursor: pointer;
+  transition: all var(--transition-smooth);
+  border-left: 2px solid transparent;
+  gap: 10px;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.category-item:hover {
+  background: rgba(226, 168, 71, 0.04);
+  color: var(--text-primary);
+}
+
+.category-item.active {
+  background: rgba(226, 168, 71, 0.08);
+  border-left-color: var(--amber);
+  color: var(--amber-light);
+}
+
+.category-item .root-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-sm);
+  background: rgba(226, 168, 71, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--amber-light);
+  flex-shrink: 0;
+}
+
+.category-item .root-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.category-item .root-name {
+  font-weight: 600;
+  font-family: var(--font-mono);
+  font-size: 13px;
+}
+
+.category-item .root-meaning {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 1px;
+}
+
+.category-item .word-count {
+  font-size: 11px;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+}
+
+/* ============= MAIN ============= */
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.top-bar {
+  padding: 20px 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.top-bar .current-category {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.top-bar .current-category .meaning {
+  font-size: 14px;
+  color: var(--text-muted);
+  font-family: var(--font-ui);
+  margin-left: 8px;
+}
+
+.mode-tabs {
+  display: flex;
+  gap: 4px;
+  background: var(--bg-surface);
+  padding: 3px;
+  border-radius: var(--radius-sm);
+}
+
+.mode-tab {
+  padding: 6px 14px;
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 12px;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: all var(--transition-smooth);
+  font-family: var(--font-ui);
+}
+
+.mode-tab:hover { color: var(--text-primary); }
+
+.mode-tab.active {
+  background: rgba(226, 168, 71, 0.15);
+  color: var(--amber-light);
+}
+
+/* Study area */
+.study-area {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  perspective: 1200px;
+}
+
+/* Card */
+.card-container {
+  width: 420px;
+  height: 280px;
+  position: relative;
+  cursor: pointer;
+}
+
+.card-inner {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform var(--transition-flip);
+}
+
+.card-inner.flipped {
+  transform: rotateY(180deg);
+}
+
+.card-face {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  border-radius: var(--radius-lg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 32px;
+}
+
+.card-front {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  box-shadow: var(--shadow-card), var(--shadow-glow);
+}
+
+.card-back {
+  background: var(--bg-card-back);
+  border: 1px solid var(--border-subtle);
+  box-shadow: var(--shadow-card);
+  transform: rotateY(180deg);
+}
+
+.card-word {
+  font-family: var(--font-display);
+  font-size: 48px;
+  font-weight: 700;
+  color: var(--amber-light);
+  letter-spacing: 0.02em;
+  line-height: 1;
+}
+
+.card-phonetic {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  color: var(--text-muted);
+  margin-top: 8px;
+  letter-spacing: 0.04em;
+}
+
+.card-hint {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: 16px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  opacity: 0.6;
+}
+
+.card-meaning {
+  font-family: var(--font-display);
+  font-size: 22px;
+  color: var(--text-primary);
+  text-align: center;
+  line-height: 1.6;
+}
+
+.card-root-ref {
+  font-size: 13px;
+  color: var(--amber-dim);
+  margin-top: 12px;
+  font-family: var(--font-mono);
+}
+
+.card-example {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin-top: 16px;
+  text-align: center;
+  font-style: italic;
+  line-height: 1.5;
+}
+
+/* Card navigation */
+.card-nav {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  margin-top: 32px;
+}
+
+.nav-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1px solid var(--border-subtle);
+  background: var(--bg-surface);
+  color: var(--text-secondary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition-smooth);
+  font-size: 18px;
+}
+
+.nav-btn:hover {
+  border-color: var(--border-active);
+  color: var(--amber-light);
+  background: rgba(226, 168, 71, 0.08);
+}
+
+.nav-btn:active { transform: scale(0.95); }
+
+.card-counter {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--text-muted);
+  min-width: 60px;
+  text-align: center;
+}
+
+/* Action buttons */
+.action-row {
+  display: flex;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.action-btn {
+  padding: 10px 20px;
+  border-radius: 20px;
+  border: 1px solid var(--border-subtle);
+  background: var(--bg-surface);
+  color: var(--text-secondary);
+  cursor: pointer;
+  font-size: 13px;
+  transition: all var(--transition-smooth);
+  font-family: var(--font-ui);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.action-btn:hover {
+  border-color: var(--border-active);
+  color: var(--text-primary);
+}
+
+.action-btn.know {
+  border-color: rgba(107, 158, 122, 0.3);
+  color: var(--success);
+}
+
+.action-btn.know:hover {
+  background: var(--success-bg);
+  border-color: var(--success);
+}
+
+.action-btn.dunno {
+  border-color: rgba(196, 104, 107, 0.3);
+  color: var(--danger);
+}
+
+.action-btn.dunno:hover {
+  background: var(--danger-bg);
+  border-color: var(--danger);
+}
+
+/* ============= GRID VIEW ============= */
+.word-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 12px;
+  padding: 20px 32px;
+  overflow-y: auto;
+  flex: 1;
+  align-content: start;
+}
+
+.word-grid::-webkit-scrollbar {
+  width: 3px;
+}
+
+.word-grid::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.06);
+  border-radius: 2px;
+}
+
+.grid-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 20px;
+  cursor: pointer;
+  transition: all var(--transition-smooth);
+  position: relative;
+}
+
+.grid-card:hover {
+  border-color: var(--border-active);
+  background: var(--bg-card-back);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+}
+
+.grid-card .word {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--amber-light);
+}
+
+.grid-card .phonetic {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+.grid-card .meaning-zh {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-top: 8px;
+  line-height: 1.5;
+}
+
+.grid-card .status-dot {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.status-dot.known { background: var(--success); }
+.status-dot.learning { background: var(--amber); }
+.status-dot.new { background: transparent; border: 1px solid var(--text-muted); }
+
+/* ============= EMPTY STATE ============= */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: var(--text-muted);
+  gap: 12px;
+}
+
+.empty-state .icon {
+  font-size: 48px;
+  opacity: 0.3;
+}
+
+.empty-state p {
+  font-size: 14px;
+  letter-spacing: 0.04em;
+}
+
+/* ============= TOAST ============= */
+.toast {
+  position: fixed;
+  bottom: 32px;
+  left: 50%;
+  transform: translateX(-50%) translateY(100px);
+  background: var(--bg-card);
+  border: 1px solid var(--border-active);
+  padding: 12px 24px;
+  border-radius: 24px;
+  font-size: 13px;
+  color: var(--amber-light);
+  opacity: 0;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  z-index: 100;
+  pointer-events: none;
+}
+
+.toast.show {
+  transform: translateX(-50%) translateY(0);
+  opacity: 1;
+}
+
+/* ============= RESPONSIVE ============= */
+@media (max-width: 768px) {
+  .sidebar {
+    width: 260px;
+    min-width: 260px;
+  }
+  .card-container {
+    width: 320px;
+    height: 220px;
+  }
+  .card-word {
+    font-size: 36px;
+  }
+  .card-meaning {
+    font-size: 18px;
+  }
+  .top-bar {
+    padding: 16px 20px;
+  }
+  .word-grid {
+    padding: 12px 16px;
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 560px) {
+  .sidebar {
+    display: none;
+  }
+  .card-container {
+    width: 280px;
+    height: 200px;
+  }
+  .card-word {
+    font-size: 30px;
+  }
+}
+</style>
+</head>
+<body>
+
+<div class="app-container">
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <h1>词根词缀法</h1>
+      <div class="subtitle">安徽专升本 · 高频词汇</div>
+    </div>
+
+    <div class="progress-section">
+      <div class="progress-label">
+        <span>学习进度</span>
+        <span id="progressPercent">0%</span>
+      </div>
+      <div class="progress-bar">
+        <div class="progress-bar-fill" id="progressFill" style="width: 0%"></div>
+      </div>
+      <div class="stats-row">
+        <div class="stat-item">
+          <div class="stat-value" id="statKnown">0</div>
+          <div class="stat-label">已掌握</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value" id="statLearning">0</div>
+          <div class="stat-label">学习中</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value" id="statTotal">0</div>
+          <div class="stat-label">总计</div>
+        </div>
+      </div>
+    </div>
+
+    <nav class="category-nav" id="categoryNav">
+      <!-- Rendered by JS -->
+    </nav>
+  </aside>
+
+  <!-- Main -->
+  <main class="main-content">
+    <div class="top-bar">
+      <div class="current-category" id="currentCategoryLabel">
+        前缀 <span class="meaning">pre- (前, 预先)</span>
+      </div>
+      <div class="mode-tabs">
+        <button class="mode-tab active" data-mode="flashcard" onclick="switchMode('flashcard')">卡片记忆</button>
+        <button class="mode-tab" data-mode="grid" onclick="switchMode('grid')">列表浏览</button>
+      </div>
+    </div>
+
+    <!-- Flashcard mode -->
+    <div class="study-area" id="flashcardArea">
+      <div style="text-align:center;">
+        <div class="card-container" id="cardContainer" onclick="flipCard()">
+          <div class="card-inner" id="cardInner">
+            <div class="card-face card-front">
+              <div class="card-word" id="cardWord">preview</div>
+              <div class="card-phonetic" id="cardPhonetic">/ˈpriːvjuː/</div>
+              <div class="card-hint">点击翻转查看释义</div>
+            </div>
+            <div class="card-face card-back">
+              <div class="card-meaning" id="cardMeaning">n./v. 预览；预习</div>
+              <div class="card-root-ref" id="cardRootRef">pre- (前) + view (看)</div>
+              <div class="card-example" id="cardExample">Preview the chapter before class.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card-nav">
+          <button class="nav-btn" onclick="prevCard(event)" title="上一个">←</button>
+          <span class="card-counter" id="cardCounter">1 / 8</span>
+          <button class="nav-btn" onclick="nextCard(event)" title="下一个">→</button>
+        </div>
+
+        <div class="action-row">
+          <button class="action-btn dunno" onclick="markWord('learning', event)">
+            <span>⟳</span> 还不熟
+          </button>
+          <button class="action-btn know" onclick="markWord('known', event)">
+            <span>✓</span> 已掌握
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Grid mode -->
+    <div class="word-grid" id="gridArea" style="display:none;">
+      <!-- Rendered by JS -->
+    </div>
+  </main>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ============ DATA ============
+const vocabularyData = [
+  {
+    type: 'prefix',
+    root: 'pre-',
+    meaning: '前, 预先',
+    words: [
+      { word: 'preview', phonetic: '/ˈpriːvjuː/', meaning: 'n./v. 预览；预习', breakdown: 'pre- (前) + view (看)', example: 'Preview the chapter before class.', status: 'new' },
+      { word: 'predict', phonetic: '/prɪˈdɪkt/', meaning: 'v. 预测；预言', breakdown: 'pre- (前) + dict (说)', example: 'Experts predict economic growth.', status: 'new' },
+      { word: 'preface', phonetic: '/ˈprefəs/', meaning: 'n. 前言；序言', breakdown: 'pre- (前) + face (说)', example: 'Read the preface of the book.', status: 'new' },
+      { word: 'precaution', phonetic: '/prɪˈkɔːʃən/', meaning: 'n. 预防；警惕', breakdown: 'pre- (前) + caution (小心)', example: 'Take precautions against fire.', status: 'new' },
+      { word: 'preceding', phonetic: '/prɪˈsiːdɪŋ/', meaning: 'adj. 在前的；前面的', breakdown: 'pre- (前) + ced (走) + -ing', example: 'See the preceding chapter.', status: 'new' },
+      { word: 'prejudice', phonetic: '/ˈpredʒʊdɪs/', meaning: 'n. 偏见；成见', breakdown: 'pre- (前) + judice (判断)', example: 'overcome racial prejudice', status: 'new' },
+      { word: 'prescribe', phonetic: '/prɪˈskraɪb/', meaning: 'v. 开药方；规定', breakdown: 'pre- (前) + scribe (写)', example: 'The doctor prescribed medicine.', status: 'new' },
+      { word: 'preliminary', phonetic: '/prɪˈlɪmɪnəri/', meaning: 'adj. 初步的；预备的', breakdown: 'pre- (前) + limin (门槛)', example: 'preliminary results', status: 'new' },
+    ]
+  },
+  {
+    type: 'prefix',
+    root: 're-',
+    meaning: '再, 重新, 回',
+    words: [
+      { word: 'review', phonetic: '/rɪˈvjuː/', meaning: 'v./n. 复习；回顾', breakdown: 're- (再) + view (看)', example: 'Review your notes daily.', status: 'new' },
+      { word: 'return', phonetic: '/rɪˈtɜːn/', meaning: 'v./n. 返回；归还', breakdown: 're- (回) + turn (转)', example: 'return the book to the library', status: 'new' },
+      { word: 'rebuild', phonetic: '/riːˈbɪld/', meaning: 'v. 重建；改造', breakdown: 're- (再) + build (建造)', example: 'rebuild after the earthquake', status: 'new' },
+      { word: 'recall', phonetic: '/rɪˈkɔːl/', meaning: 'v./n. 回忆；召回', breakdown: 're- (回) + call (叫)', example: 'I can\'t recall his name.', status: 'new' },
+      { word: 'refresh', phonetic: '/rɪˈfreʃ/', meaning: 'v. 恢复精神；刷新', breakdown: 're- (再) + fresh (新鲜)', example: 'refresh the page', status: 'new' },
+      { word: 'reform', phonetic: '/rɪˈfɔːm/', meaning: 'v./n. 改革；改良', breakdown: 're- (再) + form (形状)', example: 'educational reform', status: 'new' },
+      { word: 'retire', phonetic: '/rɪˈtaɪə/', meaning: 'v. 退休；退出', breakdown: 're- (回) + tire (拉)', example: 'He retired last year.', status: 'new' },
+      { word: 'reveal', phonetic: '/rɪˈviːl/', meaning: 'v. 揭示；展现', breakdown: 're- (移开) + veal (面纱)', example: 'reveal the truth', status: 'new' },
+    ]
+  },
+  {
+    type: 'prefix',
+    root: 'dis- / un- / in-',
+    meaning: '否定, 相反',
+    words: [
+      { word: 'disagree', phonetic: '/ˌdɪsəˈɡriː/', meaning: 'v. 不同意', breakdown: 'dis- (不) + agree (同意)', example: 'I disagree with you.', status: 'new' },
+      { word: 'disappear', phonetic: '/ˌdɪsəˈpɪə/', meaning: 'v. 消失', breakdown: 'dis- (不) + appear (出现)', example: 'The sun disappeared.', status: 'new' },
+      { word: 'unable', phonetic: '/ʌnˈeɪbəl/', meaning: 'adj. 不能的', breakdown: 'un- (不) + able (能够)', example: 'I am unable to attend.', status: 'new' },
+      { word: 'uncover', phonetic: '/ʌnˈkʌvə/', meaning: 'v. 揭露；发现', breakdown: 'un- (移开) + cover (覆盖)', example: 'uncover the secret', status: 'new' },
+      { word: 'informal', phonetic: '/ɪnˈfɔːməl/', meaning: 'adj. 非正式的', breakdown: 'in- (不) + formal (正式)', example: 'informal conversation', status: 'new' },
+      { word: 'independent', phonetic: '/ˌɪndɪˈpendənt/', meaning: 'adj. 独立的', breakdown: 'in- (不) + dependent (依赖的)', example: 'an independent country', status: 'new' },
+      { word: 'discipline', phonetic: '/ˈdɪsəplɪn/', meaning: 'n. 纪律；学科', breakdown: 'disciple (门徒) + -ine', example: 'self-discipline', status: 'new' },
+      { word: 'discourage', phonetic: '/dɪsˈkʌrɪdʒ/', meaning: 'v. 使气馁；劝阻', breakdown: 'dis- (不) + courage (勇气)', example: 'Don\'t be discouraged.', status: 'new' },
+    ]
+  },
+  {
+    type: 'root',
+    root: '-spect-',
+    meaning: '看',
+    words: [
+      { word: 'inspect', phonetic: '/ɪnˈspekt/', meaning: 'v. 检查；视察', breakdown: 'in- (内) + spect (看)', example: 'inspect the goods', status: 'new' },
+      { word: 'respect', phonetic: '/rɪˈspekt/', meaning: 'v./n. 尊重；方面', breakdown: 're- (再) + spect (看)', example: 'Show respect to elders.', status: 'new' },
+      { word: 'prospect', phonetic: '/ˈprɒspekt/', meaning: 'n. 前景；展望', breakdown: 'pro- (前) + spect (看)', example: 'job prospects', status: 'new' },
+      { word: 'aspect', phonetic: '/ˈæspekt/', meaning: 'n. 方面；层面', breakdown: 'a- (向) + spect (看)', example: 'every aspect of life', status: 'new' },
+      { word: 'spectacular', phonetic: '/spekˈtækjʊlə/', meaning: 'adj. 壮观的', breakdown: 'spect (看) + -cular', example: 'spectacular scenery', status: 'new' },
+      { word: 'suspect', phonetic: '/səˈspekt/', meaning: 'v. 怀疑 n. 嫌疑犯', breakdown: 'sus- (下) + spect (看)', example: 'I suspect he is lying.', status: 'new' },
+    ]
+  },
+  {
+    type: 'root',
+    root: '-dict-',
+    meaning: '说',
+    words: [
+      { word: 'predict', phonetic: '/prɪˈdɪkt/', meaning: 'v. 预测；预言', breakdown: 'pre- (前) + dict (说)', example: 'predict the weather', status: 'new' },
+      { word: 'dictate', phonetic: '/dɪkˈteɪt/', meaning: 'v. 口述；命令', breakdown: 'dict (说) + -ate', example: 'dictate a letter', status: 'new' },
+      { word: 'contradict', phonetic: '/ˌkɒntrəˈdɪkt/', meaning: 'v. 反驳；矛盾', breakdown: 'contra- (反) + dict (说)', example: 'Don\'t contradict yourself.', status: 'new' },
+      { word: 'dictionary', phonetic: '/ˈdɪkʃənəri/', meaning: 'n. 词典', breakdown: 'dict (说) + -ion + -ary', example: 'Look it up in the dictionary.', status: 'new' },
+      { word: 'indicate', phonetic: '/ˈɪndɪkeɪt/', meaning: 'v. 表明；指示', breakdown: 'in- (内) + dic (说) + -ate', example: 'Research indicates that...', status: 'new' },
+      { word: 'verdict', phonetic: '/ˈvɜːdɪkt/', meaning: 'n. 裁决；定论', breakdown: 'ver (真实) + dict (说)', example: 'The jury reached a verdict.', status: 'new' },
+    ]
+  },
+  {
+    type: 'root',
+    root: '-port-',
+    meaning: '携带, 运送',
+    words: [
+      { word: 'import', phonetic: '/ɪmˈpɔːt/', meaning: 'v./n. 进口', breakdown: 'im- (入) + port (运)', example: 'import goods from abroad', status: 'new' },
+      { word: 'export', phonetic: '/ɪkˈspɔːt/', meaning: 'v./n. 出口', breakdown: 'ex- (出) + port (运)', example: 'export products overseas', status: 'new' },
+      { word: 'transport', phonetic: '/trænˈspɔːt/', meaning: 'v./n. 运输', breakdown: 'trans- (跨越) + port (运)', example: 'public transport', status: 'new' },
+      { word: 'support', phonetic: '/səˈpɔːt/', meaning: 'v./n. 支持', breakdown: 'sup- (从下) + port (承载)', example: 'support the team', status: 'new' },
+      { word: 'portable', phonetic: '/ˈpɔːtəbəl/', meaning: 'adj. 便携的', breakdown: 'port (携带) + -able (可)', example: 'portable device', status: 'new' },
+      { word: 'report', phonetic: '/rɪˈpɔːt/', meaning: 'v./n. 报告；报道', breakdown: 're- (回) + port (带)', example: 'annual report', status: 'new' },
+    ]
+  },
+  {
+    type: 'root',
+    root: '-struct-',
+    meaning: '建造',
+    words: [
+      { word: 'construct', phonetic: '/kənˈstrʌkt/', meaning: 'v. 建造；构建', breakdown: 'con- (共同) + struct (建造)', example: 'construct a building', status: 'new' },
+      { word: 'structure', phonetic: '/ˈstrʌktʃə/', meaning: 'n. 结构', breakdown: 'struct (建造) + -ure', example: 'social structure', status: 'new' },
+      { word: 'instruct', phonetic: '/ɪnˈstrʌkt/', meaning: 'v. 指导；教学', breakdown: 'in- (内) + struct (建造)', example: 'instruct the students', status: 'new' },
+      { word: 'destruction', phonetic: '/dɪˈstrʌkʃən/', meaning: 'n. 破坏；毁灭', breakdown: 'de- (下) + struct (建造) + -ion', example: 'environmental destruction', status: 'new' },
+      { word: 'obstacle', phonetic: '/ˈɒbstəkəl/', meaning: 'n. 障碍物', breakdown: 'ob- (反) + stacle (站)', example: 'overcome obstacles', status: 'new' },
+      { word: 'instrument', phonetic: '/ˈɪnstrʊmənt/', meaning: 'n. 工具；乐器', breakdown: 'in- + stru (建造) + -ment', example: 'musical instrument', status: 'new' },
+    ]
+  },
+  {
+    type: 'root',
+    root: '-ject-',
+    meaning: '投, 掷',
+    words: [
+      { word: 'reject', phonetic: '/rɪˈdʒekt/', meaning: 'v. 拒绝；排斥', breakdown: 're- (回) + ject (掷)', example: 'reject an offer', status: 'new' },
+      { word: 'project', phonetic: '/ˈprɒdʒekt/', meaning: 'n. 工程 v. 投射', breakdown: 'pro- (前) + ject (掷)', example: 'complete the project', status: 'new' },
+      { word: 'inject', phonetic: '/ɪnˈdʒekt/', meaning: 'v. 注射；注入', breakdown: 'in- (入) + ject (掷)', example: 'inject the vaccine', status: 'new' },
+      { word: 'subject', phonetic: '/ˈsʌbdʒɪkt/', meaning: 'n. 主题；学科', breakdown: 'sub- (下) + ject (掷)', example: 'change the subject', status: 'new' },
+      { word: 'object', phonetic: '/ˈɒbdʒɪkt/', meaning: 'n. 物体 v. 反对', breakdown: 'ob- (反) + ject (掷)', example: 'a small object', status: 'new' },
+      { word: 'objective', phonetic: '/əbˈdʒektɪv/', meaning: 'n. 目标 adj. 客观的', breakdown: 'ob- + ject + -ive', example: 'achieve the objective', status: 'new' },
+    ]
+  },
+  {
+    type: 'root',
+    root: '-scrib- / -script-',
+    meaning: '写',
+    words: [
+      { word: 'describe', phonetic: '/dɪˈskraɪb/', meaning: 'v. 描述', breakdown: 'de- (下) + scribe (写)', example: 'describe the scene', status: 'new' },
+      { word: 'prescribe', phonetic: '/prɪˈskraɪb/', meaning: 'v. 开药方；规定', breakdown: 'pre- (前) + scribe (写)', example: 'prescribe medication', status: 'new' },
+      { word: 'subscribe', phonetic: '/səbˈskraɪb/', meaning: 'v. 订阅；签署', breakdown: 'sub- (下) + scribe (写)', example: 'subscribe to the magazine', status: 'new' },
+      { word: 'manuscript', phonetic: '/ˈmænjʊskrɪpt/', meaning: 'n. 手稿', breakdown: 'manu (手) + script (写)', example: 'ancient manuscript', status: 'new' },
+      { word: 'description', phonetic: '/dɪˈskrɪpʃən/', meaning: 'n. 描述；说明', breakdown: 'de- + script + -ion', example: 'job description', status: 'new' },
+      { word: 'script', phonetic: '/skrɪpt/', meaning: 'n. 剧本；文字', breakdown: 'script (写)', example: 'movie script', status: 'new' },
+    ]
+  },
+  {
+    type: 'root',
+    root: '-ced- / -cess-',
+    meaning: '走, 行进',
+    words: [
+      { word: 'proceed', phonetic: '/prəˈsiːd/', meaning: 'v. 继续；进行', breakdown: 'pro- (前) + ceed (走)', example: 'Proceed with the plan.', status: 'new' },
+      { word: 'succeed', phonetic: '/səkˈsiːd/', meaning: 'v. 成功；继承', breakdown: 'suc- (下) + ceed (走)', example: 'succeed in the exam', status: 'new' },
+      { word: 'exceed', phonetic: '/ɪkˈsiːd/', meaning: 'v. 超过；超越', breakdown: 'ex- (出) + ceed (走)', example: 'exceed the limit', status: 'new' },
+      { word: 'access', phonetic: '/ˈækses/', meaning: 'n./v. 进入；通道', breakdown: 'ac- (向) + cess (走)', example: 'access the internet', status: 'new' },
+      { word: 'process', phonetic: '/ˈprəʊses/', meaning: 'n. 过程 v. 处理', breakdown: 'pro- (前) + cess (走)', example: 'learning process', status: 'new' },
+      { word: 'recession', phonetic: '/rɪˈseʃən/', meaning: 'n. 衰退；后退', breakdown: 're- (回) + cess + -ion', example: 'economic recession', status: 'new' },
+    ]
+  },
+  {
+    type: 'root',
+    root: '-tract-',
+    meaning: '拉, 拽',
+    words: [
+      { word: 'attract', phonetic: '/əˈtrækt/', meaning: 'v. 吸引', breakdown: 'at- (向) + tract (拉)', example: 'attract attention', status: 'new' },
+      { word: 'extract', phonetic: '/ɪkˈstrækt/', meaning: 'v. 提取；摘录', breakdown: 'ex- (出) + tract (拉)', example: 'extract information', status: 'new' },
+      { word: 'contract', phonetic: '/ˈkɒntrækt/', meaning: 'n. 合同 v. 收缩', breakdown: 'con- (共同) + tract (拉)', example: 'sign a contract', status: 'new' },
+      { word: 'distract', phonetic: '/dɪˈstrækt/', meaning: 'v. 分心；转移', breakdown: 'dis- (分开) + tract (拉)', example: 'Don\'t distract me.', status: 'new' },
+      { word: 'abstract', phonetic: '/ˈæbstrækt/', meaning: 'adj. 抽象的 n. 摘要', breakdown: 'abs- (离开) + tract (拉)', example: 'abstract concept', status: 'new' },
+      { word: 'tractor', phonetic: '/ˈtræktə/', meaning: 'n. 拖拉机', breakdown: 'tract (拉) + -or (物)', example: 'farm tractor', status: 'new' },
+    ]
+  },
+  {
+    type: 'root',
+    root: '-mit- / -miss-',
+    meaning: '送, 发',
+    words: [
+      { word: 'transmit', phonetic: '/trænzˈmɪt/', meaning: 'v. 传播；传送', breakdown: 'trans- (跨越) + mit (送)', example: 'transmit signals', status: 'new' },
+      { word: 'permit', phonetic: '/pəˈmɪt/', meaning: 'v./n. 允许；许可', breakdown: 'per- (通过) + mit (送)', example: 'permit me to explain', status: 'new' },
+      { word: 'commit', phonetic: '/kəˈmɪt/', meaning: 'v. 承诺；犯（罪等）', breakdown: 'com- (共同) + mit (送)', example: 'commit to the plan', status: 'new' },
+      { word: 'mission', phonetic: '/ˈmɪʃən/', meaning: 'n. 任务；使命', breakdown: 'miss (送) + -ion', example: 'complete the mission', status: 'new' },
+      { word: 'dismiss', phonetic: '/dɪsˈmɪs/', meaning: 'v. 解雇；解散', breakdown: 'dis- (分开) + miss (送)', example: 'The class is dismissed.', status: 'new' },
+      { word: 'admit', phonetic: '/ədˈmɪt/', meaning: 'v. 承认；准许进入', breakdown: 'ad- (向) + mit (送)', example: 'admit the mistake', status: 'new' },
+    ]
+  },
+  {
+    type: 'root',
+    root: '-pos-',
+    meaning: '放置',
+    words: [
+      { word: 'expose', phonetic: '/ɪkˈspəʊz/', meaning: 'v. 暴露；揭露', breakdown: 'ex- (外) + pose (放)', example: 'expose the truth', status: 'new' },
+      { word: 'compose', phonetic: '/kəmˈpəʊz/', meaning: 'v. 组成；创作', breakdown: 'com- (共同) + pose (放)', example: 'compose a letter', status: 'new' },
+      { word: 'propose', phonetic: '/prəˈpəʊz/', meaning: 'v. 提议；求婚', breakdown: 'pro- (前) + pose (放)', example: 'propose a plan', status: 'new' },
+      { word: 'deposit', phonetic: '/dɪˈpɒzɪt/', meaning: 'v./n. 存放；押金', breakdown: 'de- (下) + posit (放)', example: 'deposit money in bank', status: 'new' },
+      { word: 'oppose', phonetic: '/əˈpəʊz/', meaning: 'v. 反对', breakdown: 'op- (反) + pose (放)', example: 'oppose the decision', status: 'new' },
+      { word: 'dispose', phonetic: '/dɪˈspəʊz/', meaning: 'v. 处理；处置', breakdown: 'dis- (分开) + pose (放)', example: 'dispose of waste', status: 'new' },
+    ]
+  },
+  {
+    type: 'root',
+    root: '-tain-',
+    meaning: '保持, 持有',
+    words: [
+      { word: 'contain', phonetic: '/kənˈteɪn/', meaning: 'v. 包含；容纳', breakdown: 'con- (共同) + tain (保持)', example: 'The box contains books.', status: 'new' },
+      { word: 'maintain', phonetic: '/meɪnˈteɪn/', meaning: 'v. 维持；保养', breakdown: 'main (手) + tain (保持)', example: 'maintain good health', status: 'new' },
+      { word: 'obtain', phonetic: '/əbˈteɪn/', meaning: 'v. 获得；得到', breakdown: 'ob- (向) + tain (持有)', example: 'obtain permission', status: 'new' },
+      { word: 'retain', phonetic: '/rɪˈteɪn/', meaning: 'v. 保留；保持', breakdown: 're- (回) + tain (保持)', example: 'retain customers', status: 'new' },
+      { word: 'sustain', phonetic: '/səˈsteɪn/', meaning: 'v. 维持；支撑', breakdown: 'sus- (下) + tain (保持)', example: 'sustain economic growth', status: 'new' },
+      { word: 'entertain', phonetic: '/ˌentəˈteɪn/', meaning: 'v. 娱乐；招待', breakdown: 'enter- (在…中) + tain (保持)', example: 'entertain guests', status: 'new' },
+    ]
+  },
+  {
+    type: 'root',
+    root: '-form-',
+    meaning: '形状, 形式',
+    words: [
+      { word: 'reform', phonetic: '/rɪˈfɔːm/', meaning: 'v./n. 改革', breakdown: 're- (再) + form (形状)', example: 'economic reform', status: 'new' },
+      { word: 'transform', phonetic: '/trænsˈfɔːm/', meaning: 'v. 转变；改造', breakdown: 'trans- (跨越) + form (形状)', example: 'transform the industry', status: 'new' },
+      { word: 'perform', phonetic: '/pəˈfɔːm/', meaning: 'v. 表演；执行', breakdown: 'per- (完全) + form (形状)', example: 'perform on stage', status: 'new' },
+      { word: 'uniform', phonetic: '/ˈjuːnɪfɔːm/', meaning: 'n. 制服 adj. 一致的', breakdown: 'uni- (一) + form (形式)', example: 'school uniform', status: 'new' },
+      { word: 'inform', phonetic: '/ɪnˈfɔːm/', meaning: 'v. 通知；告知', breakdown: 'in- (入) + form (形状)', example: 'inform the public', status: 'new' },
+      { word: 'platform', phonetic: '/ˈplætfɔːm/', meaning: 'n. 平台；站台', breakdown: 'plat (平) + form (形状)', example: 'online platform', status: 'new' },
+    ]
+  },
+  {
+    type: 'suffix',
+    root: '-able / -ible',
+    meaning: '可…的, 能…的',
+    words: [
+      { word: 'capable', phonetic: '/ˈkeɪpəbəl/', meaning: 'adj. 有能力的', breakdown: 'cap (抓住) + -able (可)', example: 'a capable leader', status: 'new' },
+      { word: 'flexible', phonetic: '/ˈfleksəbəl/', meaning: 'adj. 灵活的', breakdown: 'flex (弯曲) + -ible (可)', example: 'flexible schedule', status: 'new' },
+      { word: 'accessible', phonetic: '/ækˈsesəbəl/', meaning: 'adj. 可接近的', breakdown: 'access (接近) + -ible (可)', example: 'accessible to all', status: 'new' },
+      { word: 'portable', phonetic: '/ˈpɔːtəbəl/', meaning: 'adj. 便携的', breakdown: 'port (携带) + -able (可)', example: 'portable charger', status: 'new' },
+      { word: 'visible', phonetic: '/ˈvɪzəbəl/', meaning: 'adj. 可见的', breakdown: 'vis (看) + -ible (可)', example: 'clearly visible', status: 'new' },
+      { word: 'responsible', phonetic: '/rɪˈspɒnsəbəl/', meaning: 'adj. 负责的', breakdown: 'response (回应) + -ible', example: 'be responsible for', status: 'new' },
+    ]
+  },
+  {
+    type: 'suffix',
+    root: '-tion / -sion',
+    meaning: '名词后缀 (行为/状态)',
+    words: [
+      { word: 'education', phonetic: '/ˌedjʊˈkeɪʃən/', meaning: 'n. 教育', breakdown: 'educate + -ion', example: 'higher education', status: 'new' },
+      { word: 'information', phonetic: '/ˌɪnfəˈmeɪʃən/', meaning: 'n. 信息', breakdown: 'inform + -ation', example: 'useful information', status: 'new' },
+      { word: 'discussion', phonetic: '/dɪˈskʌʃən/', meaning: 'n. 讨论', breakdown: 'discuss + -ion', example: 'have a discussion', status: 'new' },
+      { word: 'decision', phonetic: '/dɪˈsɪʒən/', meaning: 'n. 决定', breakdown: 'decide + -sion', example: 'make a decision', status: 'new' },
+      { word: 'impression', phonetic: '/ɪmˈpreʃən/', meaning: 'n. 印象', breakdown: 'impress + -ion', example: 'first impression', status: 'new' },
+      { word: 'conclusion', phonetic: '/kənˈkluːʒən/', meaning: 'n. 结论', breakdown: 'conclude + -sion', example: 'draw a conclusion', status: 'new' },
+    ]
+  },
+  {
+    type: 'suffix',
+    root: '-ment',
+    meaning: '名词后缀 (行为/结果)',
+    words: [
+      { word: 'achievement', phonetic: '/əˈtʃiːvmənt/', meaning: 'n. 成就', breakdown: 'achieve + -ment', example: 'great achievement', status: 'new' },
+      { word: 'development', phonetic: '/dɪˈveləpmənt/', meaning: 'n. 发展', breakdown: 'develop + -ment', example: 'economic development', status: 'new' },
+      { word: 'environment', phonetic: '/ɪnˈvaɪrənmənt/', meaning: 'n. 环境', breakdown: 'environ + -ment', example: 'protect the environment', status: 'new' },
+      { word: 'government', phonetic: '/ˈɡʌvənmənt/', meaning: 'n. 政府', breakdown: 'govern + -ment', example: 'local government', status: 'new' },
+      { word: 'improvement', phonetic: '/ɪmˈpruːvmənt/', meaning: 'n. 改善', breakdown: 'improve + -ment', example: 'continuous improvement', status: 'new' },
+      { word: 'management', phonetic: '/ˈmænɪdʒmənt/', meaning: 'n. 管理', breakdown: 'manage + -ment', example: 'time management', status: 'new' },
+    ]
+  },
+];
+
+// ============ STATE ============
+let currentCategoryIndex = 0;
+let currentWordIndex = 0;
+let currentMode = 'flashcard';
+let wordStatuses = JSON.parse(localStorage.getItem('vocab_statuses') || '{}');
+
+// Initialize statuses from data
+vocabularyData.forEach(cat => {
+  cat.words.forEach(w => {
+    if (!(w.word in wordStatuses)) {
+      wordStatuses[w.word] = w.status;
+    }
+    w.status = wordStatuses[w.word];
+  });
+});
+
+function saveStatuses() {
+  vocabularyData.forEach(cat => {
+    cat.words.forEach(w => {
+      wordStatuses[w.word] = w.status;
+    });
+  });
+  localStorage.setItem('vocab_statuses', JSON.stringify(wordStatuses));
+}
+
+function getCategoryStats(cat) {
+  let known = 0, learning = 0;
+  cat.words.forEach(w => {
+    if (w.status === 'known') known++;
+    else if (w.status === 'learning') learning++;
+  });
+  return { known, learning, total: cat.words.length, newCount: cat.words.length - known - learning };
+}
+
+function getAllStats() {
+  let known = 0, learning = 0, total = 0;
+  vocabularyData.forEach(cat => {
+    const s = getCategoryStats(cat);
+    known += s.known;
+    learning += s.learning;
+    total += s.total;
+  });
+  return { known, learning, total };
+}
+
+// ============ RENDER ============
+function renderSidebar() {
+  const nav = document.getElementById('categoryNav');
+  const typeLabels = { prefix: '前缀', root: '词根', suffix: '后缀' };
+  let html = '';
+  let currentType = '';
+
+  vocabularyData.forEach((cat, idx) => {
+    if (cat.type !== currentType) {
+      currentType = cat.type;
+      html += `<div class="category-group"><div class="category-group-title">${typeLabels[currentType]}</div>`;
+    }
+    const stats = getCategoryStats(cat);
+    html += `
+      <div class="category-item ${idx === currentCategoryIndex ? 'active' : ''}" onclick="selectCategory(${idx})">
+        <div class="root-icon">${cat.root.replace(/[-/]/g, '')}</div>
+        <div class="root-info">
+          <div class="root-name">${cat.root}</div>
+          <div class="root-meaning">${cat.meaning}</div>
+        </div>
+        <div class="word-count">${stats.total}</div>
+      </div>`;
+  });
+
+  nav.innerHTML = html + '</div>';
+}
+
+function updateStats() {
+  const stats = getAllStats();
+  const pct = stats.total > 0 ? Math.round((stats.known / stats.total) * 100) : 0;
+  document.getElementById('progressPercent').textContent = pct + '%';
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('statKnown').textContent = stats.known;
+  document.getElementById('statLearning').textContent = stats.learning;
+  document.getElementById('statTotal').textContent = stats.total;
+}
+
+function updateTopBar() {
+  const cat = vocabularyData[currentCategoryIndex];
+  const typeLabels = { prefix: '前缀', root: '词根', suffix: '后缀' };
+  document.getElementById('currentCategoryLabel').innerHTML = `
+    ${typeLabels[cat.type]} <span class="meaning">${cat.root} (${cat.meaning})</span>`;
+}
+
+function renderCard() {
+  const cat = vocabularyData[currentCategoryIndex];
+  const word = cat.words[currentWordIndex];
+  const cardInner = document.getElementById('cardInner');
+  cardInner.classList.remove('flipped');
+
+  document.getElementById('cardWord').textContent = word.word;
+  document.getElementById('cardPhonetic').textContent = word.phonetic;
+  document.getElementById('cardMeaning').textContent = word.meaning;
+  document.getElementById('cardRootRef').textContent = word.breakdown;
+  document.getElementById('cardExample').textContent = word.example;
+  document.getElementById('cardCounter').textContent = `${currentWordIndex + 1} / ${cat.words.length}`;
+}
+
+function renderGrid() {
+  const cat = vocabularyData[currentCategoryIndex];
+  const grid = document.getElementById('gridArea');
+  grid.innerHTML = cat.words.map((w, i) => {
+    const statusClass = w.status === 'known' ? 'known' : w.status === 'learning' ? 'learning' : 'new';
+    return `
+      <div class="grid-card" onclick="currentWordIndex=${i}; switchMode('flashcard'); renderCard();">
+        <div class="status-dot ${statusClass}"></div>
+        <div class="word">${w.word}</div>
+        <div class="phonetic">${w.phonetic}</div>
+        <div class="meaning-zh">${w.meaning}</div>
+        <div style="font-size:11px;color:var(--amber-dim);margin-top:6px;font-family:var(--font-mono)">${w.breakdown}</div>
+      </div>`;
+  }).join('');
+}
+
+function switchMode(mode) {
+  currentMode = mode;
+  document.querySelectorAll('.mode-tab').forEach(t => t.classList.remove('active'));
+  document.querySelector(`[data-mode="${mode}"]`).classList.add('active');
+  document.getElementById('flashcardArea').style.display = mode === 'flashcard' ? 'flex' : 'none';
+  document.getElementById('gridArea').style.display = mode === 'grid' ? 'grid' : 'none';
+  if (mode === 'flashcard') renderCard();
+  if (mode === 'grid') renderGrid();
+}
+
+function selectCategory(idx) {
+  currentCategoryIndex = idx;
+  currentWordIndex = 0;
+  updateTopBar();
+  renderSidebar();
+  if (currentMode === 'flashcard') renderCard();
+  if (currentMode === 'grid') renderGrid();
+}
+
+function flipCard() {
+  document.getElementById('cardInner').classList.toggle('flipped');
+}
+
+function prevCard(e) {
+  e.stopPropagation();
+  const cat = vocabularyData[currentCategoryIndex];
+  currentWordIndex = (currentWordIndex - 1 + cat.words.length) % cat.words.length;
+  renderCard();
+}
+
+function nextCard(e) {
+  e.stopPropagation();
+  const cat = vocabularyData[currentCategoryIndex];
+  currentWordIndex = (currentWordIndex + 1) % cat.words.length;
+  renderCard();
+}
+
+function markWord(status, e) {
+  e.stopPropagation();
+  const cat = vocabularyData[currentCategoryIndex];
+  const word = cat.words[currentWordIndex];
+  word.status = status;
+  saveStatuses();
+  updateStats();
+  renderSidebar();
+  showToast(status === 'known' ? `✓ "${word.word}" 已标记为掌握` : `⟳ "${word.word}" 标记为学习中`);
+}
+
+function showToast(msg) {
+  const toast = document.getElementById('toast');
+  toast.textContent = msg;
+  toast.classList.add('show');
+  clearTimeout(toast._timeout);
+  toast._timeout = setTimeout(() => toast.classList.remove('show'), 2000);
+}
+
+// Keyboard shortcuts
+document.addEventListener('keydown', (e) => {
+  if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+  switch (e.key) {
+    case 'ArrowLeft': prevCard(e); break;
+    case 'ArrowRight': nextCard(e); break;
+    case ' ': e.preventDefault(); flipCard(); break;
+    case '1': markWord('known', e); break;
+    case '2': markWord('learning', e); break;
+  }
+});
+
+// ============ INIT ============
+renderSidebar();
+updateStats();
+updateTopBar();
+renderCard();
+</script>
+</body>
+</html>
