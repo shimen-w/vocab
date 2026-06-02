@@ -114,6 +114,21 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 .mode-tab:hover{color:var(--text-primary)}
 .mode-tab.active{background:rgba(226,168,71,0.15);color:var(--gold-bright)}
 
+/* Global search */
+.global-search{position:relative;flex:1;max-width:260px;margin-right:8px}
+.global-sinp{width:100%;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:var(--r-sm);padding:5px 8px 5px 8px;color:var(--text-primary);font-family:var(--ff-ui);font-size:11.5px;outline:none;transition:all var(--t-s)}
+.global-sinp:focus{border-color:var(--gold-border2);background:rgba(226,168,71,0.04);box-shadow:0 0 8px rgba(226,168,71,0.08)}
+.global-sinp::placeholder{color:var(--text-muted)}
+.global-results{position:absolute;top:100%;left:0;right:0;max-height:320px;overflow-y:auto;background:var(--bg-card);border:1px solid var(--gold-border);border-radius:var(--r-sm);margin-top:4px;z-index:50;box-shadow:0 8px 24px rgba(0,0,0,0.5)}
+.global-results::-webkit-scrollbar{width:3px}
+.global-results::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.08);border-radius:2px}
+.gres-item{display:flex;align-items:center;justify-content:space-between;padding:7px 11px;cursor:pointer;font-size:12px;border-bottom:1px solid rgba(255,255,255,0.04);transition:all var(--t-s)}
+.gres-item:hover{background:rgba(226,168,71,0.08)}
+.gres-item .gr-word{font-family:var(--ff-display);color:var(--gold-bright);font-weight:600;font-size:13px;min-width:80px}
+.gres-item .gr-meaning{color:var(--text-sec);flex:1;margin:0 8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:11px}
+.gres-item .gr-loc{color:var(--text-muted);font-size:9px;white-space:nowrap}
+.gres-empty{padding:12px;text-align:center;color:var(--text-muted);font-size:11px}
+
 /* ---- STUDY AREA ---- */
 .study-content{flex:1;position:relative;overflow:hidden;transition:opacity .2s ease,transform .2s ease}
 .study-content.fading{opacity:0;transform:translateY(6px)}
@@ -278,6 +293,10 @@ kbd.active-key{border-color:var(--gold);background:rgba(226,168,71,0.15);color:v
     <div class="toolbar">
       <div class="breadcrumb" id="breadcrumb">
         <span class="bc-section">词根词缀法</span><span class="bc-sep">/</span><span class="bc-cat">pre- (前, 预先)</span>
+      </div>
+      <div class="global-search" id="globalSearchWrap">
+        <input class="global-sinp" id="globalSearch" type="text" placeholder="🔍 搜索单词..." autocomplete="off" oninput="searchGlobal()" onfocus="searchGlobal()">
+        <div class="global-results" id="globalResults" style="display:none"></div>
       </div>
       <div class="mode-tabs">
         <button class="mode-tab active" data-mode="flashcard" onclick="switchMode('flashcard')">卡片记忆</button>
@@ -3500,7 +3519,57 @@ document.addEventListener('keydown',function(e){
   else if(e.key==='2') markWord('learning',e);
 });
 
+// ============ GLOBAL SEARCH ============
+let searchIndex=[];
+function buildSearchIndex(){
+  searchIndex=[];
+  for(const sid of Object.keys(sections)){
+    const cats=sections[sid].categories;
+    for(let ci=0;ci<cats.length;ci++){
+      const words=cats[ci].words;
+      for(let wi=0;wi<words.length;wi++){
+        const w=words[wi];
+        searchIndex.push({section:sid,label:sections[sid].label,catIdx:ci,wordIdx:wi,word:w.word,meaning:w.meaning,phonetic:w.phonetic});
+      }
+    }
+  }
+}
+function searchGlobal(){
+  const q=(document.getElementById('globalSearch').value||'').trim().toLowerCase();
+  const res=document.getElementById('globalResults');
+  if(!q){res.style.display='none';return;}
+  const matches=searchIndex.filter(e=>e.word.toLowerCase().includes(q)||(e.meaning||'').toLowerCase().includes(q)).slice(0,30);
+  if(matches.length===0){res.innerHTML='<div class="gres-empty">未找到匹配单词</div>';res.style.display='';return;}
+  res.innerHTML=matches.map(e=>`<div class="gres-item" onclick="navigateToWord('${e.section}',${e.catIdx},${e.wordIdx})">
+    <span class="gr-word">${e.word}</span>
+    <span class="gr-meaning">${e.meaning||''}</span>
+    <span class="gr-loc">${e.label} ›</span>
+  </div>`).join('');
+  res.style.display='';
+}
+function navigateToWord(sid,catIdx,wordIdx){
+  if(currentSection!==sid) switchSection(sid);
+  selectCategory(catIdx);
+  currentWordIndex=wordIdx;
+  buildFilteredWords();
+  // Find in filteredWords
+  const cat=currentCategory();
+  const w=cat.words[wordIdx];
+  const found=filteredWords.findIndex(fw=>fw.word===w.word);
+  filteredIdx=found>=0?found:0;
+  if(currentMode!=='flashcard') switchMode('flashcard');
+  else renderCard();
+  document.getElementById('globalResults').style.display='none';
+  document.getElementById('globalSearch').value='';
+}
+// Close search on outside click
+document.addEventListener('click',function(e){
+  const wrap=document.getElementById('globalSearchWrap');
+  if(wrap&&!wrap.contains(e.target)) document.getElementById('globalResults').style.display='none';
+});
+
 // ============ INIT ============
+buildSearchIndex();
 loadStatuses();
 initStatuses();
 updateSidebarHeader();
