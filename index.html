@@ -366,7 +366,7 @@ kbd.active-key{border-color:var(--gold);background:rgba(226,168,71,0.15);color:v
                 <div class="card-word" id="cardWord">preview</div>
                 <div class="card-ph-row">
                   <div class="card-phonetic" id="cardPhonetic">/ˈpriːvjuː/</div>
-                  <button class="speak-btn" id="speakBtn" onclick="speakWord(event)" title="朗读">🔊</button>
+                  <button class="speak-btn" id="speakBtn" onclick="event.stopPropagation();speakWord(event)" title="朗读">🔊</button>
                 </div>
                 <div class="card-hint">点击翻转查看释义</div>
               </div>
@@ -376,7 +376,7 @@ kbd.active-key{border-color:var(--gold);background:rgba(226,168,71,0.15);color:v
                 <div class="card-root-ref" id="cardRootRef">pre- (前) + view (看)</div>
                 <div class="card-ex-row">
                   <div class="card-example" id="cardExample">Preview the chapter before class.</div>
-                  <button class="ex-speak-btn" onclick="speakExample(event)" title="朗读例句">🔊</button>
+                  <button class="ex-speak-btn" onclick="event.stopPropagation();speakExample(event)" title="朗读例句">🔊</button>
                 </div>
               </div>
             </div>
@@ -412,7 +412,7 @@ kbd.active-key{border-color:var(--gold);background:rgba(226,168,71,0.15);color:v
       <!-- SPELLING MODE -->
       <div class="spelling-area" id="spellingArea" style="display:none">
         <div class="spell-card">
-          <div class="spell-speaker" onclick="speakSpellWord(event)">🔊 <span>点击听发音</span></div>
+          <div class="spell-speaker" onclick="event.stopPropagation();speakSpellWord(event)">🔊 <span>点击听发音</span></div>
           <div class="spell-meaning" id="spellMeaning">-</div>
           <div class="spell-hint" id="spellHint"></div>
           <div class="spell-input-row">
