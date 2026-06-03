@@ -169,6 +169,7 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 .card-ex-row{display:flex;align-items:center;justify-content:center;gap:6px;margin-top:12px}
 .ex-speak-btn{background:none;border:none;cursor:pointer;color:var(--text-muted);font-size:12px;padding:2px 4px;border-radius:4px;transition:all var(--t-s);flex-shrink:0;opacity:.6}
 .ex-speak-btn:hover{color:var(--gold);opacity:1;background:rgba(226,168,71,0.1)}
+.card-ex-cn{font-size:12px;color:var(--gold-dim);margin-top:4px;text-align:center;line-height:1.4}
 
 .card-nav{display:flex;align-items:center;gap:18px}
 .nav-btn{width:40px;height:40px;border-radius:50%;border:1px solid var(--gold-border);background:var(--bg-surface);color:var(--text-sec);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:16px;transition:all var(--t-b)}
@@ -3548,7 +3549,7 @@ function renderCard() {
     document.getElementById('cardPhonetic').textContent='';
     document.getElementById('cardMeaning').textContent='本分类下无符合条件的单词';
     document.getElementById('cardRootRef').style.display='none';
-    document.getElementById('cardExample').textContent='';
+    document.getElementById('cardExample').innerHTML='';
     document.getElementById('cardCounter').textContent='0 / 0';
     document.getElementById('dotFront').className='card-status-dot new';
     document.getElementById('dotBack').className='card-status-dot new';
@@ -3562,7 +3563,7 @@ function renderCard() {
   document.getElementById('cardMeaning').textContent=word.meaning||'释义待补充';
   const ref=document.getElementById('cardRootRef');
   if(word.breakdown){ref.textContent=word.breakdown;ref.style.display='';}else{ref.style.display='none';}
-  document.getElementById('cardExample').textContent=word.example||'';
+  document.getElementById('cardExample').innerHTML=(word.example||'')+'<div class="card-ex-cn">'+translateExample(word.example,word.meaning)+'</div>';
   document.getElementById('cardCounter').textContent=(filteredIdx+1)+' / '+filteredWords.length;
   const sc=word.status==='known'?'known':word.status==='learning'?'learning':'new';
   document.getElementById('dotFront').className='card-status-dot '+sc;
@@ -3648,6 +3649,40 @@ function speakWord(e){
     u.onerror=()=>btn.classList.remove('speaking');
     window.speechSynthesis.speak(u);
   }
+}
+
+function translateExample(ex, meaning){
+  if(!ex) return '';
+  var w=meaning||'';
+  var tpls=[
+    ['X is important.', 'X很重要。'],
+    ['We talked about X.', '我们讨论了X。'],
+    ['The X of this is clear.', '这个X的用法很清楚。'],
+    ['We need to X.', '我们需要X。'],
+    ['They X it every day.', '他们每天都X。'],
+    ['She tried to X the problem.', '她试着用X解决这个问题。'],
+    ['This is very X.', '这非常X。'],
+    ['It was a X experience.', '这是一次X的经历。'],
+    ['They found it X.', '他们发现这很X。'],
+    ['She did it X.', '她X地做了这件事。'],
+    ['They X agreed.', '他们X地同意了。'],
+    ['We often use "X".', '我们常用X这个词。'],
+    ['The X is important.', 'X很重要。'],
+    ['X is important.', 'X很重要。'],
+    ['X was surprising.', 'X令人惊讶。'],
+  ];
+  for(var i=0;i<tpls.length;i++){
+    var pat=tpls[i][0], cn=tpls[i][1];
+    var esc=pat.replace(/[.*+?^${}()|[\]\]/g,'\$&');
+    var re=new RegExp('^'+esc.replace('X','(.+?)')+'$');
+    var m=ex.match(re);
+    if(m){return cn.replace('X','<b>'+m[1]+'</b>');}
+  }
+  if(w){
+    var words=ex.replace(/[.,!?]/g,'').split(' ').slice(0,3).join(' ');
+    return '例句大意: 涉及"'+words+'"';
+  }
+  return '';
 }
 
 function speakExample(e){
