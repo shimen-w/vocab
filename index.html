@@ -3744,7 +3744,7 @@ function showSpellWord(){
   }
   const w=spellWords[spellIndex];
   document.getElementById('spellMeaning').textContent=w.meaning||w.word;
-  document.getElementById('spellHint').textContent=w.breakdown||'';
+  document.getElementById('spellHint').textContent='';
   document.getElementById('spellResult').textContent='';
   document.getElementById('spellResult').className='spell-result';
   document.getElementById('spellStats').textContent=`正确 ${spellCorrect} / 总 ${spellTotal}${spellTotal>0?' ('+Math.round(spellCorrect/spellTotal*100)+'%)':''}`;
