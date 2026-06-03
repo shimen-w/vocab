@@ -166,6 +166,9 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 .card-meaning{font-family:var(--ff-display);font-size:26px;color:var(--text-primary);text-align:center;line-height:1.65;max-width:100%}
 .card-root-ref{font-size:13px;color:var(--gold-dim);margin-top:12px;font-family:var(--ff-mono);text-align:center;background:rgba(226,168,71,0.07);border:1px solid var(--gold-border);padding:4px 12px;border-radius:18px}
 .card-example{font-size:14px;color:var(--text-muted);margin-top:12px;text-align:center;font-style:italic;line-height:1.55;max-width:88%}
+.card-ex-row{display:flex;align-items:center;justify-content:center;gap:6px;margin-top:12px}
+.ex-speak-btn{background:none;border:none;cursor:pointer;color:var(--text-muted);font-size:12px;padding:2px 4px;border-radius:4px;transition:all var(--t-s);flex-shrink:0;opacity:.6}
+.ex-speak-btn:hover{color:var(--gold);opacity:1;background:rgba(226,168,71,0.1)}
 
 .card-nav{display:flex;align-items:center;gap:18px}
 .nav-btn{width:40px;height:40px;border-radius:50%;border:1px solid var(--gold-border);background:var(--bg-surface);color:var(--text-sec);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:16px;transition:all var(--t-b)}
@@ -354,7 +357,10 @@ kbd.active-key{border-color:var(--gold);background:rgba(226,168,71,0.15);color:v
                 <div class="card-status-dot new" id="dotBack"></div>
                 <div class="card-meaning" id="cardMeaning">n./v. 预览；预习</div>
                 <div class="card-root-ref" id="cardRootRef">pre- (前) + view (看)</div>
-                <div class="card-example" id="cardExample">Preview the chapter before class.</div>
+                <div class="card-ex-row">
+                  <div class="card-example" id="cardExample">Preview the chapter before class.</div>
+                  <button class="ex-speak-btn" onclick="speakExample(event)" title="朗读例句">🔊</button>
+                </div>
               </div>
             </div>
           </div>
@@ -3640,6 +3646,20 @@ function speakWord(e){
     btn.classList.add('speaking');
     u.onend=()=>btn.classList.remove('speaking');
     u.onerror=()=>btn.classList.remove('speaking');
+    window.speechSynthesis.speak(u);
+  }
+}
+
+function speakExample(e){
+  e&&e.stopPropagation();
+  if(filteredWords.length===0) return;
+  var word=filteredWords[filteredIdx];
+  var text=word&&word.example?word.example:'';
+  if(!text) return;
+  if('speechSynthesis' in window){
+    window.speechSynthesis.cancel();
+    var u=new SpeechSynthesisUtterance(text);
+    u.lang='en-US';u.rate=0.8;
     window.speechSynthesis.speak(u);
   }
 }
