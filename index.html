@@ -343,6 +343,8 @@ kbd.active-key{border-color:var(--gold);background:rgba(226,168,71,0.15);color:v
         <button class="quick-btn" id="continueBtn" onclick="continueLastSession()">&#32487;&#32493;&#19978;&#27425;&#23398;&#20064;</button>
         <button class="quick-btn" onclick="startTodayReview()">&#20170;&#26085;&#24453;&#22797;&#20064; <span class="quick-count" id="todayReviewCount">0</span></button>
         <button class="quick-btn" onclick="startWrongWordReview()">&#38169;&#35789;&#21548;&#20889; <span class="quick-count" id="wrongReviewCount">0</span></button>
+        <button class="quick-btn" onclick="exportStudyProgress()">&#23548;&#20986;&#36827;&#24230;</button>
+        <button class="quick-btn" onclick="triggerImportProgress()">&#23548;&#20837;&#36827;&#24230;</button>
       </div>
     </div>
     <div class="study-content" id="studyContent">
@@ -425,6 +427,7 @@ kbd.active-key{border-color:var(--gold);background:rgba(226,168,71,0.15);color:v
 </div>
 <button class="mobile-btn" onclick="toggleSidebar()">&#9776;</button>
 <div class="toast" id="toast"></div>
+<input id="progressImportInput" type="file" accept="application/json" style="display:none">
 
 <script>
 const sections = {
@@ -3346,6 +3349,30 @@ const WORD_PATCHES = {
   zoo: { meaning: 'n. 动物园' }
 };
 
+const WORD_PATCHES_STABLE = {
+  description: { meaning: '\u006e\u002e \u63cf\u5199\uff1b\u5f62\u5bb9\uff1b\u8bf4\u660e', exampleCn: '\u8fd9\u4efd\u4ea7\u54c1\u63cf\u8ff0\u6e05\u6670\u7b80\u6d01\u3002' },
+  blame: { exampleCn: '\u4e0d\u8981\u56e0\u4e3a\u4f60\u7684\u9519\u8bef\u8d23\u602a\u6211\u3002' },
+  distinction: { exampleCn: '\u5bf9\u4e0e\u9519\u4e4b\u95f4\u6709\u660e\u663e\u533a\u522b\u3002' },
+  assumption: { exampleCn: '\u4ed6\u7684\u7406\u8bba\u5efa\u7acb\u5728\u4e00\u4e2a\u9519\u8bef\u7684\u5047\u8bbe\u4e4b\u4e0a\u3002' },
+  substantial: { meaning: '\u0061\u0064\u006a\u002e \u5927\u91cf\u7684\uff1b\u91cd\u5927\u7684\uff1b\u5b9e\u8d28\u6027\u7684', exampleCn: '\u8fd9\u4e2a\u6708\u6211\u4eec\u53d6\u5f97\u4e86\u5b9e\u8d28\u6027\u7684\u8fdb\u5c55\u3002' },
+  remarkable: { exampleCn: '\u5979\u7684\u82f1\u8bed\u8fdb\u6b65\u975e\u5e38\u663e\u8457\u3002' },
+  spell: { meaning: '\u0076\u002e \u62fc\u5199\uff1b\u62fc\u6210' },
+  today: { meaning: '\u0061\u0064\u0076\u002e \u5728\u4eca\u5929\uff1b\u5982\u4eca' },
+  you: { meaning: '\u0070\u0072\u006f\u006e\u002e \u4f60\uff1b\u4f60\u4eec' },
+  young: { meaning: '\u0061\u0064\u006a\u002e \u5e74\u8f7b\u7684' },
+  your: { meaning: '\u0070\u0072\u006f\u006e\u002e \u4f60\u7684\uff1b\u4f60\u4eec\u7684' },
+  yours: { meaning: '\u0070\u0072\u006f\u006e\u002e \u4f60\u7684\uff1b\u4f60\u4eec\u7684' },
+  yourself: { meaning: '\u0070\u0072\u006f\u006e\u002e \u4f60\u81ea\u5df1' },
+  zoo: { meaning: '\u006e\u002e \u52a8\u7269\u56ed' },
+  review: { exampleCn: '\u6bcf\u5929\u590d\u4e60\u4f60\u7684\u7b14\u8bb0\u3002' },
+  carbon: { exampleCn: '\u4e8c\u6c27\u5316\u78b3\u662f\u6e29\u5ba4\u6c14\u4f53\u3002' },
+  concern: { exampleCn: '\u8fd9\u4e2a\u95ee\u9898\u5173\u4e4e\u6240\u6709\u4eba\u3002' },
+  religion: { exampleCn: '\u4eba\u4eec\u7684\u5b97\u6559\u4fe1\u4ef0\u5404\u4e0d\u76f8\u540c\u3002' },
+  urban: { exampleCn: '\u8d8a\u6765\u8d8a\u591a\u4eba\u53e3\u6d8c\u5165\u57ce\u5e02\u3002' },
+  turn: { exampleCn: '\u5929\u6c14\u9aa4\u7136\u8f6c\u51b7\u3002' },
+  chain: { exampleCn: '\u8fd9\u7247\u5c71\u8109\u8fde\u7ef5\u8d77\u4f0f\u3002' }
+};
+
 function currentCategory() { return sections[currentSection].categories[currentCategoryIndex]; }
 
 // ============ STORAGE ============
@@ -3382,9 +3409,69 @@ function applyWordPatches(){
       for(const w of cat.words){
         const patch=WORD_PATCHES[w.word];
         if(patch) Object.assign(w,patch);
+        const stablePatch=WORD_PATCHES_STABLE[w.word];
+        if(stablePatch) Object.assign(w,stablePatch);
       }
     }
   }
+}
+function exportStudyProgress(){
+  const payload={
+    exportedAt:new Date().toISOString(),
+    version:1,
+    statuses:wordStatuses,
+    spellingErrors:spellingErrors,
+    session:lastSession
+  };
+  const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;
+  a.download='vocab-progress-'+todayStr()+'.json';
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+  showToast('\u5df2\u5bfc\u51fa\u5b66\u4e60\u8fdb\u5ea6');
+}
+function triggerImportProgress(){
+  const input=document.getElementById('progressImportInput');
+  if(!input) return;
+  input.value='';
+  input.click();
+}
+function importStudyProgress(file){
+  if(!file) return;
+  const reader=new FileReader();
+  reader.onload=function(){
+    try{
+      const data=JSON.parse(reader.result);
+      if(data.statuses && typeof data.statuses==='object'){
+        wordStatuses=data.statuses;
+        localStorage.setItem('vocab_statuses_v2',JSON.stringify(wordStatuses));
+      }
+      if(data.spellingErrors && typeof data.spellingErrors==='object'){
+        spellingErrors=data.spellingErrors;
+        localStorage.setItem('spelling_errors',JSON.stringify(spellingErrors));
+      }
+      if(data.session && typeof data.session==='object'){
+        lastSession=data.session;
+        localStorage.setItem(SESSION_KEY,JSON.stringify(lastSession));
+      }
+      initStatuses();
+      updateSidebarHeader();
+      renderSidebar();
+      updateStats();
+      updateBreadcrumb();
+      buildFilteredWords();
+      if(!restoreLastSession(false)) renderCard();
+      updateQuickActionState();
+      showToast('\u5df2\u5bfc\u5165\u5b66\u4e60\u8fdb\u5ea6');
+    }catch(e){
+      showToast('\u5bfc\u5165\u5931\u8d25\uff0c\u8bf7\u68c0\u67e5 JSON \u6587\u4ef6');
+    }
+  };
+  reader.readAsText(file,'utf-8');
 }
 // SM-2 复习间隔（天）
 function getReviewInterval(reviewCount){return[1,2,4,7,15,30][Math.min(reviewCount,5)];}
@@ -3962,6 +4049,10 @@ function checkSpelling(){
 
 // Enter key to submit spelling
 document.getElementById('spellInput').addEventListener('keydown',function(e){if(e.key==='Enter')checkSpelling();});
+document.getElementById('progressImportInput').addEventListener('change',function(e){
+  const file=e.target.files&&e.target.files[0];
+  if(file) importStudyProgress(file);
+});
 
 // ============ KEYBOARD ============
 const KMAP={ArrowLeft:'kL',ArrowRight:'kR',' ':'kSp','1':'k1','2':'k2'};
