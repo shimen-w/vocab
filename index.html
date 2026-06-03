@@ -3730,9 +3730,16 @@ function toggleSidebar(){document.getElementById('sidebar').classList.toggle('op
 // ============ SPELLING ============
 function speakSpellWord(e){e&&e.stopPropagation();if(spellWords.length===0)return;const w=spellWords[spellIndex];if(!w)return;if('speechSynthesis' in window){window.speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(w.word);u.lang='en-US';u.rate=0.8;window.speechSynthesis.speak(u);}}
 
+function setSpellFilter(f){
+  spellFilter=f;
+  var btns=document.querySelectorAll('#spellFilterRow .gfbtn');
+  for(var i=0;i<btns.length;i++) btns[i].classList.toggle('active',btns[i].dataset.sf===f);
+  renderSpelling();
+}
+
 function renderSpelling(){
   const cat=currentCategory();
-  spellWords=cardFilter==='all'?[...cat.words]:cat.words.filter(w=>w.status===cardFilter);
+  spellWords=spellFilter==='all'?[...cat.words]:cat.words.filter(w=>w.status===spellFilter);
   if(spellWords.length===0){document.getElementById('spellMeaning').textContent='无单词';return;}
   // Shuffle
   for(let i=spellWords.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[spellWords[i],spellWords[j]]=[spellWords[j],spellWords[i]];}
