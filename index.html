@@ -3373,6 +3373,30 @@ const WORD_PATCHES_STABLE = {
   chain: { exampleCn: '\u8fd9\u7247\u5c71\u8109\u8fde\u7ef5\u8d77\u4f0f\u3002' }
 };
 
+const UI_TEXT = {
+  noWords: '\u65e0\u5355\u8bcd',
+  noMatchingWords: '\u672c\u5206\u7c7b\u4e0b\u65e0\u7b26\u5408\u6761\u4ef6\u7684\u5355\u8bcd',
+  reviewDone: '\u4eca\u65e5\u590d\u4e60\u5b8c\u6210',
+  reviewDoneDesc: '\u5f53\u524d\u5206\u7c7b\u7684\u5f85\u590d\u4e60\u5355\u8bcd\u5df2\u5168\u90e8\u5b8c\u6210',
+  meaningPending: '\u91ca\u4e49\u5f85\u8865\u5145',
+  correct: '\u6b63\u786e',
+  total: '\u603b',
+  allDone: '\u5168\u90e8\u5b8c\u6210',
+  correctAnswer: '\u6b63\u786e\u7b54\u6848',
+  mastered: '\u5df2\u638c\u63e1',
+  nextReview: '\u4e0b\u6b21\u590d\u4e60',
+  reviewReset: '\u590d\u4e60\u91cd\u7f6e',
+  veryImportant: '\u5f88\u91cd\u8981\u3002',
+  discussed: '\u6211\u4eec\u8ba8\u8bba\u4e86',
+  needTo: '\u6211\u4eec\u9700\u8981',
+  everyDay: '\u4ed6\u4eec\u6bcf\u5929\u90fd',
+  very: '\u8fd9\u975e\u5e38',
+  relatedUsage: '\u6d89\u53ca',
+  commonUse: '\u6211\u4eec\u5e38\u7528',
+  thisWord: '\u8fd9\u4e2a\u8bcd\u3002',
+  example: '\u4f8b\uff1a'
+};
+
 function currentCategory() { return sections[currentSection].categories[currentCategoryIndex]; }
 
 // ============ STORAGE ============
@@ -4122,6 +4146,100 @@ document.addEventListener('click',function(e){
   const wrap=document.getElementById('globalSearchWrap');
   if(wrap&&!wrap.contains(e.target)) document.getElementById('globalResults').style.display='none';
 });
+
+translateExample = function(ex, meaning, exCn){
+  if(exCn) return exCn;
+  if(!ex) return '';
+  if(ex.indexOf(' is important')>0||ex.indexOf(' are important')>0) return ex.replace(/ (is|are) important/,'')+UI_TEXT.veryImportant;
+  if(ex.indexOf('We talked about ')>-1) return UI_TEXT.discussed+ex.replace('We talked about ','').replace('.','')+'。';
+  if(ex.indexOf('We need to ')>-1) return UI_TEXT.needTo+ex.replace('We need to ','').replace('.','')+'。';
+  if(ex.indexOf('They ')>-1&&ex.indexOf(' it every day')>-1) return UI_TEXT.everyDay+ex.split(' ')[1]+'。';
+  if(ex.indexOf('This is very ')>-1) return UI_TEXT.very+ex.replace('This is very ','').replace('.','')+'。';
+  if(ex.indexOf(' is important')>-1) return ex.replace(' is important.','')+UI_TEXT.veryImportant;
+  if(ex.indexOf(' of this is clear')>-1) return UI_TEXT.relatedUsage+ex.split(' ')[0]+'的用法。';
+  if(ex.indexOf('We often use')>-1) return UI_TEXT.commonUse+ex.replace(/We often use "?/,'').replace(/"?\./,'')+UI_TEXT.thisWord;
+  if(meaning) return UI_TEXT.example+meaning.split(' ').slice(0,2).join(' ');
+  return '';
+};
+
+renderCard = function() {
+  const cardInner=document.getElementById('cardInner');
+  if(filteredWords.length===0){
+    document.getElementById('cardWord').textContent=cardFilter==='review'?UI_TEXT.reviewDone:UI_TEXT.noWords;
+    document.getElementById('cardPhonetic').textContent='';
+    document.getElementById('cardMeaning').textContent=cardFilter==='review'?UI_TEXT.reviewDoneDesc:UI_TEXT.noMatchingWords;
+    document.getElementById('cardRootRef').style.display='none';
+    document.getElementById('cardExample').innerHTML='';
+    document.getElementById('cardCounter').textContent='0 / 0';
+    document.getElementById('dotFront').className='card-status-dot new';
+    document.getElementById('dotBack').className='card-status-dot new';
+    cardInner.classList.toggle('flipped',cardFilter==='review');
+    return;
+  }
+  const word=filteredWords[filteredIdx];
+  cardInner.classList.remove('flipped');
+  document.getElementById('cardWord').textContent=word.word;
+  document.getElementById('cardPhonetic').textContent=word.phonetic||'';
+  document.getElementById('cardMeaning').textContent=word.meaning||UI_TEXT.meaningPending;
+  const ref=document.getElementById('cardRootRef');
+  if(word.breakdown){ref.textContent=word.breakdown;ref.style.display='';}else{ref.style.display='none';}
+  document.getElementById('cardExample').innerHTML=(word.example||'')+'<div class="card-ex-cn">'+translateExample(word.example,word.meaning,word.exampleCn||'')+'</div>';
+  document.getElementById('cardCounter').textContent=(filteredIdx+1)+' / '+filteredWords.length;
+  const sc=word.status==='known'?'known':word.status==='learning'?'learning':'new';
+  document.getElementById('dotFront').className='card-status-dot '+sc;
+  document.getElementById('dotBack').className='card-status-dot '+sc;
+  if(cardFilter==='review') cardInner.classList.add('flipped');
+};
+
+showSpellWord = function(){
+  if(spellIndex>=spellWords.length){
+    document.getElementById('spellMeaning').textContent='🎉 '+UI_TEXT.allDone+'!';
+    document.getElementById('spellResult').textContent=`${UI_TEXT.correct} ${spellCorrect} / ${spellTotal}`;
+    document.getElementById('spellResult').className='spell-result '+(spellCorrect===spellTotal?'correct':'wrong');
+    document.getElementById('spellStats').textContent='';
+    document.getElementById('spellHint').textContent='';
+    document.getElementById('spellInput').style.display='none';
+    document.getElementById('spellBtn').style.display='none';
+    if(spellCorrect===spellTotal) triggerConfetti();
+    return;
+  }
+  const w=spellWords[spellIndex];
+  document.getElementById('spellMeaning').textContent=w.meaning||w.word;
+  document.getElementById('spellHint').textContent=w.breakdown||'';
+  document.getElementById('spellResult').textContent='';
+  document.getElementById('spellResult').className='spell-result';
+  document.getElementById('spellStats').textContent=`${UI_TEXT.correct} ${spellCorrect} / ${UI_TEXT.total} ${spellTotal}${spellTotal>0?' ('+Math.round(spellCorrect/spellTotal*100)+'%)':''}`;
+  document.getElementById('spellInput').value='';
+  document.getElementById('spellInput').style.display='';
+  document.getElementById('spellBtn').style.display='';
+  document.getElementById('spellInput').focus();
+  setTimeout(()=>speakSpellWord(),600);
+};
+
+checkSpelling = function(){
+  if(spellIndex>=spellWords.length) return;
+  const w=spellWords[spellIndex];
+  const inp=(document.getElementById('spellInput').value||'').trim().toLowerCase();
+  const correct=w.word.toLowerCase();
+  spellTotal++;
+  const resultEl=document.getElementById('spellResult');
+  if(inp===correct){
+    spellCorrect++;
+    resultEl.textContent='✅ '+UI_TEXT.correct+'!';
+    resultEl.className='spell-result correct';
+  }else{
+    resultEl.innerHTML='❌ '+UI_TEXT.correctAnswer+': <b>'+w.word+'</b>';
+    resultEl.className='spell-result wrong';
+    if(!spellingErrors[w.word]) spellingErrors[w.word]={count:0,word:w.word};
+    spellingErrors[w.word].count++;
+    spellingErrors[w.word].lastWrong=todayStr();
+    localStorage.setItem('spelling_errors',JSON.stringify(spellingErrors));
+    updateQuickActionState();
+  }
+  document.getElementById('spellStats').textContent=`${UI_TEXT.correct} ${spellCorrect} / ${UI_TEXT.total} ${spellTotal} (${Math.round(spellCorrect/spellTotal*100)}%)`;
+  spellIndex++;
+  setTimeout(()=>showSpellWord(),1000);
+};
 
 // ============ INIT ============
 applyWordPatches();
