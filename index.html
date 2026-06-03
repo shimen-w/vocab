@@ -243,7 +243,7 @@ kbd.active-key{border-color:var(--gold);background:rgba(226,168,71,0.15);color:v
 .spell-speaker:hover{transform:scale(1.1);color:var(--gold-bright)}
 .spell-speaker span{font-size:12px;color:var(--text-muted);display:block;margin-top:4px}
 .spell-meaning{font-family:var(--ff-display);font-size:26px;color:var(--text-primary);margin:16px 0 8px;line-height:1.5}
-.spell-hint{font-size:11px;color:var(--text-muted);margin-bottom:20px;min-height:18px}
+.spell-hint{display:none}
 .spell-input-row{display:flex;gap:8px;justify-content:center}
 .spell-inp{flex:1;max-width:280px;background:rgba(255,255,255,0.04);border:1px solid var(--gold-border);border-radius:var(--r-sm);padding:10px 14px;color:var(--text-primary);font-family:var(--ff-ui);font-size:18px;outline:none;text-align:center;transition:all var(--t-s)}
 .spell-inp:focus{border-color:var(--gold);background:rgba(226,168,71,0.04);box-shadow:0 0 12px var(--gold-glow)}
@@ -4034,7 +4034,7 @@ function showSpellWord(){
   }
   const w=spellWords[spellIndex];
   document.getElementById('spellMeaning').textContent=w.meaning||w.word;
-  document.getElementById('spellHint').textContent=w.breakdown||'';
+  document.getElementById('spellHint').textContent='';
   document.getElementById('spellResult').textContent='';
   document.getElementById('spellResult').className='spell-result';
   document.getElementById('spellStats').textContent=`正确 ${spellCorrect} / 总 ${spellTotal}${spellTotal>0?' ('+Math.round(spellCorrect/spellTotal*100)+'%)':''}`;
@@ -4206,7 +4206,7 @@ showSpellWord = function(){
   }
   const w=spellWords[spellIndex];
   document.getElementById('spellMeaning').textContent=w.meaning||w.word;
-  document.getElementById('spellHint').textContent=w.breakdown||'';
+  document.getElementById('spellHint').textContent='';
   document.getElementById('spellResult').textContent='';
   document.getElementById('spellResult').className='spell-result';
   document.getElementById('spellStats').textContent=`${UI_TEXT.correct} ${spellCorrect} / ${UI_TEXT.total} ${spellTotal}${spellTotal>0?' ('+Math.round(spellCorrect/spellTotal*100)+'%)':''}`;
