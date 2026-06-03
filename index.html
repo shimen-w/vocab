@@ -106,11 +106,17 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 .sec-tab.active{background:rgba(226,168,71,0.12);border-color:var(--gold);color:var(--gold-bright);box-shadow:0 0 10px rgba(226,168,71,0.1)}
 .tab-icon{font-size:13px;line-height:1}
 
-.toolbar{padding:9px 22px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--gold-border);gap:10px}
+.toolbar{padding:9px 22px;display:flex;flex-direction:column;align-items:stretch;border-bottom:1px solid var(--gold-border);gap:10px}
+.toolbar-main{display:flex;align-items:center;justify-content:space-between;gap:10px}
 .breadcrumb{font-size:12.5px;color:var(--text-muted);flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .bc-sep{margin:0 7px;opacity:.3}
 .bc-section{color:var(--text-sec)}
 .bc-cat{color:var(--gold-bright);font-weight:500}
+.quick-actions{display:flex;gap:8px;flex-wrap:wrap}
+.quick-btn{padding:7px 12px;border-radius:999px;border:1px solid rgba(255,255,255,0.08);background:rgba(255,255,255,0.03);color:var(--text-sec);font-family:var(--ff-ui);font-size:11.5px;cursor:pointer;transition:all var(--t-s)}
+.quick-btn:hover{border-color:var(--gold-border2);color:var(--gold-bright);background:rgba(226,168,71,0.08);transform:translateY(-1px)}
+.quick-btn[disabled]{opacity:.45;cursor:not-allowed;transform:none}
+.quick-count{color:var(--gold-bright);font-family:var(--ff-mono);margin-left:4px}
 .mode-tabs{display:flex;gap:2px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);padding:3px;border-radius:var(--r-sm);flex-shrink:0}
 .mode-tab{padding:4px 12px;border:none;background:transparent;color:var(--text-muted);font-family:var(--ff-ui);font-size:11.5px;cursor:pointer;border-radius:4px;transition:all var(--t-s)}
 .mode-tab:hover{color:var(--text-primary)}
@@ -228,7 +234,7 @@ kbd.active-key{border-color:var(--gold);background:rgba(226,168,71,0.15);color:v
 .sb-overlay.open{display:block}
 
 @media(max-width:700px){.sidebar{width:260px;min-width:260px}.card-container{height:260px}.card-word{font-size:42px}.card-meaning{font-size:22px}.card-phonetic{font-size:13px}}
-@media(max-width:560px){.sidebar{position:fixed;left:-300px;top:0;z-index:160;transition:left .3s ease;width:278px;min-width:278px;height:100vh}.sidebar.open{left:0}.mobile-btn{display:flex;align-items:center;justify-content:center}.card-container{height:220px}.card-word{font-size:34px}.card-meaning{font-size:19px}.card-face{padding:22px}.sec-tab .tab-lbl{display:none}.sec-tab{padding:6px 9px}}
+@media(max-width:560px){.sidebar{position:fixed;left:-300px;top:0;z-index:160;transition:left .3s ease;width:278px;min-width:278px;height:100vh}.sidebar.open{left:0}.mobile-btn{display:flex;align-items:center;justify-content:center}.card-container{height:220px}.card-word{font-size:34px}.card-meaning{font-size:19px}.card-face{padding:22px}.sec-tab .tab-lbl{display:none}.sec-tab{padding:6px 9px}.toolbar{padding:10px 14px}.toolbar-main{flex-wrap:wrap}.global-search{max-width:none;width:100%;margin-right:0;order:3}.quick-btn{flex:1;min-width:120px;text-align:center}.spell-input-row{flex-direction:column}.spell-inp{max-width:none}.spell-btn{width:100%}}
 /* Spelling */
 .spelling-area{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:20px}
 .spell-card{text-align:center;max-width:420px;width:100%}
@@ -319,6 +325,7 @@ kbd.active-key{border-color:var(--gold);background:rgba(226,168,71,0.15);color:v
       </button>
     </nav>
     <div class="toolbar" id="toolbar">
+      <div class="toolbar-main">
       <div class="breadcrumb" id="breadcrumb">
         <span class="bc-section">词根词缀法</span><span class="bc-sep">/</span><span class="bc-cat">pre- (前, 预先)</span>
       </div>
@@ -330,6 +337,12 @@ kbd.active-key{border-color:var(--gold);background:rgba(226,168,71,0.15);color:v
         <button class="mode-tab active" data-mode="flashcard" onclick="switchMode('flashcard')">卡片记忆</button>
         <button class="mode-tab" data-mode="grid" onclick="switchMode('grid')">列表浏览</button>
         <button class="mode-tab" data-mode="spelling" onclick="switchMode('spelling')">✏️听写</button>
+      </div>
+      </div>
+      <div class="quick-actions">
+        <button class="quick-btn" id="continueBtn" onclick="continueLastSession()">缁х画涓婃瀛︿範</button>
+        <button class="quick-btn" onclick="startTodayReview()">浠婃棩寰呭涔? <span class="quick-count" id="todayReviewCount">0</span></button>
+        <button class="quick-btn" onclick="startWrongWordReview()">閿欒瘝鍚啓 <span class="quick-count" id="wrongReviewCount">0</span></button>
       </div>
     </div>
     <div class="study-content" id="studyContent">
@@ -3311,6 +3324,27 @@ let filteredWords = [];
 let filteredIdx = 0;
 let spellingErrors = {};
 let spellIndex = 0, spellCorrect = 0, spellTotal = 0, spellWords = [];
+let spellingSource = 'category';
+let customSpellWords = [];
+let lastSession = null;
+
+const SESSION_KEY = 'study_session_v1';
+const WORD_PATCHES = {
+  description: { meaning: 'n. 描写；形容；说明', example: 'The product description is clear and concise.', exampleCn: '这份产品描述清晰简洁。' },
+  blame: { exampleCn: '不要因为你的错误责怪我。' },
+  distinction: { exampleCn: '对与错之间有明显区别。' },
+  assumption: { exampleCn: '他的理论建立在一个错误的假设之上。' },
+  substantial: { meaning: 'adj. 大量的；重大的；实质性的', exampleCn: '这个月我们取得了实质性的进展。' },
+  remarkable: { exampleCn: '她的英语进步非常显著。' },
+  spell: { meaning: 'v. 拼写；拼成' },
+  today: { meaning: 'adv. 在今天；如今' },
+  you: { meaning: 'pron. 你；你们' },
+  young: { meaning: 'adj. 年轻的' },
+  your: { meaning: 'pron. 你的；你们的' },
+  yours: { meaning: 'pron. 你的；你们的' },
+  yourself: { meaning: 'pron. 你自己' },
+  zoo: { meaning: 'n. 动物园' }
+};
 
 function currentCategory() { return sections[currentSection].categories[currentCategoryIndex]; }
 
@@ -3323,6 +3357,34 @@ function loadStatuses() {
     ? { roots_affixes: v1, high_frequency: {}, essential: {} }
     : { roots_affixes: {}, high_frequency: {}, essential: {} };
   saveStatuses();
+}
+function loadLastSession(){
+  try{lastSession=JSON.parse(localStorage.getItem(SESSION_KEY)||'null');}catch(e){lastSession=null;}
+}
+function saveLastSession(){
+  const cat=currentCategory();
+  const word=cat&&cat.words[currentWordIndex]?cat.words[currentWordIndex]:null;
+  lastSession={
+    section:currentSection,
+    categoryIndex:currentCategoryIndex,
+    word:word?word.word:'',
+    mode:currentMode,
+    filter:cardFilter,
+    source:spellingSource,
+    updatedAt:new Date().toISOString()
+  };
+  localStorage.setItem(SESSION_KEY,JSON.stringify(lastSession));
+  updateQuickActionState();
+}
+function applyWordPatches(){
+  for(const sid of Object.keys(sections)){
+    for(const cat of sections[sid].categories){
+      for(const w of cat.words){
+        const patch=WORD_PATCHES[w.word];
+        if(patch) Object.assign(w,patch);
+      }
+    }
+  }
 }
 // SM-2 复习间隔（天）
 function getReviewInterval(reviewCount){return[1,2,4,7,15,30][Math.min(reviewCount,5)];}
@@ -3389,6 +3451,106 @@ function getDueCount(sid){
       if(w._nextReview&&w._nextReview<=today&&w.status==='known') count++;
     }
   return count;
+}
+function getTotalDueCount(){
+  let total=0;
+  for(const sid of Object.keys(sections)) total+=getDueCount(sid);
+  return total;
+}
+function getSpellingErrorWords(){
+  const seen={};
+  const words=[];
+  for(const sid of Object.keys(sections)){
+    for(const cat of sections[sid].categories){
+      for(const w of cat.words){
+        if(spellingErrors[w.word] && !seen[w.word]){
+          words.push(w);
+          seen[w.word]=1;
+        }
+      }
+    }
+  }
+  words.sort((a,b)=>(spellingErrors[b.word]?.count||0)-(spellingErrors[a.word]?.count||0));
+  return words;
+}
+function findFirstDueTarget(){
+  const today=todayStr();
+  for(const sid of Object.keys(sections)){
+    const cats=sections[sid].categories;
+    for(let ci=0;ci<cats.length;ci++){
+      const hit=cats[ci].words.find(w=>w._nextReview&&w._nextReview<=today&&w.status==='known');
+      if(hit) return {section:sid,categoryIndex:ci,word:hit.word};
+    }
+  }
+  return null;
+}
+function jumpToWordByText(wordText){
+  const cat=currentCategory();
+  if(!cat) return false;
+  const idx=cat.words.findIndex(w=>w.word===wordText);
+  if(idx<0) return false;
+  currentWordIndex=idx;
+  buildFilteredWords();
+  const found=filteredWords.findIndex(w=>w.word===wordText);
+  filteredIdx=found>=0?found:0;
+  return true;
+}
+function updateQuickActionState(){
+  const dueEl=document.getElementById('todayReviewCount');
+  const wrongEl=document.getElementById('wrongReviewCount');
+  const continueBtn=document.getElementById('continueBtn');
+  if(dueEl) dueEl.textContent=getTotalDueCount();
+  if(wrongEl) wrongEl.textContent=getSpellingErrorWords().length;
+  if(continueBtn) continueBtn.disabled=!lastSession;
+}
+function restoreLastSession(showNotice){
+  if(!lastSession||!sections[lastSession.section]) return false;
+  currentSection=lastSession.section;
+  currentCategoryIndex=Math.min(Math.max(lastSession.categoryIndex||0,0),sections[currentSection].categories.length-1);
+  currentWordIndex=0;
+  currentMode=lastSession.mode||'flashcard';
+  cardFilter=lastSession.filter||'all';
+  spellingSource=lastSession.source||'category';
+  if(spellingSource==='errors') customSpellWords=getSpellingErrorWords();
+  document.querySelectorAll('.sec-tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('tab-'+currentSection).classList.add('active');
+  document.querySelectorAll('.mode-tab').forEach(t=>t.classList.toggle('active',t.dataset.mode===currentMode));
+  document.querySelectorAll('.filter-tab').forEach(b=>b.classList.toggle('active',b.dataset.filter===cardFilter));
+  updateSidebarHeader();
+  renderSidebar();
+  updateStats();
+  updateBreadcrumb();
+  buildFilteredWords();
+  if(lastSession.word) jumpToWordByText(lastSession.word);
+  if(currentMode==='grid') renderGrid();
+  else if(currentMode==='spelling') renderSpelling();
+  else renderCard();
+  updateQuickActionState();
+  if(showNotice) showToast('已恢复上次学习位置');
+  return true;
+}
+function continueLastSession(){
+  if(!restoreLastSession(true)) showToast('还没有可继续的学习记录');
+}
+function startTodayReview(){
+  const target=findFirstDueTarget();
+  if(!target){showToast('今天没有待复习单词');return;}
+  if(currentSection!==target.section) switchSection(target.section);
+  selectCategory(target.categoryIndex);
+  setFilter('review');
+  jumpToWordByText(target.word);
+  if(currentMode!=='flashcard') switchMode('flashcard'); else renderCard();
+  saveLastSession();
+  showToast('已进入今日待复习');
+}
+function startWrongWordReview(){
+  const words=getSpellingErrorWords();
+  if(words.length===0){showToast('还没有拼写错词');return;}
+  spellingSource='errors';
+  customSpellWords=words.slice();
+  if(currentMode!=='spelling') switchMode('spelling'); else renderSpelling();
+  saveLastSession();
+  showToast('已进入错词听写');
 }
 
 // ============ STATS ============
@@ -3482,6 +3644,8 @@ function switchSection(sectionId) {
   currentSection=sectionId;
   currentCategoryIndex=0;
   currentWordIndex=0;
+  spellingSource='category';
+  customSpellWords=[];
   document.querySelectorAll('.sec-tab').forEach(t=>t.classList.remove('active'));
   document.getElementById('tab-'+sectionId).classList.add('active');
   const sc=document.getElementById('studyContent');
@@ -3492,21 +3656,27 @@ function switchSection(sectionId) {
     if(currentMode==='flashcard') renderCard();
     if(currentMode==='grid') renderGrid();
     if(currentMode==='spelling') renderSpelling();
+    saveLastSession();
     sc.classList.remove('fading');
   },180);
 }
 function selectCategory(idx) {
   currentCategoryIndex=idx;
   currentWordIndex=0;
+  spellingSource='category';
+  customSpellWords=[];
   buildFilteredWords();
   updateBreadcrumb();renderSidebar();
   if(currentMode==='flashcard') renderCard();
   if(currentMode==='grid') renderGrid();
+  if(currentMode==='spelling') renderSpelling();
+  saveLastSession();
 }
 
 // ============ MODE SWITCH ============
 function switchMode(mode) {
   currentMode=mode;
+  if(mode!=='spelling'){spellingSource='category';customSpellWords=[];}
   document.querySelectorAll('.mode-tab').forEach(t=>t.classList.remove('active'));
   document.querySelector(`[data-mode="${mode}"]`).classList.add('active');
   const fa=document.getElementById('flashcardArea');
@@ -3516,14 +3686,18 @@ function switchMode(mode) {
   if(mode==='flashcard'){fa.style.display='';renderCard();}
   else if(mode==='grid'){ga.classList.add('visible');renderGrid();}
   else if(mode==='spelling'){if(sa)sa.style.display='flex';renderSpelling();}
+  saveLastSession();
 }
 
 // ============ FILTER ============
 function setFilter(f) {
   cardFilter=f;
+  spellingSource='category';
+  customSpellWords=[];
   document.querySelectorAll('.filter-tab').forEach(b=>b.classList.toggle('active',b.dataset.filter===f));
   buildFilteredWords();
   renderCard();
+  saveLastSession();
 }
 function buildFilteredWords() {
   const cat=currentCategory();
@@ -3540,6 +3714,7 @@ function buildFilteredWords() {
     filteredIdx=0;
   }
   currentWordIndex = filteredWords.length>0 ? cat.words.indexOf(filteredWords[filteredIdx]) : 0;
+  if(currentWordIndex<0) currentWordIndex=0;
 }
 
 // ============ CARD RENDERING ============
@@ -3582,8 +3757,8 @@ function flipCard() { document.getElementById('cardInner').classList.toggle('fli
   });
   card.addEventListener('mouseleave',function(){card.style.transform='perspective(1200px) rotateY(0) rotateX(0)';});
 })();
-function prevCard(e){e&&e.stopPropagation();if(filteredWords.length===0)return;flashBtn('prevBtn');filteredIdx=(filteredIdx-1+filteredWords.length)%filteredWords.length;renderCard();}
-function nextCard(e){e&&e.stopPropagation();if(filteredWords.length===0)return;flashBtn('nextBtn');filteredIdx=(filteredIdx+1)%filteredWords.length;renderCard();}
+function prevCard(e){e&&e.stopPropagation();if(filteredWords.length===0)return;flashBtn('prevBtn');filteredIdx=(filteredIdx-1+filteredWords.length)%filteredWords.length;currentWordIndex=currentCategory().words.indexOf(filteredWords[filteredIdx]);renderCard();saveLastSession();}
+function nextCard(e){e&&e.stopPropagation();if(filteredWords.length===0)return;flashBtn('nextBtn');filteredIdx=(filteredIdx+1)%filteredWords.length;currentWordIndex=currentCategory().words.indexOf(filteredWords[filteredIdx]);renderCard();saveLastSession();}
 function flashBtn(id){const b=document.getElementById(id);if(!b)return;b.classList.add('pressed');setTimeout(()=>b.classList.remove('pressed'),200);}
 
 // ============ MARK WORD ============
@@ -3595,7 +3770,7 @@ function markWord(status,e) {
   if(!wordStatuses[currentSection]) wordStatuses[currentSection]={};
   updateReview(word,status==='known');
   saveStatuses();updateStats();renderSidebar();
-  buildFilteredWords();renderCard();
+  buildFilteredWords();renderCard();saveLastSession();updateQuickActionState();
   showToast(status==='known'?`✓ "${word.word}" 已掌握,${word._nextReview?'下次复习:'+word._nextReview:''}`:`↻ "${word.word}" 复习重置`);
 }
 
@@ -3629,7 +3804,7 @@ function renderGrid(){
 }
 function jumpToCard(wordIdx) {
   const cat=currentCategory();
-  filteredWords=[cat.words[wordIdx]];filteredIdx=0;
+  filteredWords=[cat.words[wordIdx]];filteredIdx=0;currentWordIndex=wordIdx;
   switchMode('flashcard');renderCard();
 }
 
@@ -3721,7 +3896,10 @@ function speakSpellWord(e){e&&e.stopPropagation();if(spellWords.length===0)retur
 
 function renderSpelling(){
   const cat=currentCategory();
-  spellWords=cardFilter==='all'?[...cat.words]:cat.words.filter(w=>w.status===cardFilter);
+  if(spellingSource==='errors') spellWords=[...customSpellWords];
+  else if(cardFilter==='all') spellWords=[...cat.words];
+  else if(cardFilter==='review'){const t=todayStr();spellWords=cat.words.filter(w=>w._nextReview&&w._nextReview<=t&&w.status==='known');}
+  else spellWords=cat.words.filter(w=>w.status===cardFilter);
   if(spellWords.length===0){document.getElementById('spellMeaning').textContent='无单词';return;}
   // Shuffle
   for(let i=spellWords.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[spellWords[i],spellWords[j]]=[spellWords[j],spellWords[i]];}
@@ -3774,6 +3952,7 @@ function checkSpelling(){
     spellingErrors[w.word].count++;
     spellingErrors[w.word].lastWrong=todayStr();
     localStorage.setItem('spelling_errors',JSON.stringify(spellingErrors));
+    updateQuickActionState();
   }
   document.getElementById('spellStats').textContent=`正确 ${spellCorrect} / 总 ${spellTotal} (${Math.round(spellCorrect/spellTotal*100)}%)`;
   spellIndex++;
@@ -3844,6 +4023,7 @@ function navigateToWord(sid,catIdx,wordIdx){
   else renderCard();
   document.getElementById('globalResults').style.display='none';
   document.getElementById('globalSearch').value='';
+  saveLastSession();
 }
 // Close search on outside click
 document.addEventListener('click',function(e){
@@ -3852,15 +4032,18 @@ document.addEventListener('click',function(e){
 });
 
 // ============ INIT ============
+applyWordPatches();
 buildSearchIndex();
 loadStatuses();
+loadLastSession();
 initStatuses();
 updateSidebarHeader();
 renderSidebar();
 updateStats();
 updateBreadcrumb();
 buildFilteredWords();
-renderCard();
+if(!restoreLastSession(false)) renderCard();
+updateQuickActionState();
 </script>
 </body>
 </html>
