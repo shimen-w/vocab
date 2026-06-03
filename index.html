@@ -435,60 +435,37 @@ kbd.active-key{border-color:var(--gold);background:rgba(226,168,71,0.15);color:v
 <button class="mobile-btn" onclick="toggleSidebar()">&#9776;</button>
 <div class="toast" id="toast"></div>
 
-<script>
-// ============ LOGIN ============
-var PASSWORD_HASH = '8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92';
-async function doLogin(){
-  var inp=document.getElementById('loginInput').value.trim();
-  if(!inp){document.getElementById('loginMsg').textContent='请输入密码';return;}
-  try{
-    var hash=await sha256(inp);
-    if(hash===PASSWORD_HASH){
-      document.getElementById('loginOverlay').classList.add('hidden');
-      sessionStorage.setItem('vocab_logged_in','1');
-    }else{
-      document.getElementById('loginMsg').textContent='密码错误,请重试';
-      document.getElementById('loginInput').value='';
-    }
-  }catch(e){
-    document.getElementById('loginMsg').textContent='登录出错,请刷新页面重试';
-  }
-}
-async function sha256(msg){
-  try{
-    var buf=new TextEncoder().encode(msg);
-    var hash=await crypto.subtle.digest('SHA-256',buf);
-    return Array.from(new Uint8Array(hash)).map(function(b){return b.toString(16).padStart(2,'0');}).join('');
-  }catch(e){
-    // Fallback: simple hash for non-HTTPS environments
-    var h=0;
-    for(var i=0;i<msg.length;i++){h=((h<<5)-h)+msg.charCodeAt(i);h|=0;}
-    return 'fallback_'+Math.abs(h).toString(16);
-  }
-}
-// Check session
-if(sessionStorage.getItem('vocab_logged_in')==='1'){
+<script>// ============ LOGIN ============
+var CORRECT_PWD = '123456';
+if (sessionStorage.getItem('vocab_logged_in') === '1') {
   document.getElementById('loginOverlay').classList.add('hidden');
-}else{
+} else {
   document.getElementById('loginInput').focus();
 }
-// Change password (sidebar admin)
-function showChangePwd(){
-  var oldPwd=prompt('请输入旧密码:');if(!oldPwd) return;
-  sha256(oldPwd).then(function(h){
-    if(h!==PASSWORD_HASH){alert('旧密码错误');return;}
-    var newPwd=prompt('请输入新密码(至少4位):');if(!newPwd||newPwd.length<4){alert('密码至少4位');return;}
-    sha256(newPwd).then(function(nh){
-      PASSWORD_HASH=nh;
-      localStorage.setItem('vocab_pwd_hash',nh);
-      alert('密码修改成功!请保存此哈希值到HTML文件中:\\n'+nh);
-    });
-  });
+function doLogin() {
+  var inp = document.getElementById('loginInput').value.trim();
+  if (!inp) { document.getElementById('loginMsg').textContent = '请输入密码'; return; }
+  if (inp === CORRECT_PWD) {
+    document.getElementById('loginOverlay').classList.add('hidden');
+    sessionStorage.setItem('vocab_logged_in', '1');
+  } else {
+    document.getElementById('loginMsg').textContent = '密码错误';
+    document.getElementById('loginInput').value = '';
+  }
 }
-// Load custom hash if set
-(function(){
-  var saved=localStorage.getItem('vocab_pwd_hash');
-  if(saved) PASSWORD_HASH=saved;
+function showChangePwd() {
+  var oldPwd = prompt('请输入旧密码:');
+  if (!oldPwd) return;
+  if (oldPwd !== CORRECT_PWD) { alert('旧密码错误'); return; }
+  var newPwd = prompt('请输入新密码(至少4位):');
+  if (!newPwd || newPwd.length < 4) { alert('密码至少4位'); return; }
+  CORRECT_PWD = newPwd;
+  localStorage.setItem('vocab_pwd', newPwd);
+  alert('密码修改成功!');
+}
+(function () {
+  var saved = localStorage.getItem('vocab_pwd');
+  if (saved) CORRECT_PWD = saved;
 })();
 
 const sections = {
