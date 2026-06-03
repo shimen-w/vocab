@@ -106,17 +106,11 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 .sec-tab.active{background:rgba(226,168,71,0.12);border-color:var(--gold);color:var(--gold-bright);box-shadow:0 0 10px rgba(226,168,71,0.1)}
 .tab-icon{font-size:13px;line-height:1}
 
-.toolbar{padding:9px 22px;display:flex;flex-direction:column;align-items:stretch;border-bottom:1px solid var(--gold-border);gap:10px}
-.toolbar-main{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.toolbar{padding:9px 22px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--gold-border);gap:10px}
 .breadcrumb{font-size:12.5px;color:var(--text-muted);flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .bc-sep{margin:0 7px;opacity:.3}
 .bc-section{color:var(--text-sec)}
 .bc-cat{color:var(--gold-bright);font-weight:500}
-.quick-actions{display:flex;gap:8px;flex-wrap:wrap}
-.quick-btn{padding:7px 12px;border-radius:999px;border:1px solid rgba(255,255,255,0.08);background:rgba(255,255,255,0.03);color:var(--text-sec);font-family:var(--ff-ui);font-size:11.5px;cursor:pointer;transition:all var(--t-s)}
-.quick-btn:hover{border-color:var(--gold-border2);color:var(--gold-bright);background:rgba(226,168,71,0.08);transform:translateY(-1px)}
-.quick-btn[disabled]{opacity:.45;cursor:not-allowed;transform:none}
-.quick-count{color:var(--gold-bright);font-family:var(--ff-mono);margin-left:4px}
 .mode-tabs{display:flex;gap:2px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);padding:3px;border-radius:var(--r-sm);flex-shrink:0}
 .mode-tab{padding:4px 12px;border:none;background:transparent;color:var(--text-muted);font-family:var(--ff-ui);font-size:11.5px;cursor:pointer;border-radius:4px;transition:all var(--t-s)}
 .mode-tab:hover{color:var(--text-primary)}
@@ -172,10 +166,9 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 .card-meaning{font-family:var(--ff-display);font-size:26px;color:var(--text-primary);text-align:center;line-height:1.65;max-width:100%}
 .card-root-ref{font-size:13px;color:var(--gold-dim);margin-top:12px;font-family:var(--ff-mono);text-align:center;background:rgba(226,168,71,0.07);border:1px solid var(--gold-border);padding:4px 12px;border-radius:18px}
 .card-example{font-size:14px;color:var(--text-muted);margin-top:12px;text-align:center;font-style:italic;line-height:1.55;max-width:88%}
-.card-ex-row{display:flex;align-items:center;justify-content:center;gap:10px;margin-top:12px;position:relative;z-index:2}
-.ex-speak-btn{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);cursor:pointer;color:var(--text-muted);font-size:16px;line-height:1;min-width:40px;min-height:40px;padding:0 10px;border-radius:999px;transition:all var(--t-s);flex-shrink:0;opacity:.9;display:flex;align-items:center;justify-content:center;position:relative;z-index:3}
-.ex-speak-btn:hover{color:var(--gold);opacity:1;background:rgba(226,168,71,0.12);border-color:var(--gold-border2);transform:translateY(-1px)}
-.ex-speak-btn:active{transform:scale(.96)}
+.card-ex-row{display:flex;align-items:center;justify-content:center;gap:6px;margin-top:12px}
+.ex-speak-btn{background:none;border:none;cursor:pointer;color:var(--text-muted);font-size:12px;padding:2px 4px;border-radius:4px;transition:all var(--t-s);flex-shrink:0;opacity:.6}
+.ex-speak-btn:hover{color:var(--gold);opacity:1;background:rgba(226,168,71,0.1)}
 .card-ex-cn{font-size:12px;color:var(--gold-dim);margin-top:4px;text-align:center;line-height:1.4}
 
 .card-nav{display:flex;align-items:center;gap:18px}
@@ -235,7 +228,7 @@ kbd.active-key{border-color:var(--gold);background:rgba(226,168,71,0.15);color:v
 .sb-overlay.open{display:block}
 
 @media(max-width:700px){.sidebar{width:260px;min-width:260px}.card-container{height:260px}.card-word{font-size:42px}.card-meaning{font-size:22px}.card-phonetic{font-size:13px}}
-@media(max-width:560px){.sidebar{position:fixed;left:-300px;top:0;z-index:160;transition:left .3s ease;width:278px;min-width:278px;height:100vh}.sidebar.open{left:0}.mobile-btn{display:flex;align-items:center;justify-content:center}.card-container{height:220px}.card-word{font-size:34px}.card-meaning{font-size:19px}.card-face{padding:22px}.sec-tab .tab-lbl{display:none}.sec-tab{padding:6px 9px}.toolbar{padding:10px 14px}.toolbar-main{flex-wrap:wrap}.global-search{max-width:none;width:100%;margin-right:0;order:3}.quick-btn{flex:1;min-width:120px;text-align:center}.spell-input-row{flex-direction:column}.spell-inp{max-width:none}.spell-btn{width:100%}}
+@media(max-width:560px){.sidebar{position:fixed;left:-300px;top:0;z-index:160;transition:left .3s ease;width:278px;min-width:278px;height:100vh}.sidebar.open{left:0}.mobile-btn{display:flex;align-items:center;justify-content:center}.card-container{height:220px}.card-word{font-size:34px}.card-meaning{font-size:19px}.card-face{padding:22px}.sec-tab .tab-lbl{display:none}.sec-tab{padding:6px 9px}}
 /* Spelling */
 .spelling-area{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:20px}
 .spell-card{text-align:center;max-width:420px;width:100%}
@@ -243,7 +236,7 @@ kbd.active-key{border-color:var(--gold);background:rgba(226,168,71,0.15);color:v
 .spell-speaker:hover{transform:scale(1.1);color:var(--gold-bright)}
 .spell-speaker span{font-size:12px;color:var(--text-muted);display:block;margin-top:4px}
 .spell-meaning{font-family:var(--ff-display);font-size:26px;color:var(--text-primary);margin:16px 0 8px;line-height:1.5}
-.spell-hint{display:none}
+.spell-hint{font-size:11px;color:var(--text-muted);margin-bottom:20px;min-height:18px}
 .spell-input-row{display:flex;gap:8px;justify-content:center}
 .spell-inp{flex:1;max-width:280px;background:rgba(255,255,255,0.04);border:1px solid var(--gold-border);border-radius:var(--r-sm);padding:10px 14px;color:var(--text-primary);font-family:var(--ff-ui);font-size:18px;outline:none;text-align:center;transition:all var(--t-s)}
 .spell-inp:focus{border-color:var(--gold);background:rgba(226,168,71,0.04);box-shadow:0 0 12px var(--gold-glow)}
@@ -327,7 +320,6 @@ kbd.active-key{border-color:var(--gold);background:rgba(226,168,71,0.15);color:v
       </button>
     </nav>
     <div class="toolbar" id="toolbar">
-      <div class="toolbar-main">
       <div class="breadcrumb" id="breadcrumb">
         <span class="bc-section">词根词缀法</span><span class="bc-sep">/</span><span class="bc-cat">pre- (前, 预先)</span>
       </div>
@@ -339,14 +331,6 @@ kbd.active-key{border-color:var(--gold);background:rgba(226,168,71,0.15);color:v
         <button class="mode-tab active" data-mode="flashcard" onclick="switchMode('flashcard')">卡片记忆</button>
         <button class="mode-tab" data-mode="grid" onclick="switchMode('grid')">列表浏览</button>
         <button class="mode-tab" data-mode="spelling" onclick="switchMode('spelling')">✏️听写</button>
-      </div>
-      </div>
-      <div class="quick-actions">
-        <button class="quick-btn" id="continueBtn" onclick="continueLastSession()">&#32487;&#32493;&#19978;&#27425;&#23398;&#20064;</button>
-        <button class="quick-btn" onclick="startTodayReview()">&#20170;&#26085;&#24453;&#22797;&#20064; <span class="quick-count" id="todayReviewCount">0</span></button>
-        <button class="quick-btn" onclick="startWrongWordReview()">&#38169;&#35789;&#21548;&#20889; <span class="quick-count" id="wrongReviewCount">0</span></button>
-        <button class="quick-btn" onclick="exportStudyProgress()">&#23548;&#20986;&#36827;&#24230;</button>
-        <button class="quick-btn" onclick="triggerImportProgress()">&#23548;&#20837;&#36827;&#24230;</button>
       </div>
     </div>
     <div class="study-content" id="studyContent">
@@ -413,12 +397,7 @@ kbd.active-key{border-color:var(--gold);background:rgba(226,168,71,0.15);color:v
       <!-- SPELLING MODE -->
       <div class="spelling-area" id="spellingArea" style="display:none">
         <div class="spell-card">
-          <div class="spell-filter-row" id="spellFilterRow">
-            <button class="gfbtn active" data-sf="all" onclick="setSpellFilter('all')">全部</button>
-            <button class="gfbtn" data-sf="known" onclick="setSpellFilter('known')">已掌握</button>
-            <button class="gfbtn" data-sf="learning" onclick="setSpellFilter('learning')">学习中</button>
-          </div>
-          <div class="spell-speaker" onclick="event.stopPropagation();speakSpellWord(event)">🔊 <span>点击听发音</span></div>
+          <div class="spell-filter-row" id="spellFilterRow"><button class="gfbtn active" data-sf="all" onclick="setSpellFilter("all")">全部</button><button class="gfbtn" data-sf="known" onclick="setSpellFilter("known")">已掌握</button><button class="gfbtn" data-sf="learning" onclick="setSpellFilter("learning")">学习中</button></div><div class="spell-speaker" onclick="event.stopPropagation();speakSpellWord(event)">🔊 <span>点击听发音</span></div>
           <div class="spell-meaning" id="spellMeaning">-</div>
           <div class="spell-hint" id="spellHint"></div>
           <div class="spell-input-row">
@@ -434,7 +413,6 @@ kbd.active-key{border-color:var(--gold);background:rgba(226,168,71,0.15);color:v
 </div>
 <button class="mobile-btn" onclick="toggleSidebar()">&#9776;</button>
 <div class="toast" id="toast"></div>
-<input id="progressImportInput" type="file" accept="application/json" style="display:none">
 
 <script>
 const sections = {
@@ -3333,113 +3311,7 @@ let gridFilter = 'all';
 let filteredWords = [];
 let filteredIdx = 0;
 let spellingErrors = {};
-let spellIndex = 0, spellCorrect = 0, spellTotal = 0, spellWords = [], spellFilter = 'all';
-let spellingSource = 'category';
-let customSpellWords = [];
-let lastSession = null;
-
-const SESSION_KEY = 'study_session_v1';
-const WORD_PATCHES = {
-  description: { meaning: 'n. 描写；形容；说明', example: 'The product description is clear and concise.', exampleCn: '这份产品描述清晰简洁。' },
-  blame: { exampleCn: '不要因为你的错误责怪我。' },
-  distinction: { exampleCn: '对与错之间有明显区别。' },
-  assumption: { exampleCn: '他的理论建立在一个错误的假设之上。' },
-  substantial: { meaning: 'adj. 大量的；重大的；实质性的', exampleCn: '这个月我们取得了实质性的进展。' },
-  remarkable: { exampleCn: '她的英语进步非常显著。' },
-  spell: { meaning: 'v. 拼写；拼成' },
-  today: { meaning: 'adv. 在今天；如今' },
-  you: { meaning: 'pron. 你；你们' },
-  young: { meaning: 'adj. 年轻的' },
-  your: { meaning: 'pron. 你的；你们的' },
-  yours: { meaning: 'pron. 你的；你们的' },
-  yourself: { meaning: 'pron. 你自己' },
-  zoo: { meaning: 'n. 动物园' }
-};
-
-const WORD_PATCHES_STABLE = {
-  description: { meaning: '\u006e\u002e \u63cf\u5199\uff1b\u5f62\u5bb9\uff1b\u8bf4\u660e', exampleCn: '\u8fd9\u4efd\u4ea7\u54c1\u63cf\u8ff0\u6e05\u6670\u7b80\u6d01\u3002' },
-  blame: { exampleCn: '\u4e0d\u8981\u56e0\u4e3a\u4f60\u7684\u9519\u8bef\u8d23\u602a\u6211\u3002' },
-  distinction: { exampleCn: '\u5bf9\u4e0e\u9519\u4e4b\u95f4\u6709\u660e\u663e\u533a\u522b\u3002' },
-  assumption: { exampleCn: '\u4ed6\u7684\u7406\u8bba\u5efa\u7acb\u5728\u4e00\u4e2a\u9519\u8bef\u7684\u5047\u8bbe\u4e4b\u4e0a\u3002' },
-  substantial: { meaning: '\u0061\u0064\u006a\u002e \u5927\u91cf\u7684\uff1b\u91cd\u5927\u7684\uff1b\u5b9e\u8d28\u6027\u7684', exampleCn: '\u8fd9\u4e2a\u6708\u6211\u4eec\u53d6\u5f97\u4e86\u5b9e\u8d28\u6027\u7684\u8fdb\u5c55\u3002' },
-  remarkable: { exampleCn: '\u5979\u7684\u82f1\u8bed\u8fdb\u6b65\u975e\u5e38\u663e\u8457\u3002' },
-  spell: { meaning: '\u0076\u002e \u62fc\u5199\uff1b\u62fc\u6210' },
-  today: { meaning: '\u0061\u0064\u0076\u002e \u5728\u4eca\u5929\uff1b\u5982\u4eca' },
-  you: { meaning: '\u0070\u0072\u006f\u006e\u002e \u4f60\uff1b\u4f60\u4eec' },
-  young: { meaning: '\u0061\u0064\u006a\u002e \u5e74\u8f7b\u7684' },
-  your: { meaning: '\u0070\u0072\u006f\u006e\u002e \u4f60\u7684\uff1b\u4f60\u4eec\u7684' },
-  yours: { meaning: '\u0070\u0072\u006f\u006e\u002e \u4f60\u7684\uff1b\u4f60\u4eec\u7684' },
-  yourself: { meaning: '\u0070\u0072\u006f\u006e\u002e \u4f60\u81ea\u5df1' },
-  zoo: { meaning: '\u006e\u002e \u52a8\u7269\u56ed' },
-  review: { exampleCn: '\u6bcf\u5929\u590d\u4e60\u4f60\u7684\u7b14\u8bb0\u3002' },
-  carbon: { exampleCn: '\u4e8c\u6c27\u5316\u78b3\u662f\u6e29\u5ba4\u6c14\u4f53\u3002' },
-  concern: { exampleCn: '\u8fd9\u4e2a\u95ee\u9898\u5173\u4e4e\u6240\u6709\u4eba\u3002' },
-  religion: { exampleCn: '\u4eba\u4eec\u7684\u5b97\u6559\u4fe1\u4ef0\u5404\u4e0d\u76f8\u540c\u3002' },
-  urban: { exampleCn: '\u8d8a\u6765\u8d8a\u591a\u4eba\u53e3\u6d8c\u5165\u57ce\u5e02\u3002' },
-  turn: { exampleCn: '\u5929\u6c14\u9aa4\u7136\u8f6c\u51b7\u3002' },
-  chain: { exampleCn: '\u8fd9\u7247\u5c71\u8109\u8fde\u7ef5\u8d77\u4f0f\u3002' },
-  preface: { meaning: '\u006e\u002e \u524d\u8a00\uff1b\u5e8f\u8a00', breakdown: 'pre- (\u524d) + face/fari (\u8bf4) -> \u5199\u5728\u524d\u9762\u7684\u8bdd', example: 'I read the preface before starting the novel.', exampleCn: '\u6211\u5728\u5f00\u59cb\u8bfb\u8fd9\u672c\u5c0f\u8bf4\u524d\u5148\u8bfb\u4e86\u524d\u8a00\u3002' },
-  prejudice: { example: 'We should fight prejudice with understanding.', exampleCn: '\u6211\u4eec\u5e94\u8be5\u7528\u7406\u89e3\u6765\u6d88\u9664\u504f\u89c1\u3002' },
-  preliminary: { example: 'The committee released its preliminary findings yesterday.', exampleCn: '\u59d4\u5458\u4f1a\u6628\u5929\u516c\u5e03\u4e86\u521d\u6b65\u8c03\u67e5\u7ed3\u679c\u3002' },
-  return: { example: 'Please return the book to the library tomorrow.', exampleCn: '\u8bf7\u660e\u5929\u628a\u8fd9\u672c\u4e66\u8fd8\u5230\u56fe\u4e66\u9986\u3002' },
-  rebuild: { example: 'The town worked hard to rebuild after the flood.', exampleCn: '\u6d2a\u6c34\u8fc7\u540e\uff0c\u5c0f\u9547\u52aa\u529b\u91cd\u5efa\u3002' },
-  refresh: { example: 'Take a short walk to refresh your mind.', exampleCn: '\u6563\u4f1a\u513f\u6b65\uff0c\u8ba9\u5927\u8111\u91cd\u65b0\u6e05\u9192\u4e00\u4e0b\u3002' },
-  reform: { example: 'The government plans to reform the education system.', exampleCn: '\u653f\u5e9c\u8ba1\u5212\u6539\u9769\u6559\u80b2\u4f53\u7cfb\u3002' },
-  reveal: { breakdown: '\u8bb0\u5fc6\uff1a\u628a\u906e\u4f4f\u7684\u4e1c\u897f\u663e\u9732\u51fa\u6765', example: 'The report revealed several serious problems.', exampleCn: '\u8fd9\u4efd\u62a5\u544a\u63ed\u793a\u4e86\u51e0\u4e2a\u4e25\u91cd\u95ee\u9898\u3002' },
-  uncover: { example: 'The investigation helped uncover the truth.', exampleCn: '\u8fd9\u6b21\u8c03\u67e5\u5e2e\u52a9\u63ed\u5f00\u4e86\u771f\u76f8\u3002' },
-  informal: { example: 'We had an informal talk after class.', exampleCn: '\u8bfe\u540e\u6211\u4eec\u8fdb\u884c\u4e86\u4e00\u6b21\u8f7b\u677e\u7684\u4ea4\u8c08\u3002' },
-  independent: { example: 'Teenagers need to learn to be independent.', exampleCn: '\u9752\u5c11\u5e74\u9700\u8981\u5b66\u4f1a\u72ec\u7acb\u3002' },
-  discipline: { word: 'dishonest', phonetic: '/dɪsˈɑːnɪst/', meaning: '\u0061\u0064\u006a\u002e \u4e0d\u8bda\u5b9e\u7684', breakdown: 'dis- (\u4e0d) + honest (\u8bda\u5b9e\u7684)', example: 'It is dishonest to copy someone else\'s homework.', exampleCn: '\u6284\u522b\u4eba\u7684\u4f5c\u4e1a\u662f\u4e0d\u8bda\u5b9e\u7684\u884c\u4e3a\u3002' },
-  inspect: { example: 'The engineer inspected the bridge for damage.', exampleCn: '\u5de5\u7a0b\u5e08\u68c0\u67e5\u4e86\u8fd9\u5ea7\u6865\u662f\u5426\u53d7\u635f\u3002' },
-  prospect: { example: 'Graduates face good job prospects this year.', exampleCn: '\u4eca\u5e74\u6bd5\u4e1a\u751f\u9762\u4e34\u4e0d\u9519\u7684\u5c31\u4e1a\u524d\u666f\u3002' },
-  aspect: { example: 'We discussed every aspect of the plan.', exampleCn: '\u6211\u4eec\u8ba8\u8bba\u4e86\u8fd9\u4e2a\u8ba1\u5212\u7684\u5404\u4e2a\u65b9\u9762\u3002' },
-  spectacular: { example: 'We watched a spectacular sunset over the sea.', exampleCn: '\u6211\u4eec\u89c2\u770b\u4e86\u6d77\u4e0a\u58ee\u89c2\u7684\u65e5\u843d\u3002' },
-  dictate: { example: 'The manager dictated a short email to his assistant.', exampleCn: '\u7ecf\u7406\u53e3\u8ff0\u4e86\u4e00\u5c01\u77ed\u90ae\u4ef6\u7ed9\u52a9\u7406\u3002' },
-  indicate: { example: 'The survey results indicate that prices are rising.', exampleCn: '\u8c03\u67e5\u7ed3\u679c\u8868\u660e\u4ef7\u683c\u6b63\u5728\u4e0a\u6da8\u3002' },
-  import: { example: 'The country imports oil from abroad.', exampleCn: '\u8fd9\u4e2a\u56fd\u5bb6\u4ece\u56fd\u5916\u8fdb\u53e3\u77f3\u6cb9\u3002' },
-  export: { example: 'This company exports tea to many countries.', exampleCn: '\u8fd9\u5bb6\u516c\u53f8\u628a\u8336\u53f6\u51fa\u53e3\u5230\u8bb8\u591a\u56fd\u5bb6\u3002' },
-  transport: { example: 'Public transport is convenient in this city.', exampleCn: '\u8fd9\u5ea7\u57ce\u5e02\u7684\u516c\u5171\u4ea4\u901a\u5f88\u4fbf\u5229\u3002' },
-  support: { example: 'Her friends supported her during the competition.', exampleCn: '\u6bd4\u8d5b\u671f\u95f4\uff0c\u5979\u7684\u670b\u53cb\u4e00\u76f4\u652f\u6301\u5979\u3002' },
-  portable: { example: 'This portable speaker is easy to carry.', exampleCn: '\u8fd9\u4e2a\u4fbf\u643a\u97f3\u7bb1\u5f88\u5bb9\u6613\u643a\u5e26\u3002' },
-  report: { example: 'She is writing a report on climate change.', exampleCn: '\u5979\u6b63\u5728\u5199\u4e00\u4efd\u5173\u4e8e\u6c14\u5019\u53d8\u5316\u7684\u62a5\u544a\u3002' },
-  obstacle: { word: 'obstruct', phonetic: '/əbˈstrʌkt/', meaning: '\u0076\u002e \u963b\u788d\uff1b\u5835\u585e', breakdown: 'ob- (\u5bf9\u7740) + struct (build/pile) -> \u6321\u4f4f', example: 'A fallen tree obstructed the road.', exampleCn: '\u4e00\u68f5\u5012\u4e0b\u7684\u6811\u6321\u4f4f\u4e86\u9053\u8def\u3002' },
-  translate: { breakdown: 'trans- (\u8f6c\u6362) + lat (\u643a\u5e26) -> \u628a\u610f\u601d\u5e26\u5230\u53e6\u4e00\u79cd\u8bed\u8a00\u4e2d', example: 'Can you translate this sentence into Chinese?', exampleCn: '\u4f60\u80fd\u628a\u8fd9\u53e5\u8bdd\u7ffb\u8bd1\u6210\u4e2d\u6587\u5417\uff1f' },
-  transparent: { breakdown: '\u8bb0\u5fc6\uff1a\u5149\u7ebf\u53ef\u4ee5\u7a7f\u8fc7\uff0c\u6240\u4ee5\u770b\u8d77\u6765\u662f\u900f\u660e\u7684', example: 'The bag is made of transparent plastic.', exampleCn: '\u8fd9\u4e2a\u888b\u5b50\u662f\u7528\u900f\u660e\u5851\u6599\u505a\u7684\u3002' },
-  project: { phonetic: 'n. /ˈprɑːdʒekt/; v. /prəˈdʒekt/', meaning: '\u006e\u002e \u9879\u76ee\uff1b\u5de5\u7a0b \u0076\u002e \u6295\u5c04\uff1b\u9884\u8ba1', example: 'Our team finished the project on time.', exampleCn: '\u6211\u4eec\u7684\u56e2\u961f\u6309\u65f6\u5b8c\u6210\u4e86\u8fd9\u4e2a\u9879\u76ee\u3002' },
-  object: { phonetic: 'n. /ˈɑːbdʒekt/; v. /əbˈdʒekt/', meaning: '\u006e\u002e \u7269\u4f53\uff1b\u5bf9\u8c61 \u0076\u002e \u53cd\u5bf9', example: 'The child picked up a small object.', exampleCn: '\u90a3\u4e2a\u5b69\u5b50\u62fe\u8d77\u4e86\u4e00\u4e2a\u5c0f\u7269\u4f53\u3002' },
-  responsible: { breakdown: 'respond/response + -ible -> \u9700\u8981\u4f5c\u51fa\u56de\u5e94\u7684\uff1b\u8d1f\u8d23\u7684', example: 'Parents are responsible for their children\'s safety.', exampleCn: '\u7236\u6bcd\u5bf9\u5b69\u5b50\u7684\u5b89\u5168\u8d1f\u6709\u8d23\u4efb\u3002' },
-  depress: { example: 'The news depressed him for several days.', exampleCn: '\u8fd9\u4e2a\u6d88\u606f\u8ba9\u4ed6\u6d88\u6c89\u4e86\u597d\u51e0\u5929\u3002' },
-  retire: { word: 'rewrite', phonetic: '/ˌriːˈraɪt/', meaning: '\u0076\u002e \u91cd\u5199\uff1b\u6539\u5199', breakdown: 're- (\u518d\u6b21) + write (\u5199)', example: 'Please rewrite the last paragraph more clearly.', exampleCn: '\u8bf7\u628a\u6700\u540e\u4e00\u6bb5\u91cd\u5199\u5f97\u66f4\u6e05\u695a\u4e00\u4e9b\u3002' },
-  capable: { breakdown: 'capax -> able to hold or take in -> capable', example: 'She is capable of leading the whole team.', exampleCn: '\u5979\u6709\u80fd\u529b\u5e26\u9886\u6574\u4e2a\u56e2\u961f\u3002' },
-  platform: { word: 'deform', phonetic: '/dɪˈfɔːm/', meaning: '\u0076\u002e \u4f7f\u53d8\u5f62\uff1b\u4f7f\u7578\u5f62', breakdown: 'de- (\u79bb\u5f00) + form (\u5f62\u72b6)', example: 'Too much heat can deform the plastic.', exampleCn: '\u8fc7\u9ad8\u7684\u6e29\u5ea6\u4f1a\u4f7f\u5851\u6599\u53d8\u5f62\u3002' },
-  video: { breakdown: 'videre (to see) -> recorded moving images', example: 'We watched a short video about space travel.', exampleCn: '\u6211\u4eec\u89c2\u770b\u4e86\u4e00\u6bb5\u5173\u4e8e\u592a\u7a7a\u65c5\u884c\u7684\u77ed\u89c6\u9891\u3002' },
-  bankrupt: { word: 'rupture', phonetic: '/ˈrʌptʃər/', meaning: '\u0076\u002e\u002f\u006e\u002e \u7834\u88c2\uff1b\u51b3\u88c2', breakdown: 'rupt (\u65ad\u88c2) + -ure', example: 'The pipe may rupture under pressure.', exampleCn: '\u8fd9\u6839\u7ba1\u9053\u5728\u538b\u529b\u4e0b\u53ef\u80fd\u7834\u88c2\u3002' },
-  general: { word: 'manufacture', phonetic: '/ˌmænjuˈfæktʃər/', meaning: '\u0076\u002e \u5236\u9020\uff1b\u52a0\u5de5 \u006e\u002e \u5236\u9020\u4e1a', breakdown: 'manu (\u624b) + fact (\u505a) + -ure', example: 'They manufacture car parts in this factory.', exampleCn: '\u4ed6\u4eec\u5728\u8fd9\u5bb6\u5de5\u5382\u5236\u9020\u6c7d\u8f66\u96f6\u4ef6\u3002' }
-};
-
-const UI_TEXT = {
-  noWords: '\u65e0\u5355\u8bcd',
-  noMatchingWords: '\u672c\u5206\u7c7b\u4e0b\u65e0\u7b26\u5408\u6761\u4ef6\u7684\u5355\u8bcd',
-  reviewDone: '\u4eca\u65e5\u590d\u4e60\u5b8c\u6210',
-  reviewDoneDesc: '\u5f53\u524d\u5206\u7c7b\u7684\u5f85\u590d\u4e60\u5355\u8bcd\u5df2\u5168\u90e8\u5b8c\u6210',
-  meaningPending: '\u91ca\u4e49\u5f85\u8865\u5145',
-  correct: '\u6b63\u786e',
-  total: '\u603b',
-  allDone: '\u5168\u90e8\u5b8c\u6210',
-  correctAnswer: '\u6b63\u786e\u7b54\u6848',
-  mastered: '\u5df2\u638c\u63e1',
-  nextReview: '\u4e0b\u6b21\u590d\u4e60',
-  reviewReset: '\u590d\u4e60\u91cd\u7f6e',
-  veryImportant: '\u5f88\u91cd\u8981\u3002',
-  discussed: '\u6211\u4eec\u8ba8\u8bba\u4e86',
-  needTo: '\u6211\u4eec\u9700\u8981',
-  everyDay: '\u4ed6\u4eec\u6bcf\u5929\u90fd',
-  very: '\u8fd9\u975e\u5e38',
-  relatedUsage: '\u6d89\u53ca',
-  commonUse: '\u6211\u4eec\u5e38\u7528',
-  thisWord: '\u8fd9\u4e2a\u8bcd\u3002',
-  example: '\u4f8b\uff1a'
-};
+let spellIndex = 0, spellCorrect = 0, spellTotal = 0, spellWords = [], spellFilter = "all";
 
 function currentCategory() { return sections[currentSection].categories[currentCategoryIndex]; }
 
@@ -3452,94 +3324,6 @@ function loadStatuses() {
     ? { roots_affixes: v1, high_frequency: {}, essential: {} }
     : { roots_affixes: {}, high_frequency: {}, essential: {} };
   saveStatuses();
-}
-function loadLastSession(){
-  try{lastSession=JSON.parse(localStorage.getItem(SESSION_KEY)||'null');}catch(e){lastSession=null;}
-}
-function saveLastSession(){
-  const cat=currentCategory();
-  const word=cat&&cat.words[currentWordIndex]?cat.words[currentWordIndex]:null;
-  lastSession={
-    section:currentSection,
-    categoryIndex:currentCategoryIndex,
-    word:word?word.word:'',
-    mode:currentMode,
-    filter:cardFilter,
-    source:spellingSource,
-    updatedAt:new Date().toISOString()
-  };
-  localStorage.setItem(SESSION_KEY,JSON.stringify(lastSession));
-  updateQuickActionState();
-}
-function applyWordPatches(){
-  for(const sid of Object.keys(sections)){
-    for(const cat of sections[sid].categories){
-      for(const w of cat.words){
-        const patch=WORD_PATCHES[w.word];
-        if(patch) Object.assign(w,patch);
-        const stablePatch=WORD_PATCHES_STABLE[w.word];
-        if(stablePatch) Object.assign(w,stablePatch);
-      }
-    }
-  }
-}
-function exportStudyProgress(){
-  const payload={
-    exportedAt:new Date().toISOString(),
-    version:1,
-    statuses:wordStatuses,
-    spellingErrors:spellingErrors,
-    session:lastSession
-  };
-  const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});
-  const url=URL.createObjectURL(blob);
-  const a=document.createElement('a');
-  a.href=url;
-  a.download='vocab-progress-'+todayStr()+'.json';
-  document.body.appendChild(a);
-  a.click();
-  a.remove();
-  URL.revokeObjectURL(url);
-  showToast('\u5df2\u5bfc\u51fa\u5b66\u4e60\u8fdb\u5ea6');
-}
-function triggerImportProgress(){
-  const input=document.getElementById('progressImportInput');
-  if(!input) return;
-  input.value='';
-  input.click();
-}
-function importStudyProgress(file){
-  if(!file) return;
-  const reader=new FileReader();
-  reader.onload=function(){
-    try{
-      const data=JSON.parse(reader.result);
-      if(data.statuses && typeof data.statuses==='object'){
-        wordStatuses=data.statuses;
-        localStorage.setItem('vocab_statuses_v2',JSON.stringify(wordStatuses));
-      }
-      if(data.spellingErrors && typeof data.spellingErrors==='object'){
-        spellingErrors=data.spellingErrors;
-        localStorage.setItem('spelling_errors',JSON.stringify(spellingErrors));
-      }
-      if(data.session && typeof data.session==='object'){
-        lastSession=data.session;
-        localStorage.setItem(SESSION_KEY,JSON.stringify(lastSession));
-      }
-      initStatuses();
-      updateSidebarHeader();
-      renderSidebar();
-      updateStats();
-      updateBreadcrumb();
-      buildFilteredWords();
-      if(!restoreLastSession(false)) renderCard();
-      updateQuickActionState();
-      showToast('\u5df2\u5bfc\u5165\u5b66\u4e60\u8fdb\u5ea6');
-    }catch(e){
-      showToast('\u5bfc\u5165\u5931\u8d25\uff0c\u8bf7\u68c0\u67e5 JSON \u6587\u4ef6');
-    }
-  };
-  reader.readAsText(file,'utf-8');
 }
 // SM-2 复习间隔（天）
 function getReviewInterval(reviewCount){return[1,2,4,7,15,30][Math.min(reviewCount,5)];}
@@ -3606,106 +3390,6 @@ function getDueCount(sid){
       if(w._nextReview&&w._nextReview<=today&&w.status==='known') count++;
     }
   return count;
-}
-function getTotalDueCount(){
-  let total=0;
-  for(const sid of Object.keys(sections)) total+=getDueCount(sid);
-  return total;
-}
-function getSpellingErrorWords(){
-  const seen={};
-  const words=[];
-  for(const sid of Object.keys(sections)){
-    for(const cat of sections[sid].categories){
-      for(const w of cat.words){
-        if(spellingErrors[w.word] && !seen[w.word]){
-          words.push(w);
-          seen[w.word]=1;
-        }
-      }
-    }
-  }
-  words.sort((a,b)=>(spellingErrors[b.word]?.count||0)-(spellingErrors[a.word]?.count||0));
-  return words;
-}
-function findFirstDueTarget(){
-  const today=todayStr();
-  for(const sid of Object.keys(sections)){
-    const cats=sections[sid].categories;
-    for(let ci=0;ci<cats.length;ci++){
-      const hit=cats[ci].words.find(w=>w._nextReview&&w._nextReview<=today&&w.status==='known');
-      if(hit) return {section:sid,categoryIndex:ci,word:hit.word};
-    }
-  }
-  return null;
-}
-function jumpToWordByText(wordText){
-  const cat=currentCategory();
-  if(!cat) return false;
-  const idx=cat.words.findIndex(w=>w.word===wordText);
-  if(idx<0) return false;
-  currentWordIndex=idx;
-  buildFilteredWords();
-  const found=filteredWords.findIndex(w=>w.word===wordText);
-  filteredIdx=found>=0?found:0;
-  return true;
-}
-function updateQuickActionState(){
-  const dueEl=document.getElementById('todayReviewCount');
-  const wrongEl=document.getElementById('wrongReviewCount');
-  const continueBtn=document.getElementById('continueBtn');
-  if(dueEl) dueEl.textContent=getTotalDueCount();
-  if(wrongEl) wrongEl.textContent=getSpellingErrorWords().length;
-  if(continueBtn) continueBtn.disabled=!lastSession;
-}
-function restoreLastSession(showNotice){
-  if(!lastSession||!sections[lastSession.section]) return false;
-  currentSection=lastSession.section;
-  currentCategoryIndex=Math.min(Math.max(lastSession.categoryIndex||0,0),sections[currentSection].categories.length-1);
-  currentWordIndex=0;
-  currentMode=lastSession.mode||'flashcard';
-  cardFilter=lastSession.filter||'all';
-  spellingSource=lastSession.source||'category';
-  if(spellingSource==='errors') customSpellWords=getSpellingErrorWords();
-  document.querySelectorAll('.sec-tab').forEach(t=>t.classList.remove('active'));
-  document.getElementById('tab-'+currentSection).classList.add('active');
-  document.querySelectorAll('.mode-tab').forEach(t=>t.classList.toggle('active',t.dataset.mode===currentMode));
-  document.querySelectorAll('.filter-tab').forEach(b=>b.classList.toggle('active',b.dataset.filter===cardFilter));
-  updateSidebarHeader();
-  renderSidebar();
-  updateStats();
-  updateBreadcrumb();
-  buildFilteredWords();
-  if(lastSession.word) jumpToWordByText(lastSession.word);
-  if(currentMode==='grid') renderGrid();
-  else if(currentMode==='spelling') renderSpelling();
-  else renderCard();
-  updateQuickActionState();
-  if(showNotice) showToast('已恢复上次学习位置');
-  return true;
-}
-function continueLastSession(){
-  if(!restoreLastSession(true)) showToast('还没有可继续的学习记录');
-}
-function startTodayReview(){
-  const target=findFirstDueTarget();
-  if(!target){showToast('今天没有待复习单词');return;}
-  if(currentSection!==target.section) switchSection(target.section);
-  selectCategory(target.categoryIndex);
-  setFilter('review');
-  jumpToWordByText(target.word);
-  if(currentMode!=='flashcard') switchMode('flashcard'); else renderCard();
-  saveLastSession();
-  showToast('已进入今日待复习');
-}
-function startWrongWordReview(){
-  const words=getSpellingErrorWords();
-  if(words.length===0){showToast('还没有拼写错词');return;}
-  spellingSource='errors';
-  customSpellWords=words.slice();
-  if(currentMode!=='spelling') switchMode('spelling'); else renderSpelling();
-  saveLastSession();
-  showToast('已进入错词听写');
 }
 
 // ============ STATS ============
@@ -3799,8 +3483,6 @@ function switchSection(sectionId) {
   currentSection=sectionId;
   currentCategoryIndex=0;
   currentWordIndex=0;
-  spellingSource='category';
-  customSpellWords=[];
   document.querySelectorAll('.sec-tab').forEach(t=>t.classList.remove('active'));
   document.getElementById('tab-'+sectionId).classList.add('active');
   const sc=document.getElementById('studyContent');
@@ -3811,27 +3493,21 @@ function switchSection(sectionId) {
     if(currentMode==='flashcard') renderCard();
     if(currentMode==='grid') renderGrid();
     if(currentMode==='spelling') renderSpelling();
-    saveLastSession();
     sc.classList.remove('fading');
   },180);
 }
 function selectCategory(idx) {
   currentCategoryIndex=idx;
   currentWordIndex=0;
-  spellingSource='category';
-  customSpellWords=[];
   buildFilteredWords();
   updateBreadcrumb();renderSidebar();
   if(currentMode==='flashcard') renderCard();
   if(currentMode==='grid') renderGrid();
-  if(currentMode==='spelling') renderSpelling();
-  saveLastSession();
 }
 
 // ============ MODE SWITCH ============
 function switchMode(mode) {
   currentMode=mode;
-  if(mode!=='spelling'){spellingSource='category';customSpellWords=[];}
   document.querySelectorAll('.mode-tab').forEach(t=>t.classList.remove('active'));
   document.querySelector(`[data-mode="${mode}"]`).classList.add('active');
   const fa=document.getElementById('flashcardArea');
@@ -3841,18 +3517,14 @@ function switchMode(mode) {
   if(mode==='flashcard'){fa.style.display='';renderCard();}
   else if(mode==='grid'){ga.classList.add('visible');renderGrid();}
   else if(mode==='spelling'){if(sa)sa.style.display='flex';renderSpelling();}
-  saveLastSession();
 }
 
 // ============ FILTER ============
 function setFilter(f) {
   cardFilter=f;
-  spellingSource='category';
-  customSpellWords=[];
   document.querySelectorAll('.filter-tab').forEach(b=>b.classList.toggle('active',b.dataset.filter===f));
   buildFilteredWords();
   renderCard();
-  saveLastSession();
 }
 function buildFilteredWords() {
   const cat=currentCategory();
@@ -3869,21 +3541,20 @@ function buildFilteredWords() {
     filteredIdx=0;
   }
   currentWordIndex = filteredWords.length>0 ? cat.words.indexOf(filteredWords[filteredIdx]) : 0;
-  if(currentWordIndex<0) currentWordIndex=0;
 }
 
 // ============ CARD RENDERING ============
 function renderCard() {
   if(filteredWords.length===0){
-    document.getElementById('cardWord').textContent=cardFilter==='review'?'今日复习完成':'无单词';
+    document.getElementById('cardWord').textContent='无单词';
     document.getElementById('cardPhonetic').textContent='';
-    document.getElementById('cardMeaning').textContent=cardFilter==='review'?'当前分类的待复习单词已全部完成':'本分类下无符合条件的单词';
+    document.getElementById('cardMeaning').textContent='本分类下无符合条件的单词';
     document.getElementById('cardRootRef').style.display='none';
     document.getElementById('cardExample').innerHTML='';
     document.getElementById('cardCounter').textContent='0 / 0';
     document.getElementById('dotFront').className='card-status-dot new';
     document.getElementById('dotBack').className='card-status-dot new';
-    document.getElementById('cardInner').classList.toggle('flipped',cardFilter==='review');
+    document.getElementById('cardInner').classList.remove('flipped');
     return;
   }
   const word=filteredWords[filteredIdx];
@@ -3898,7 +3569,6 @@ function renderCard() {
   const sc=word.status==='known'?'known':word.status==='learning'?'learning':'new';
   document.getElementById('dotFront').className='card-status-dot '+sc;
   document.getElementById('dotBack').className='card-status-dot '+sc;
-  if(cardFilter==='review') document.getElementById('cardInner').classList.add('flipped');
 }
 function flipCard() { document.getElementById('cardInner').classList.toggle('flipped'); }
 // Card parallax tilt
@@ -3913,8 +3583,8 @@ function flipCard() { document.getElementById('cardInner').classList.toggle('fli
   });
   card.addEventListener('mouseleave',function(){card.style.transform='perspective(1200px) rotateY(0) rotateX(0)';});
 })();
-function prevCard(e){e&&e.stopPropagation();if(filteredWords.length===0)return;flashBtn('prevBtn');filteredIdx=(filteredIdx-1+filteredWords.length)%filteredWords.length;currentWordIndex=currentCategory().words.indexOf(filteredWords[filteredIdx]);renderCard();saveLastSession();}
-function nextCard(e){e&&e.stopPropagation();if(filteredWords.length===0)return;flashBtn('nextBtn');filteredIdx=(filteredIdx+1)%filteredWords.length;currentWordIndex=currentCategory().words.indexOf(filteredWords[filteredIdx]);renderCard();saveLastSession();}
+function prevCard(e){e&&e.stopPropagation();if(filteredWords.length===0)return;flashBtn('prevBtn');filteredIdx=(filteredIdx-1+filteredWords.length)%filteredWords.length;renderCard();}
+function nextCard(e){e&&e.stopPropagation();if(filteredWords.length===0)return;flashBtn('nextBtn');filteredIdx=(filteredIdx+1)%filteredWords.length;renderCard();}
 function flashBtn(id){const b=document.getElementById(id);if(!b)return;b.classList.add('pressed');setTimeout(()=>b.classList.remove('pressed'),200);}
 
 // ============ MARK WORD ============
@@ -3926,7 +3596,7 @@ function markWord(status,e) {
   if(!wordStatuses[currentSection]) wordStatuses[currentSection]={};
   updateReview(word,status==='known');
   saveStatuses();updateStats();renderSidebar();
-  buildFilteredWords();renderCard();saveLastSession();updateQuickActionState();
+  buildFilteredWords();renderCard();
   showToast(status==='known'?`✓ "${word.word}" 已掌握,${word._nextReview?'下次复习:'+word._nextReview:''}`:`↻ "${word.word}" 复习重置`);
 }
 
@@ -3960,7 +3630,7 @@ function renderGrid(){
 }
 function jumpToCard(wordIdx) {
   const cat=currentCategory();
-  filteredWords=[cat.words[wordIdx]];filteredIdx=0;currentWordIndex=wordIdx;
+  filteredWords=[cat.words[wordIdx]];filteredIdx=0;
   switchMode('flashcard');renderCard();
 }
 
@@ -4050,16 +3720,9 @@ function toggleSidebar(){document.getElementById('sidebar').classList.toggle('op
 // ============ SPELLING ============
 function speakSpellWord(e){e&&e.stopPropagation();if(spellWords.length===0)return;const w=spellWords[spellIndex];if(!w)return;if('speechSynthesis' in window){window.speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(w.word);u.lang='en-US';u.rate=0.8;window.speechSynthesis.speak(u);}}
 
-function setSpellFilter(f){
-  spellFilter=f;
-  document.querySelectorAll('#spellFilterRow .gfbtn').forEach(function(b){b.classList.toggle('active',b.dataset.sf===f);});
-  renderSpelling();
-}
-
 function renderSpelling(){
   const cat=currentCategory();
-  if(spellFilter==='all') spellWords=[...cat.words];
-  else spellWords=cat.words.filter(w=>w.status===spellFilter);
+  spellWords=cardFilter==='all'?[...cat.words]:cat.words.filter(w=>w.status===cardFilter);
   if(spellWords.length===0){document.getElementById('spellMeaning').textContent='无单词';return;}
   // Shuffle
   for(let i=spellWords.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[spellWords[i],spellWords[j]]=[spellWords[j],spellWords[i]];}
@@ -4081,7 +3744,7 @@ function showSpellWord(){
   }
   const w=spellWords[spellIndex];
   document.getElementById('spellMeaning').textContent=w.meaning||w.word;
-  document.getElementById('spellHint').textContent='';
+  document.getElementById('spellHint').textContent=w.breakdown||'';
   document.getElementById('spellResult').textContent='';
   document.getElementById('spellResult').className='spell-result';
   document.getElementById('spellStats').textContent=`正确 ${spellCorrect} / 总 ${spellTotal}${spellTotal>0?' ('+Math.round(spellCorrect/spellTotal*100)+'%)':''}`;
@@ -4112,7 +3775,6 @@ function checkSpelling(){
     spellingErrors[w.word].count++;
     spellingErrors[w.word].lastWrong=todayStr();
     localStorage.setItem('spelling_errors',JSON.stringify(spellingErrors));
-    updateQuickActionState();
   }
   document.getElementById('spellStats').textContent=`正确 ${spellCorrect} / 总 ${spellTotal} (${Math.round(spellCorrect/spellTotal*100)}%)`;
   spellIndex++;
@@ -4121,10 +3783,6 @@ function checkSpelling(){
 
 // Enter key to submit spelling
 document.getElementById('spellInput').addEventListener('keydown',function(e){if(e.key==='Enter')checkSpelling();});
-document.getElementById('progressImportInput').addEventListener('change',function(e){
-  const file=e.target.files&&e.target.files[0];
-  if(file) importStudyProgress(file);
-});
 
 // ============ KEYBOARD ============
 const KMAP={ArrowLeft:'kL',ArrowRight:'kR',' ':'kSp','1':'k1','2':'k2'};
@@ -4187,7 +3845,6 @@ function navigateToWord(sid,catIdx,wordIdx){
   else renderCard();
   document.getElementById('globalResults').style.display='none';
   document.getElementById('globalSearch').value='';
-  saveLastSession();
 }
 // Close search on outside click
 document.addEventListener('click',function(e){
@@ -4195,113 +3852,16 @@ document.addEventListener('click',function(e){
   if(wrap&&!wrap.contains(e.target)) document.getElementById('globalResults').style.display='none';
 });
 
-translateExample = function(ex, meaning, exCn){
-  if(exCn) return exCn;
-  if(!ex) return '';
-  if(ex.indexOf(' is important')>0||ex.indexOf(' are important')>0) return ex.replace(/ (is|are) important/,'')+UI_TEXT.veryImportant;
-  if(ex.indexOf('We talked about ')>-1) return UI_TEXT.discussed+ex.replace('We talked about ','').replace('.','')+'。';
-  if(ex.indexOf('We need to ')>-1) return UI_TEXT.needTo+ex.replace('We need to ','').replace('.','')+'。';
-  if(ex.indexOf('They ')>-1&&ex.indexOf(' it every day')>-1) return UI_TEXT.everyDay+ex.split(' ')[1]+'。';
-  if(ex.indexOf('This is very ')>-1) return UI_TEXT.very+ex.replace('This is very ','').replace('.','')+'。';
-  if(ex.indexOf(' is important')>-1) return ex.replace(' is important.','')+UI_TEXT.veryImportant;
-  if(ex.indexOf(' of this is clear')>-1) return UI_TEXT.relatedUsage+ex.split(' ')[0]+'的用法。';
-  if(ex.indexOf('We often use')>-1) return UI_TEXT.commonUse+ex.replace(/We often use "?/,'').replace(/"?\./,'')+UI_TEXT.thisWord;
-  if(meaning) return UI_TEXT.example+meaning.split(' ').slice(0,2).join(' ');
-  return '';
-};
-
-renderCard = function() {
-  const cardInner=document.getElementById('cardInner');
-  if(filteredWords.length===0){
-    document.getElementById('cardWord').textContent=cardFilter==='review'?UI_TEXT.reviewDone:UI_TEXT.noWords;
-    document.getElementById('cardPhonetic').textContent='';
-    document.getElementById('cardMeaning').textContent=cardFilter==='review'?UI_TEXT.reviewDoneDesc:UI_TEXT.noMatchingWords;
-    document.getElementById('cardRootRef').style.display='none';
-    document.getElementById('cardExample').innerHTML='';
-    document.getElementById('cardCounter').textContent='0 / 0';
-    document.getElementById('dotFront').className='card-status-dot new';
-    document.getElementById('dotBack').className='card-status-dot new';
-    cardInner.classList.toggle('flipped',cardFilter==='review');
-    return;
-  }
-  const word=filteredWords[filteredIdx];
-  cardInner.classList.remove('flipped');
-  document.getElementById('cardWord').textContent=word.word;
-  document.getElementById('cardPhonetic').textContent=word.phonetic||'';
-  document.getElementById('cardMeaning').textContent=word.meaning||UI_TEXT.meaningPending;
-  const ref=document.getElementById('cardRootRef');
-  if(word.breakdown){ref.textContent=word.breakdown;ref.style.display='';}else{ref.style.display='none';}
-  document.getElementById('cardExample').innerHTML=(word.example||'')+'<div class="card-ex-cn">'+translateExample(word.example,word.meaning,word.exampleCn||'')+'</div>';
-  document.getElementById('cardCounter').textContent=(filteredIdx+1)+' / '+filteredWords.length;
-  const sc=word.status==='known'?'known':word.status==='learning'?'learning':'new';
-  document.getElementById('dotFront').className='card-status-dot '+sc;
-  document.getElementById('dotBack').className='card-status-dot '+sc;
-  if(cardFilter==='review') cardInner.classList.add('flipped');
-};
-
-showSpellWord = function(){
-  if(spellIndex>=spellWords.length){
-    document.getElementById('spellMeaning').textContent='🎉 '+UI_TEXT.allDone+'!';
-    document.getElementById('spellResult').textContent=`${UI_TEXT.correct} ${spellCorrect} / ${spellTotal}`;
-    document.getElementById('spellResult').className='spell-result '+(spellCorrect===spellTotal?'correct':'wrong');
-    document.getElementById('spellStats').textContent='';
-    document.getElementById('spellHint').textContent='';
-    document.getElementById('spellInput').style.display='none';
-    document.getElementById('spellBtn').style.display='none';
-    if(spellCorrect===spellTotal) triggerConfetti();
-    return;
-  }
-  const w=spellWords[spellIndex];
-  document.getElementById('spellMeaning').textContent=w.meaning||w.word;
-  document.getElementById('spellHint').textContent='';
-  document.getElementById('spellResult').textContent='';
-  document.getElementById('spellResult').className='spell-result';
-  document.getElementById('spellStats').textContent=`${UI_TEXT.correct} ${spellCorrect} / ${UI_TEXT.total} ${spellTotal}${spellTotal>0?' ('+Math.round(spellCorrect/spellTotal*100)+'%)':''}`;
-  document.getElementById('spellInput').value='';
-  document.getElementById('spellInput').style.display='';
-  document.getElementById('spellBtn').style.display='';
-  document.getElementById('spellInput').focus();
-  setTimeout(()=>speakSpellWord(),600);
-};
-
-checkSpelling = function(){
-  if(spellIndex>=spellWords.length) return;
-  const w=spellWords[spellIndex];
-  const inp=(document.getElementById('spellInput').value||'').trim().toLowerCase();
-  const correct=w.word.toLowerCase();
-  spellTotal++;
-  const resultEl=document.getElementById('spellResult');
-  if(inp===correct){
-    spellCorrect++;
-    resultEl.textContent='✅ '+UI_TEXT.correct+'!';
-    resultEl.className='spell-result correct';
-  }else{
-    resultEl.innerHTML='❌ '+UI_TEXT.correctAnswer+': <b>'+w.word+'</b>';
-    resultEl.className='spell-result wrong';
-    if(!spellingErrors[w.word]) spellingErrors[w.word]={count:0,word:w.word};
-    spellingErrors[w.word].count++;
-    spellingErrors[w.word].lastWrong=todayStr();
-    localStorage.setItem('spelling_errors',JSON.stringify(spellingErrors));
-    updateQuickActionState();
-  }
-  document.getElementById('spellStats').textContent=`${UI_TEXT.correct} ${spellCorrect} / ${UI_TEXT.total} ${spellTotal} (${Math.round(spellCorrect/spellTotal*100)}%)`;
-  spellIndex++;
-  setTimeout(()=>showSpellWord(),1000);
-};
-
 // ============ INIT ============
-applyWordPatches();
 buildSearchIndex();
 loadStatuses();
-loadLastSession();
 initStatuses();
 updateSidebarHeader();
 renderSidebar();
 updateStats();
 updateBreadcrumb();
 buildFilteredWords();
-if(!restoreLastSession(false)) renderCard();
-updateQuickActionState();
+renderCard();
 </script>
 </body>
 </html>
