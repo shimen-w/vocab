@@ -253,6 +253,7 @@ kbd.active-key{border-color:var(--gold);background:rgba(226,168,71,0.15);color:v
 .spell-result.correct{color:var(--green)}
 .spell-result.wrong{color:var(--red)}
 .spell-stats{font-size:12px;color:var(--text-muted);margin-top:12px}
+.spell-filter-row{display:flex;gap:6px;justify-content:center;margin-bottom:16px}
 </style>
 </head>
 <body>
@@ -412,6 +413,11 @@ kbd.active-key{border-color:var(--gold);background:rgba(226,168,71,0.15);color:v
       <!-- SPELLING MODE -->
       <div class="spelling-area" id="spellingArea" style="display:none">
         <div class="spell-card">
+          <div class="spell-filter-row" id="spellFilterRow">
+            <button class="gfbtn active" data-sf="all" onclick="setSpellFilter('all')">全部</button>
+            <button class="gfbtn" data-sf="known" onclick="setSpellFilter('known')">已掌握</button>
+            <button class="gfbtn" data-sf="learning" onclick="setSpellFilter('learning')">学习中</button>
+          </div>
           <div class="spell-speaker" onclick="event.stopPropagation();speakSpellWord(event)">🔊 <span>点击听发音</span></div>
           <div class="spell-meaning" id="spellMeaning">-</div>
           <div class="spell-hint" id="spellHint"></div>
@@ -3327,7 +3333,7 @@ let gridFilter = 'all';
 let filteredWords = [];
 let filteredIdx = 0;
 let spellingErrors = {};
-let spellIndex = 0, spellCorrect = 0, spellTotal = 0, spellWords = [];
+let spellIndex = 0, spellCorrect = 0, spellTotal = 0, spellWords = [], spellFilter = 'all';
 let spellingSource = 'category';
 let customSpellWords = [];
 let lastSession = null;
@@ -4044,12 +4050,16 @@ function toggleSidebar(){document.getElementById('sidebar').classList.toggle('op
 // ============ SPELLING ============
 function speakSpellWord(e){e&&e.stopPropagation();if(spellWords.length===0)return;const w=spellWords[spellIndex];if(!w)return;if('speechSynthesis' in window){window.speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(w.word);u.lang='en-US';u.rate=0.8;window.speechSynthesis.speak(u);}}
 
+function setSpellFilter(f){
+  spellFilter=f;
+  document.querySelectorAll('#spellFilterRow .gfbtn').forEach(function(b){b.classList.toggle('active',b.dataset.sf===f);});
+  renderSpelling();
+}
+
 function renderSpelling(){
   const cat=currentCategory();
-  if(spellingSource==='errors') spellWords=[...customSpellWords];
-  else if(cardFilter==='all') spellWords=[...cat.words];
-  else if(cardFilter==='review'){const t=todayStr();spellWords=cat.words.filter(w=>w._nextReview&&w._nextReview<=t&&w.status==='known');}
-  else spellWords=cat.words.filter(w=>w.status===cardFilter);
+  if(spellFilter==='all') spellWords=[...cat.words];
+  else spellWords=cat.words.filter(w=>w.status===spellFilter);
   if(spellWords.length===0){document.getElementById('spellMeaning').textContent='无单词';return;}
   // Shuffle
   for(let i=spellWords.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[spellWords[i],spellWords[j]]=[spellWords[j],spellWords[i]];}
