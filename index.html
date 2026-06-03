@@ -3653,35 +3653,15 @@ function speakWord(e){
 
 function translateExample(ex, meaning){
   if(!ex) return '';
-  var w=meaning||'';
-  var tpls=[
-    ['X is important.', 'X很重要。'],
-    ['We talked about X.', '我们讨论了X。'],
-    ['The X of this is clear.', '这个X的用法很清楚。'],
-    ['We need to X.', '我们需要X。'],
-    ['They X it every day.', '他们每天都X。'],
-    ['She tried to X the problem.', '她试着用X解决这个问题。'],
-    ['This is very X.', '这非常X。'],
-    ['It was a X experience.', '这是一次X的经历。'],
-    ['They found it X.', '他们发现这很X。'],
-    ['She did it X.', '她X地做了这件事。'],
-    ['They X agreed.', '他们X地同意了。'],
-    ['We often use "X".', '我们常用X这个词。'],
-    ['The X is important.', 'X很重要。'],
-    ['X is important.', 'X很重要。'],
-    ['X was surprising.', 'X令人惊讶。'],
-  ];
-  for(var i=0;i<tpls.length;i++){
-    var pat=tpls[i][0], cn=tpls[i][1];
-    var esc=pat.replace(/[.*+?^${}()|[\]\]/g,'\$&');
-    var re=new RegExp('^'+esc.replace('X','(.+?)')+'$');
-    var m=ex.match(re);
-    if(m){return cn.replace('X','<b>'+m[1]+'</b>');}
-  }
-  if(w){
-    var words=ex.replace(/[.,!?]/g,'').split(' ').slice(0,3).join(' ');
-    return '例句大意: 涉及"'+words+'"';
-  }
+  if(ex.indexOf(' is important')>0||ex.indexOf(' are important')>0) return ex.replace(/ (is|are) important/,'')+' 很重要。';
+  if(ex.indexOf('We talked about ')>-1) return '我们讨论了 '+ex.replace('We talked about ','').replace('.','')+'。';
+  if(ex.indexOf('We need to ')>-1) return '我们需要'+ex.replace('We need to ','').replace('.','')+'。';
+  if(ex.indexOf('They ')>-1&&ex.indexOf(' it every day')>-1) return '他们每天都'+ex.split(' ')[1]+'。';
+  if(ex.indexOf('This is very ')>-1) return '这非常'+ex.replace('This is very ','').replace('.','')+'。';
+  if(ex.indexOf(' is important')>-1) return ex.replace(' is important.','')+'很重要。';
+  if(ex.indexOf(' of this is clear')>-1) return '涉及'+ex.split(' ')[0]+'的用法。';
+  if(ex.indexOf('We often use')>-1) return '我们常用'+ex.replace(/We often use "?/,'').replace(/"?\./,'')+'这个词。';
+  if(meaning){return '例: '+meaning.split(' ').slice(0,2).join(' ');}
   return '';
 }
 
