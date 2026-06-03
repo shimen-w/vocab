@@ -3720,15 +3720,15 @@ function buildFilteredWords() {
 // ============ CARD RENDERING ============
 function renderCard() {
   if(filteredWords.length===0){
-    document.getElementById('cardWord').textContent='无单词';
+    document.getElementById('cardWord').textContent=cardFilter==='review'?'今日复习完成':'无单词';
     document.getElementById('cardPhonetic').textContent='';
-    document.getElementById('cardMeaning').textContent='本分类下无符合条件的单词';
+    document.getElementById('cardMeaning').textContent=cardFilter==='review'?'当前分类的待复习单词已全部完成':'本分类下无符合条件的单词';
     document.getElementById('cardRootRef').style.display='none';
     document.getElementById('cardExample').innerHTML='';
     document.getElementById('cardCounter').textContent='0 / 0';
     document.getElementById('dotFront').className='card-status-dot new';
     document.getElementById('dotBack').className='card-status-dot new';
-    document.getElementById('cardInner').classList.remove('flipped');
+    document.getElementById('cardInner').classList.toggle('flipped',cardFilter==='review');
     return;
   }
   const word=filteredWords[filteredIdx];
@@ -3743,6 +3743,7 @@ function renderCard() {
   const sc=word.status==='known'?'known':word.status==='learning'?'learning':'new';
   document.getElementById('dotFront').className='card-status-dot '+sc;
   document.getElementById('dotBack').className='card-status-dot '+sc;
+  if(cardFilter==='review') document.getElementById('cardInner').classList.add('flipped');
 }
 function flipCard() { document.getElementById('cardInner').classList.toggle('flipped'); }
 // Card parallax tilt
