@@ -246,9 +246,31 @@ kbd.active-key{border-color:var(--gold);background:rgba(226,168,71,0.15);color:v
 .spell-result.correct{color:var(--green)}
 .spell-result.wrong{color:var(--red)}
 .spell-stats{font-size:12px;color:var(--text-muted);margin-top:12px}
+
+/* Login */
+.login-overlay{display:flex;position:fixed;inset:0;background:var(--bg-deep);z-index:999;justify-content:center;align-items:center;flex-direction:column}
+.login-overlay.hidden{display:none}
+.login-card{background:var(--bg-card);border:1px solid var(--gold-border);border-radius:var(--r-lg);padding:36px 32px;text-align:center;max-width:360px;width:90%;box-shadow:0 8px 32px rgba(0,0,0,0.5)}
+.login-card h2{font-family:var(--ff-display);font-size:22px;color:var(--gold-bright);margin-bottom:6px}
+.login-card .login-sub{font-size:12px;color:var(--text-muted);margin-bottom:20px}
+.login-inp{width:100%;background:rgba(255,255,255,0.04);border:1px solid var(--gold-border);border-radius:var(--r-sm);padding:10px 14px;color:var(--text-primary);font-size:16px;text-align:center;outline:none;margin-bottom:12px;transition:all var(--t-s)}
+.login-inp:focus{border-color:var(--gold);box-shadow:0 0 10px var(--gold-glow)}
+.login-btn{background:var(--gold-dim);border:none;color:var(--bg-deep);padding:10px 36px;border-radius:20px;cursor:pointer;font-size:14px;font-weight:500;transition:all var(--t-s)}
+.login-btn:hover{background:var(--gold)}
+.login-msg{font-size:12px;color:var(--red);margin-top:8px;min-height:18px}
 </style>
 </head>
 <body>
+<div class="login-overlay" id="loginOverlay">
+  <div class="login-card">
+    <h2>专升本词汇记忆系统</h2>
+    <div class="login-sub">请输入密码进入学习</div>
+    <input class="login-inp" id="loginInput" type="password" placeholder="输入密码" onkeydown="if(event.key==='Enter')doLogin()">
+    <button class="login-btn" onclick="doLogin()">进入系统</button>
+    <div class="login-msg" id="loginMsg"></div>
+  </div>
+</div>
+
 
 <svg width="0" height="0" style="position:absolute">
   <defs>
@@ -414,6 +436,51 @@ kbd.active-key{border-color:var(--gold);background:rgba(226,168,71,0.15);color:v
 <div class="toast" id="toast"></div>
 
 <script>
+// ============ LOGIN ============
+var PASSWORD_HASH = '8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92';
+async function doLogin(){
+  var inp=document.getElementById('loginInput').value.trim();
+  if(!inp){document.getElementById('loginMsg').textContent='请输入密码';return;}
+  var hash=await sha256(inp);
+  if(hash===PASSWORD_HASH){
+    document.getElementById('loginOverlay').classList.add('hidden');
+    sessionStorage.setItem('vocab_logged_in','1');
+  }else{
+    document.getElementById('loginMsg').textContent='密码错误,请重试';
+    document.getElementById('loginInput').value='';
+  }
+}
+async function sha256(msg){
+  var buf=new TextEncoder().encode(msg);
+  var hash=await crypto.subtle.digest('SHA-256',buf);
+  return Array.from(new Uint8Array(hash)).map(function(b){return b.toString(16).padStart(2,'0');}).join('');
+}
+// Check session
+if(sessionStorage.getItem('vocab_logged_in')==='1'){
+  document.addEventListener('DOMContentLoaded',function(){document.getElementById('loginOverlay').classList.add('hidden');});
+}else{
+  document.addEventListener('DOMContentLoaded',function(){document.getElementById('loginInput').focus();});
+}
+// Change password (sidebar admin)
+function showChangePwd(){
+  var oldPwd=prompt('请输入旧密码:');if(!oldPwd) return;
+  sha256(oldPwd).then(function(h){
+    if(h!==PASSWORD_HASH){alert('旧密码错误');return;}
+    var newPwd=prompt('请输入新密码(至少4位):');if(!newPwd||newPwd.length<4){alert('密码至少4位');return;}
+    sha256(newPwd).then(function(nh){
+      PASSWORD_HASH=nh;
+      localStorage.setItem('vocab_pwd_hash',nh);
+      alert('密码修改成功!请保存此哈希值到HTML文件中:
+'+nh);
+    });
+  });
+}
+// Load custom hash if set
+(function(){
+  var saved=localStorage.getItem('vocab_pwd_hash');
+  if(saved) PASSWORD_HASH=saved;
+})();
+
 const sections = {
   roots_affixes: {
     id: 'roots_affixes',
