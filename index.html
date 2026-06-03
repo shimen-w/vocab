@@ -3648,18 +3648,14 @@ function jumpToCard(wordIdx) {
 function speakWord(e){
   e&&e.stopPropagation();
   if(filteredWords.length===0) return;
-  const word=filteredWords[filteredIdx];
+  var word=filteredWords[filteredIdx];
   if(!word||!word.word) return;
-  if('speechSynthesis' in window){
-    window.speechSynthesis.cancel();
-    const u=new SpeechSynthesisUtterance(word.word);
-    u.lang='en-US';u.rate=0.85;
-    const btn=document.getElementById('speakBtn');
-    btn.classList.add('speaking');
-    u.onend=()=>btn.classList.remove('speaking');
-    u.onerror=()=>btn.classList.remove('speaking');
-    window.speechSynthesis.speak(u);
-  }
+  var btn=document.getElementById('speakBtn');
+  btn.classList.add('speaking');
+  var audio=new Audio('https://dict.youdao.com/dictvoice?audio='+encodeURIComponent(word.word)+'&type=0');
+  audio.onended=function(){btn.classList.remove('speaking');};
+  audio.onerror=function(){btn.classList.remove('speaking');};
+  audio.play();
 }
 
 function translateExample(ex, meaning, exCn){
@@ -3683,12 +3679,7 @@ function speakExample(e){
   var word=filteredWords[filteredIdx];
   var text=word&&word.example?word.example:'';
   if(!text) return;
-  if('speechSynthesis' in window){
-    window.speechSynthesis.cancel();
-    var u=new SpeechSynthesisUtterance(text);
-    u.lang='en-US';u.rate=0.8;
-    window.speechSynthesis.speak(u);
-  }
+  new Audio('https://dict.youdao.com/dictvoice?audio='+encodeURIComponent(text)+'&type=0').play();
 }
 
 // ============ TOAST ============
@@ -3728,7 +3719,7 @@ document.getElementById('sidebarSearch').addEventListener('input',renderSidebar)
 function toggleSidebar(){document.getElementById('sidebar').classList.toggle('open');document.getElementById('sbOverlay').classList.toggle('open');}
 
 // ============ SPELLING ============
-function speakSpellWord(e){e&&e.stopPropagation();if(spellWords.length===0)return;const w=spellWords[spellIndex];if(!w)return;if('speechSynthesis' in window){window.speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(w.word);u.lang='en-US';u.rate=0.8;window.speechSynthesis.speak(u);}}
+function speakSpellWord(e){e&&e.stopPropagation();if(spellWords.length===0)return;var w=spellWords[spellIndex];if(!w)return;new Audio('https://dict.youdao.com/dictvoice?audio='+encodeURIComponent(w.word)+'&type=0').play();}
 
 function setSpellFilter(f){
   spellFilter=f;
