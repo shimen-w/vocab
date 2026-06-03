@@ -481,8 +481,7 @@ function showChangePwd(){
     sha256(newPwd).then(function(nh){
       PASSWORD_HASH=nh;
       localStorage.setItem('vocab_pwd_hash',nh);
-      alert('密码修改成功!请保存此哈希值到HTML文件中:
-'+nh);
+      alert('密码修改成功!请保存此哈希值到HTML文件中:\\n'+nh);
     });
   });
 }
