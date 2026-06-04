@@ -3648,14 +3648,23 @@ function jumpToCard(wordIdx) {
 function speakWord(e){
   e&&e.stopPropagation();
   if(filteredWords.length===0) return;
-  var word=filteredWords[filteredIdx];
-  if(!word||!word.word) return;
+  var w=filteredWords[filteredIdx];
+  if(!w||!w.word) return;
   var btn=document.getElementById('speakBtn');
   btn.classList.add('speaking');
-  var audio=new Audio('https://dict.youdao.com/dictvoice?audio='+encodeURIComponent(word.word)+'&type=0');
-  audio.onended=function(){btn.classList.remove('speaking');};
-  audio.onerror=function(){btn.classList.remove('speaking');};
-  audio.play();
+  var done=function(){btn.classList.remove('speaking');};
+  function fallback(){
+    if('speechSynthesis' in window){
+      var u=new SpeechSynthesisUtterance(w.word);
+      u.lang='en-US';u.rate=0.85;
+      u.onend=done;u.onerror=done;
+      window.speechSynthesis.speak(u);
+    }else{done();}
+  }
+  var audio=new Audio('https://dict.youdao.com/dictvoice?audio='+encodeURIComponent(w.word)+'&type=0');
+  audio.onended=done;
+  audio.onerror=fallback;
+  audio.play().catch(fallback);
 }
 
 function translateExample(ex, meaning, exCn){
@@ -3676,10 +3685,19 @@ function translateExample(ex, meaning, exCn){
 function speakExample(e){
   e&&e.stopPropagation();
   if(filteredWords.length===0) return;
-  var word=filteredWords[filteredIdx];
-  var text=word&&word.example?word.example:'';
+  var w=filteredWords[filteredIdx];
+  var text=w&&w.example?w.example:'';
   if(!text) return;
-  new Audio('https://dict.youdao.com/dictvoice?audio='+encodeURIComponent(text)+'&type=0').play();
+  function fallback(){
+    if('speechSynthesis' in window){
+      var u=new SpeechSynthesisUtterance(text);
+      u.lang='en-US';u.rate=0.8;
+      window.speechSynthesis.speak(u);
+    }
+  }
+  var audio=new Audio('https://dict.youdao.com/dictvoice?audio='+encodeURIComponent(text)+'&type=0');
+  audio.onerror=fallback;
+  audio.play().catch(fallback);
 }
 
 // ============ TOAST ============
@@ -3719,7 +3737,22 @@ document.getElementById('sidebarSearch').addEventListener('input',renderSidebar)
 function toggleSidebar(){document.getElementById('sidebar').classList.toggle('open');document.getElementById('sbOverlay').classList.toggle('open');}
 
 // ============ SPELLING ============
-function speakSpellWord(e){e&&e.stopPropagation();if(spellWords.length===0)return;var w=spellWords[spellIndex];if(!w)return;new Audio('https://dict.youdao.com/dictvoice?audio='+encodeURIComponent(w.word)+'&type=0').play();}
+function speakSpellWord(e){
+  e&&e.stopPropagation();
+  if(spellWords.length===0) return;
+  var w=spellWords[spellIndex];
+  if(!w) return;
+  function fallback(){
+    if('speechSynthesis' in window){
+      var u=new SpeechSynthesisUtterance(w.word);
+      u.lang='en-US';u.rate=0.8;
+      window.speechSynthesis.speak(u);
+    }
+  }
+  var audio=new Audio('https://dict.youdao.com/dictvoice?audio='+encodeURIComponent(w.word)+'&type=0');
+  audio.onerror=fallback;
+  audio.play().catch(fallback);
+}
 
 function setSpellFilter(f){
   spellFilter=f;
