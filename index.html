@@ -3432,7 +3432,7 @@ function updateStats() {
   document.getElementById('statKnown').textContent=s.known;
   document.getElementById('statLearning').textContent=s.learning;
   document.getElementById('statTotal').textContent=s.total;
-  var due=getTotalDueCount();
+  var due=getDueCount(currentSection);
   var dueEl=document.getElementById('statDue');
   if(dueEl){dueEl.textContent=due;dueEl.parentElement.style.display='';}
   // Update review filter button with count
