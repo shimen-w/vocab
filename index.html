@@ -257,6 +257,20 @@ kbd.active-key{border-color:var(--gold);background:rgba(226,168,71,0.15);color:v
 .spell-result.wrong{color:var(--red)}
 .spell-stats{font-size:12px;color:var(--text-muted);margin-top:12px}
 .spell-filter-row{display:flex;gap:6px;justify-content:center;margin-bottom:16px}
+
+.review-btn{padding:8px 16px;border-radius:20px;border:1px solid var(--gold-border2);background:rgba(226,168,71,0.1);color:var(--gold-bright);font-family:var(--ff-ui);font-size:12px;cursor:pointer;transition:all var(--t-s);white-space:nowrap;display:flex;align-items:center;gap:6px}
+.review-btn:hover{background:rgba(226,168,71,0.18);transform:translateY(-1px);box-shadow:0 4px 12px var(--gold-glow)}
+.review-btn .rv-count{background:var(--gold);color:var(--bg-deep);border-radius:10px;padding:1px 7px;font-size:11px;font-weight:600}
+.review-progress{display:none;align-items:center;gap:16px;font-size:12px;color:var(--text-sec);padding:6px 16px;border-radius:12px;background:rgba(226,168,71,0.06);border:1px solid var(--gold-border)}
+.review-progress .rv-timer{color:var(--gold-bright);font-family:var(--ff-mono)}
+.review-complete-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:300;justify-content:center;align-items:center}
+.review-complete-overlay.show{display:flex}
+.review-complete-card{background:var(--bg-card);border:1px solid var(--gold-border);border-radius:var(--r-lg);padding:32px;text-align:center;max-width:380px;width:90%;box-shadow:0 16px 48px rgba(0,0,0,0.6)}
+.review-complete-card h3{font-family:var(--ff-display);font-size:24px;color:var(--gold-bright);margin-bottom:16px}
+.review-complete-card .rv-stat{font-size:14px;color:var(--text-sec);margin:6px 0}
+.review-complete-card .rv-stat b{color:var(--gold-bright)}
+.rv-close-btn{margin-top:16px;padding:8px 24px;border-radius:20px;border:1px solid var(--gold-border);background:transparent;color:var(--text-sec);cursor:pointer;font-size:13px;transition:all var(--t-s)}
+.rv-close-btn:hover{background:rgba(226,168,71,0.1);color:var(--gold-bright)}
 </style>
 </head>
 <body>
@@ -338,7 +352,8 @@ kbd.active-key{border-color:var(--gold);background:rgba(226,168,71,0.15);color:v
       <div class="breadcrumb" id="breadcrumb">
         <span class="bc-section">词根词缀法</span><span class="bc-sep">/</span><span class="bc-cat">pre- (前, 预先)</span>
       </div>
-      <div class="global-search" id="globalSearchWrap">
+      <button class="review-btn" id="reviewBtn" onclick="startReview()">📅 <span id="reviewDate">今天</span><span class="rv-count" id="reviewCount">0</span></button>
+        <div class="global-search" id="globalSearchWrap">
         <input class="global-sinp" id="globalSearch" type="text" placeholder="🔍 搜索单词..." autocomplete="off" oninput="searchGlobal()" onfocus="searchGlobal()">
         <div class="global-results" id="globalResults" style="display:none"></div>
       </div>
@@ -358,6 +373,7 @@ kbd.active-key{border-color:var(--gold);background:rgba(226,168,71,0.15);color:v
           <button class="filter-tab" data-filter="known" onclick="setFilter('known')">已掌握</button>
         <button class="filter-tab" data-filter="review" onclick="setFilter('review')">🔁待复习</button>
         </div>
+        <div class="review-progress" id="reviewProgress"><span class="rv-timer" id="rvTimer">⏱ 0:00</span><span>✅ <b id="rvDone">0</b>/<b id="rvTotal">0</b></span><span>🔄 还需 <b id="rvLeft">0</b></span></div>
         <div class="card-wrap">
           <div class="card-container" id="cardContainer" onclick="flipCard()">
             <div class="card-inner" id="cardInner">
@@ -426,6 +442,7 @@ kbd.active-key{border-color:var(--gold);background:rgba(226,168,71,0.15);color:v
       </div>
     </div>
   </main>
+<div class="review-complete-overlay" id="reviewCompleteOverlay"><div class="review-complete-card"><h3>🎉 今日复习完成!</h3><div class="rv-stat">📝 复习单词: <b id="rvStatTotal">0</b> 个</div><div class="rv-stat">✅ 标记掌握: <b id="rvStatKnown">0</b> 个</div><div class="rv-stat">🔄 还需巩固: <b id="rvStatLearning">0</b> 个</div><div class="rv-stat">⏱ 总用时: <b id="rvStatTime">0:00</b></div><button class="rv-close-btn" onclick="closeReviewComplete()">继续学习</button></div></div>
 </div>
 <button class="mobile-btn" onclick="toggleSidebar()">&#9776;</button>
 <div class="toast" id="toast"></div>
@@ -3328,6 +3345,7 @@ let filteredWords = [];
 let filteredIdx = 0;
 let spellingErrors = {};
 let spellIndex = 0, spellCorrect = 0, spellTotal = 0, spellWords = [], spellFilter = "all";
+let reviewActive = false, reviewStartTime = 0, reviewDueTotal = 0, reviewKnownCount = 0, reviewLearningCount = 0, reviewTimer = null;
 
 function currentCategory() { return sections[currentSection].categories[currentCategoryIndex]; }
 
@@ -3621,6 +3639,7 @@ function markWord(status,e) {
   updateReview(word,status==='known');
   saveStatuses();updateStats();renderSidebar();
   buildFilteredWords();renderCard();
+  if(reviewActive){if(status==="known")reviewKnownCount++;else reviewLearningCount++;updateReviewProgress();var allDone=!filteredWords.some(function(w){var t=todayStr();return w._nextReview&&w._nextReview<=t&&w.status==="known";});if(allDone)showReviewComplete();}
   showToast(status==='known'?`✓ "${word.word}" 已掌握,${word._nextReview?'下次复习:'+word._nextReview:''}`:`↻ "${word.word}" 复习重置`);
 }
 
@@ -3934,6 +3953,65 @@ document.addEventListener('click',function(e){
   const wrap=document.getElementById('globalSearchWrap');
   if(wrap&&!wrap.contains(e.target)) document.getElementById('globalResults').style.display='none';
 });
+
+
+// ============ REVIEW MODE ============
+function startReview(){
+  reviewActive=true;reviewStartTime=Date.now();reviewKnownCount=0;reviewLearningCount=0;
+  var today=todayStr(),dueWords=[];
+  for(var sid in sections){
+    var cats=sections[sid].categories;
+    for(var i=0;i<cats.length;i++){
+      for(var j=0;j<cats[i].words.length;j++){
+        var w=cats[i].words[j];
+        if(w._nextReview&&w._nextReview<=today&&w.status==="known") dueWords.push({section:sid,catIdx:i,wordIdx:j});
+      }
+    }
+  }
+  reviewDueTotal=dueWords.length;
+  if(reviewDueTotal===0){reviewActive=false;showToast("🎉 今日无待复习单词!");return;}
+  if(currentSection!==dueWords[0].section) switchSection(dueWords[0].section);
+  setTimeout(function(){
+    selectCategory(dueWords[0].catIdx);
+    setFilter("review");
+    if(currentMode!=="flashcard") switchMode("flashcard");
+  },200);
+  document.getElementById("reviewProgress").style.display="flex";
+  document.getElementById("rvTotal").textContent=reviewDueTotal;
+  document.getElementById("rvDone").textContent="0";
+  document.getElementById("rvLeft").textContent=reviewDueTotal;
+  document.getElementById("rvTimer").textContent="⏱ 0:00";
+  if(reviewTimer) clearInterval(reviewTimer);
+  reviewTimer=setInterval(updateReviewTimer,1000);
+  showToast("📅 开始今日复习: "+reviewDueTotal+" 词");
+}
+function updateReviewTimer(){
+  var elapsed=Math.floor((Date.now()-reviewStartTime)/1000);
+  var min=Math.floor(elapsed/60),sec=elapsed%60;
+  var el=document.getElementById("rvTimer");
+  if(el) el.textContent="⏱ "+min+":"+(sec<10?"0":"")+sec;
+}
+function updateReviewProgress(){
+  var done=reviewKnownCount+reviewLearningCount;
+  var elD=document.getElementById("rvDone");if(elD) elD.textContent=done;
+  var elL=document.getElementById("rvLeft");if(elL) elL.textContent=reviewDueTotal-done;
+}
+function showReviewComplete(){
+  if(reviewTimer){clearInterval(reviewTimer);reviewTimer=null;}
+  var elapsed=Math.floor((Date.now()-reviewStartTime)/1000);
+  var min=Math.floor(elapsed/60),sec=elapsed%60;
+  document.getElementById("rvStatTotal").textContent=reviewDueTotal;
+  document.getElementById("rvStatKnown").textContent=reviewKnownCount;
+  document.getElementById("rvStatLearning").textContent=reviewLearningCount;
+  document.getElementById("rvStatTime").textContent=min+":"+(sec<10?"0":"")+sec;
+  document.getElementById("reviewCompleteOverlay").classList.add("show");
+  document.getElementById("reviewProgress").style.display="none";
+  reviewActive=false;
+  triggerConfetti();
+}
+function closeReviewComplete(){
+  document.getElementById("reviewCompleteOverlay").classList.remove("show");
+}
 
 // ============ INIT ============
 buildSearchIndex();
