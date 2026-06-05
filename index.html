@@ -3407,6 +3407,11 @@ function getDueCount(sid){
     }
   return count;
 }
+function getTotalDueCount(){
+  var total=0;
+  for(var sid in sections) total+=getDueCount(sid);
+  return total;
+}
 
 // ============ STATS ============
 function getCatStats(cat) {
@@ -3427,9 +3432,12 @@ function updateStats() {
   document.getElementById('statKnown').textContent=s.known;
   document.getElementById('statLearning').textContent=s.learning;
   document.getElementById('statTotal').textContent=s.total;
-  const due=getDueCount(currentSection);
-  const dueEl=document.getElementById('statDue');
-  if(dueEl){dueEl.textContent=due;dueEl.parentElement.style.display=due>0?'':'none';}
+  var due=getTotalDueCount();
+  var dueEl=document.getElementById('statDue');
+  if(dueEl){dueEl.textContent=due;dueEl.parentElement.style.display='';}
+  // Update review filter button with count
+  var reviewBtns=document.querySelectorAll('[data-filter=\"review\"]');
+  for(var i=0;i<reviewBtns.length;i++) reviewBtns[i].textContent='🔁待复习'+(due>0?' ('+due+')':'');
   if(pct===100&&s.total>0) triggerConfetti();
 }
 
