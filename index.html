@@ -270,6 +270,9 @@ kbd.active-key{border-color:var(--gold);background:rgba(226,168,71,0.15);color:v
 .review-btn:hover{background:rgba(226,168,71,0.18);transform:translateY(-1px);box-shadow:0 4px 12px var(--gold-glow)}
 .review-btn.has-due{background:rgba(226,168,71,0.14);border-color:rgba(245,201,109,0.38);box-shadow:0 0 0 1px rgba(245,201,109,0.08),0 8px 24px rgba(226,168,71,0.14)}
 .review-btn .rv-count{background:var(--gold);color:var(--bg-deep);border-radius:11px;padding:2px 8px;font-size:12px;font-weight:600}
+.review-clear-btn{padding:8px 10px;border-radius:12px;border:1px solid rgba(255,255,255,0.08);background:rgba(255,255,255,0.04);color:var(--text-muted);font-family:var(--ff-ui);font-size:11px;cursor:pointer;transition:all var(--t-s);white-space:nowrap;display:inline-flex;align-items:center;justify-content:center}
+.review-clear-btn:hover{color:var(--text-primary);border-color:rgba(255,255,255,0.16);background:rgba(255,255,255,0.07)}
+.review-clear-btn:disabled{opacity:.45;cursor:not-allowed;transform:none;box-shadow:none}
 .review-progress{display:none;align-items:center;gap:16px;font-size:12px;color:var(--text-sec);padding:6px 16px;border-radius:12px;background:rgba(226,168,71,0.06);border:1px solid var(--gold-border)}
 .review-progress .rv-timer{color:var(--gold-bright);font-family:var(--ff-mono)}
 .review-complete-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:300;justify-content:center;align-items:center}
@@ -3637,6 +3640,34 @@ function getDueWordPool(){
   }
   return list;
 }
+function clearDailyReviewSnapshot(){
+  dailyReviewSnapshot = { date:todayStr(), keys:[] };
+  saveDailyReviewSnapshot();
+  if(reviewTimer){clearInterval(reviewTimer);reviewTimer=null;}
+  reviewActive=false;
+  reviewPoolActive=false;
+  reviewHandledKeys={};
+  var nextMode=currentMode==='review-spelling'?'flashcard':currentMode;
+  var progressEl=document.getElementById('reviewProgress');
+  if(progressEl) progressEl.style.display='none';
+  var overlayEl=document.getElementById('reviewCompleteOverlay');
+  if(overlayEl) overlayEl.classList.remove('show');
+  currentMode=nextMode;
+  if(cardFilter==='review') cardFilter='all';
+  document.querySelectorAll('.filter-tab').forEach(function(b){
+    b.classList.toggle('active',b.dataset.filter===cardFilter);
+  });
+  document.querySelectorAll('.mode-tab').forEach(function(t){
+    t.classList.toggle('active',t.dataset.mode===currentMode);
+  });
+  updateBreadcrumb();
+  buildFilteredWords();
+  updateStats();
+  showToast('\u5df2\u6e05\u7a7a\u4eca\u65e5\u5f85\u590d\u4e60');
+  if(currentMode==='grid') renderGrid();
+  else if(currentMode==='spelling') renderSpelling();
+  else switchMode('flashcard');
+}
 function getWordOriginText(word){
   if(!word||!word._sectionId||typeof word._catIdx!=='number') return '';
   var sec=sections[word._sectionId];
@@ -3658,6 +3689,19 @@ function enhanceReviewUi(){
   var reviewBtn=document.getElementById('reviewBtn');
   if(reviewBtn){
     reviewBtn.innerHTML='📅 <span id="reviewDate">今天待复习</span><span class="rv-count" id="reviewCount">0</span>';
+  }
+  if(reviewBtn&&!document.getElementById('clearReviewBtn')){
+    var clearBtn=document.createElement('button');
+    clearBtn.id='clearReviewBtn';
+    clearBtn.className='review-clear-btn';
+    clearBtn.type='button';
+    clearBtn.textContent='\u6e05\u7a7a\u4eca\u65e5';
+    clearBtn.title='\u624b\u52a8\u6e05\u7a7a\u4eca\u65e5\u5f85\u590d\u4e60\u5feb\u7167';
+    clearBtn.onclick=function(e){
+      e.stopPropagation();
+      clearDailyReviewSnapshot();
+    };
+    reviewBtn.insertAdjacentElement('afterend', clearBtn);
   }
   var modeTabs=document.querySelector('.mode-tabs');
   if(modeTabs&&!modeTabs.querySelector('[data-mode="review-spelling"]')){
@@ -3709,6 +3753,11 @@ function updateStats() {
   if(reviewBtnEl){
     reviewBtnEl.title=totalDue>0?'今日待复习 '+totalDue+' 个单词':'今日没有待复习单词';
     reviewBtnEl.classList.toggle('has-due',totalDue>0);
+  }
+  var clearReviewBtn=document.getElementById('clearReviewBtn');
+  if(clearReviewBtn){
+    clearReviewBtn.disabled=totalDue===0;
+    clearReviewBtn.title=totalDue>0?'\u624b\u52a8\u6e05\u7a7a\u4eca\u65e5\u5f85\u590d\u4e60\u5feb\u7167':'\u4eca\u65e5\u6682\u65e0\u5f85\u6e05\u7a7a\u7684\u590d\u4e60\u5feb\u7167';
   }
   // Update review filter button with count
   var reviewBtns=document.querySelectorAll('[data-filter=\"review\"]');
