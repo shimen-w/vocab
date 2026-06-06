@@ -257,6 +257,7 @@ kbd.active-key{border-color:var(--gold);background:rgba(226,168,71,0.15);color:v
 .spell-result.wrong{color:var(--red)}
 .spell-stats{font-size:12px;color:var(--text-muted);margin-top:12px}
 .spell-filter-row{display:flex;gap:6px;justify-content:center;margin-bottom:16px}
+.spell-mode-label{display:inline-flex;align-items:center;justify-content:center;margin-bottom:14px;padding:7px 14px;border-radius:999px;border:1px solid rgba(245,201,109,0.2);background:rgba(226,168,71,0.08);color:var(--gold-bright);font-size:12px;font-family:var(--ff-ui);letter-spacing:.02em}
 
 .review-btn{padding:8px 12px;border-radius:14px;border:1px solid rgba(255,255,255,0.1);background:rgba(226,168,71,0.08);color:var(--gold-bright);font-family:var(--ff-ui);font-size:12px;cursor:pointer;transition:all var(--t-s);white-space:nowrap;display:inline-flex;align-items:center;gap:7px}
 .review-btn:hover{background:rgba(226,168,71,0.18);transform:translateY(-1px);box-shadow:0 4px 12px var(--gold-glow)}
@@ -3464,6 +3465,8 @@ let filteredIdx = 0;
 let spellingErrors = {};
 let spellIndex = 0, spellCorrect = 0, spellTotal = 0, spellWords = [], spellFilter = "all";
 let reviewActive = false, reviewStartTime = 0, reviewDueTotal = 0, reviewKnownCount = 0, reviewLearningCount = 0, reviewTimer = null;
+let reviewPoolActive = false;
+let reviewHandledKeys = {};
 
 function currentCategory() { return sections[currentSection].categories[currentCategoryIndex]; }
 
@@ -3516,7 +3519,7 @@ function initStatuses() {
 }
 // Review helpers
 function updateReview(word,known){
-  var sid=currentSection; if(!wordStatuses[sid]) wordStatuses[sid]={};
+  var sid=word._sectionId||currentSection; if(!wordStatuses[sid]) wordStatuses[sid]={};
   var entry=wordStatuses[sid][word.word];
   if(!entry||typeof entry==='string') entry={status:word.status,reviewCount:0,nextReview:'',lastReview:''};
   if(known){
@@ -3548,6 +3551,76 @@ function getTotalDueCount(){
   for(var sid in sections) total+=getDueCount(sid);
   return total;
 }
+function ensureWordMeta(){
+  for(var sid in sections){
+    var cats=sections[sid].categories;
+    for(var i=0;i<cats.length;i++){
+      for(var j=0;j<cats[i].words.length;j++){
+        var w=cats[i].words[j];
+        w._sectionId=sid;
+        w._catIdx=i;
+        w._wordIdx=j;
+      }
+    }
+  }
+}
+function getWordKey(word){
+  return [word._sectionId||currentSection,word._catIdx||0,word._wordIdx||0,word.word||''].join('|');
+}
+function getDueWordPool(){
+  ensureWordMeta();
+  var today=todayStr(),list=[];
+  for(var sid in sections){
+    var cats=sections[sid].categories;
+    for(var i=0;i<cats.length;i++){
+      for(var j=0;j<cats[i].words.length;j++){
+        var w=cats[i].words[j];
+        if(w._nextReview&&w._nextReview<=today&&w.status==='known') list.push(w);
+      }
+    }
+  }
+  return list;
+}
+function getWordOriginText(word){
+  if(!word||!word._sectionId||typeof word._catIdx!=='number') return '';
+  var sec=sections[word._sectionId];
+  if(!sec||!sec.categories[word._catIdx]) return '';
+  var cat=sec.categories[word._catIdx];
+  return sec.label+' / '+cat.root+' ('+cat.meaning+')';
+}
+function recordReviewOutcome(word,known){
+  if(!reviewActive) return;
+  var key=getWordKey(word);
+  if(reviewHandledKeys[key]) return;
+  reviewHandledKeys[key]=true;
+  if(known) reviewKnownCount++;
+  else reviewLearningCount++;
+  updateReviewProgress();
+  if(reviewKnownCount+reviewLearningCount>=reviewDueTotal) showReviewComplete();
+}
+function enhanceReviewUi(){
+  var reviewBtn=document.getElementById('reviewBtn');
+  if(reviewBtn){
+    reviewBtn.innerHTML='📅 <span id="reviewDate">今天待复习</span><span class="rv-count" id="reviewCount">0</span>';
+  }
+  var modeTabs=document.querySelector('.mode-tabs');
+  if(modeTabs&&!modeTabs.querySelector('[data-mode="review-spelling"]')){
+    var btn=document.createElement('button');
+    btn.className='mode-tab';
+    btn.setAttribute('data-mode','review-spelling');
+    btn.textContent='📅 复习听写';
+    btn.onclick=function(){switchMode('review-spelling');};
+    modeTabs.appendChild(btn);
+  }
+  var spellCard=document.querySelector('#spellingArea .spell-card');
+  if(spellCard&&!document.getElementById('spellModeLabel')){
+    var label=document.createElement('div');
+    label.id='spellModeLabel';
+    label.className='spell-mode-label';
+    label.textContent='✏️ 当前分类听写';
+    spellCard.insertBefore(label, spellCard.firstChild);
+  }
+}
 
 // ============ STATS ============
 function getCatStats(cat) {
@@ -3572,6 +3645,8 @@ function updateStats() {
   var totalDue=getTotalDueCount();
   var dueEl=document.getElementById('statDue');
   if(dueEl){dueEl.textContent=due;dueEl.parentElement.style.display='';}
+  var reviewDateEl=document.getElementById('reviewDate');
+  if(reviewDateEl) reviewDateEl.textContent='\u4eca\u5929\u5f85\u590d\u4e60';
   var reviewCountEl=document.getElementById('reviewCount');
   if(reviewCountEl) reviewCountEl.textContent=totalDue;
   var reviewBtnEl=document.getElementById('reviewBtn');
@@ -3581,7 +3656,8 @@ function updateStats() {
   }
   // Update review filter button with count
   var reviewBtns=document.querySelectorAll('[data-filter=\"review\"]');
-  for(var i=0;i<reviewBtns.length;i++) reviewBtns[i].textContent='🔁待复习'+(due>0?' ('+due+')':'');
+  var reviewLabelCount=reviewPoolActive?totalDue:due;
+  for(var i=0;i<reviewBtns.length;i++) reviewBtns[i].textContent='🔁待复习'+(reviewLabelCount>0?' ('+reviewLabelCount+')':'');
   if(pct===100&&s.total>0) triggerConfetti();
 }
 
@@ -3639,6 +3715,11 @@ function updateSidebarHeader() {
   document.getElementById('sidebarSubtitle').textContent=sec.description;
 }
 function updateBreadcrumb() {
+  if(reviewPoolActive){
+    document.getElementById('breadcrumb').innerHTML=
+      '<span class="bc-section">\u4eca\u65e5\u5f85\u590d\u4e60</span><span class="bc-sep">/</span><span class="bc-cat">\u5168\u90e8\u5f85\u590d\u4e60\u5355\u8bcd</span>';
+    return;
+  }
   const cat=currentCategory();
   const sec=sections[currentSection];
   document.getElementById('breadcrumb').innerHTML=
@@ -3647,6 +3728,7 @@ function updateBreadcrumb() {
 
 // ============ SECTION / CATEGORY SWITCH ============
 function switchSection(sectionId) {
+  reviewPoolActive=false;
   if(currentSection===sectionId) return;
   currentSection=sectionId;
   currentCategoryIndex=0;
@@ -3660,55 +3742,74 @@ function switchSection(sectionId) {
     buildFilteredWords();
     if(currentMode==='flashcard') renderCard();
     if(currentMode==='grid') renderGrid();
-    if(currentMode==='spelling') renderSpelling();
+    if(currentMode==='spelling'||currentMode==='review-spelling') renderSpelling();
     sc.classList.remove('fading');
   },180);
 }
 function selectCategory(idx) {
+  reviewPoolActive=false;
   currentCategoryIndex=idx;
   currentWordIndex=0;
   buildFilteredWords();
   updateBreadcrumb();renderSidebar();
   if(currentMode==='flashcard') renderCard();
   if(currentMode==='grid') renderGrid();
+  if(currentMode==='spelling'||currentMode==='review-spelling') renderSpelling();
 }
 
 // ============ MODE SWITCH ============
 function switchMode(mode) {
   currentMode=mode;
   document.querySelectorAll('.mode-tab').forEach(t=>t.classList.remove('active'));
-  document.querySelector(`[data-mode="${mode}"]`).classList.add('active');
+  var modeBtn=document.querySelector(`[data-mode="${mode}"]`);
+  if(modeBtn) modeBtn.classList.add('active');
   const fa=document.getElementById('flashcardArea');
   const ga=document.getElementById('gridArea');
   const sa=document.getElementById('spellingArea');
+  if(mode==='review-spelling'){
+    reviewPoolActive=true;
+    cardFilter='review';
+    updateBreadcrumb();
+  }else if(mode==='spelling'&&!reviewActive){
+    reviewPoolActive=false;
+    updateBreadcrumb();
+  }else if(mode==='grid'&&reviewPoolActive){
+    reviewPoolActive=false;
+    updateBreadcrumb();
+    buildFilteredWords();
+  }
   fa.style.display='none';ga.classList.remove('visible');if(sa)sa.style.display='none';
   if(mode==='flashcard'){fa.style.display='';renderCard();}
   else if(mode==='grid'){ga.classList.add('visible');renderGrid();}
-  else if(mode==='spelling'){if(sa)sa.style.display='flex';renderSpelling();}
+  else if(mode==='spelling'||mode==='review-spelling'){if(sa)sa.style.display='flex';renderSpelling();}
 }
 
 // ============ FILTER ============
 function setFilter(f) {
+  if(f!=='review') reviewPoolActive=false;
   cardFilter=f;
   document.querySelectorAll('.filter-tab').forEach(b=>b.classList.toggle('active',b.dataset.filter===f));
+  updateBreadcrumb();
   buildFilteredWords();
   renderCard();
 }
 function buildFilteredWords() {
   const cat=currentCategory();
   const prevWord=filteredWords.length>0 ? filteredWords[filteredIdx] : null;
-  const prevWordText=prevWord ? prevWord.word : '';
-  if(cardFilter==='all') filteredWords=[...cat.words];
+  const prevWordKey=prevWord ? getWordKey(prevWord) : '';
+  if(reviewPoolActive&&cardFilter==='review') filteredWords=getDueWordPool();
+  else if(cardFilter==='all') filteredWords=[...cat.words];
   else if(cardFilter==='review'){var t=todayStr();filteredWords=cat.words.filter(w=>w._nextReview&&w._nextReview<=t&&w.status==='known');}
   else filteredWords=cat.words.filter(w=>w.status===cardFilter);
   // Keep position on current word by matching word text
-  if(prevWordText){
-    const found=filteredWords.findIndex(w=>w.word===prevWordText);
+  if(prevWordKey){
+    const found=filteredWords.findIndex(w=>getWordKey(w)===prevWordKey);
     filteredIdx=found>=0 ? found : 0;
   }else{
     filteredIdx=0;
   }
-  currentWordIndex = filteredWords.length>0 ? cat.words.indexOf(filteredWords[filteredIdx]) : 0;
+  if(reviewPoolActive&&filteredWords.length>0) currentWordIndex=filteredWords[filteredIdx]._wordIdx||0;
+  else currentWordIndex = filteredWords.length>0 ? cat.words.indexOf(filteredWords[filteredIdx]) : 0;
 }
 
 // ============ CARD RENDERING ============
@@ -3765,7 +3866,7 @@ function markWord(status,e) {
   updateReview(word,status==='known');
   saveStatuses();updateStats();renderSidebar();
   buildFilteredWords();renderCard();
-  if(reviewActive){if(status==="known")reviewKnownCount++;else reviewLearningCount++;updateReviewProgress();if(reviewKnownCount+reviewLearningCount>=reviewDueTotal)showReviewComplete();}
+  if(reviewActive) recordReviewOutcome(word,status==="known");
   showToast(status==='known'?`✓ "${word.word}" 已掌握,${word._nextReview?'下次复习:'+word._nextReview:''}`:`↻ "${word.word}" 复习重置`);
 }
 
@@ -4147,7 +4248,149 @@ function exitReview(){
   showToast("已退出复习模式");
 }
 
+function renderCard() {
+  if(filteredWords.length===0){
+    document.getElementById('cardWord').textContent='无单词';
+    document.getElementById('cardPhonetic').textContent='';
+    document.getElementById('cardMeaning').textContent=reviewPoolActive?'今日待复习已全部完成':'本分类下无符合条件的单词';
+    document.getElementById('cardRootRef').style.display='none';
+    document.getElementById('cardExample').innerHTML='';
+    document.getElementById('cardCounter').textContent='0 / 0';
+    document.getElementById('dotFront').className='card-status-dot new';
+    document.getElementById('dotBack').className='card-status-dot new';
+    document.getElementById('cardInner').classList.remove('flipped');
+    return;
+  }
+  const word=filteredWords[filteredIdx];
+  document.getElementById('cardInner').classList.remove('flipped');
+  document.getElementById('cardWord').textContent=word.word;
+  document.getElementById('cardPhonetic').textContent=word.phonetic||'';
+  document.getElementById('cardMeaning').textContent=word.meaning||'释义待补充';
+  const ref=document.getElementById('cardRootRef');
+  const origin=getWordOriginText(word);
+  if(reviewPoolActive&&origin&&word.breakdown){ref.textContent='来源：'+origin+' | '+word.breakdown;ref.style.display='';}
+  else if(reviewPoolActive&&origin){ref.textContent='来源：'+origin;ref.style.display='';}
+  else if(word.breakdown){ref.textContent=word.breakdown;ref.style.display='';}
+  else{ref.style.display='none';}
+  document.getElementById('cardExample').innerHTML=(word.example||'')+'<div class="card-ex-cn">'+translateExample(word.example,word.meaning,word.exampleCn||'')+'</div>';
+  document.getElementById('cardCounter').textContent=(filteredIdx+1)+' / '+filteredWords.length;
+  const sc=word.status==='known'?'known':word.status==='learning'?'learning':'new';
+  document.getElementById('dotFront').className='card-status-dot '+sc;
+  document.getElementById('dotBack').className='card-status-dot '+sc;
+}
+
+function renderSpelling(){
+  const cat=currentCategory();
+  enhanceReviewUi();
+  var label=document.getElementById('spellModeLabel');
+  var row=document.getElementById('spellFilterRow');
+  if(currentMode==='review-spelling'){
+    reviewPoolActive=true;
+    cardFilter='review';
+    if(label) label.textContent='📅 今日待复习听写';
+    if(row) row.style.display='none';
+    spellWords=getDueWordPool();
+  }else{
+    if(label) label.textContent='✏️ 当前分类听写';
+    if(row) row.style.display='flex';
+    spellWords=spellFilter==='all'?[...cat.words]:cat.words.filter(w=>w.status===spellFilter);
+  }
+  if(spellWords.length===0){
+    document.getElementById('spellMeaning').textContent=currentMode==='review-spelling'?'今日没有待复习单词':'无单词';
+    document.getElementById('spellHint').textContent='';
+    document.getElementById('spellResult').textContent='';
+    document.getElementById('spellStats').textContent='';
+    return;
+  }
+  for(let i=spellWords.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1));
+    [spellWords[i],spellWords[j]]=[spellWords[j],spellWords[i]];
+  }
+  spellIndex=0;spellCorrect=0;spellTotal=0;
+  showSpellWord();
+}
+
+function checkSpelling(){
+  if(spellIndex>=spellWords.length) return;
+  const w=spellWords[spellIndex];
+  const inp=(document.getElementById('spellInput').value||'').trim().toLowerCase();
+  const correct=w.word.toLowerCase();
+  spellTotal++;
+  const resultEl=document.getElementById('spellResult');
+  const isRight=inp===correct;
+  if(isRight){
+    spellCorrect++;
+    resultEl.textContent='✓ 正确!';
+    resultEl.className='spell-result correct';
+  }else{
+    resultEl.innerHTML='✗ 正确答案: <b>'+w.word+'</b>';
+    resultEl.className='spell-result wrong';
+    if(!spellingErrors[w.word]) spellingErrors[w.word]={count:0,word:w.word};
+    spellingErrors[w.word].count++;
+    spellingErrors[w.word].lastWrong=todayStr();
+    localStorage.setItem('spelling_errors',JSON.stringify(spellingErrors));
+  }
+  if(currentMode==='review-spelling'){
+    updateReview(w,isRight);
+    saveStatuses();
+    updateStats();
+    recordReviewOutcome(w,isRight);
+  }
+  document.getElementById('spellStats').textContent=`正确 ${spellCorrect} / 总 ${spellTotal} (${Math.round(spellCorrect/spellTotal*100)}%)`;
+  spellIndex++;
+  setTimeout(()=>showSpellWord(),1000);
+}
+
+function startReview(){
+  const dueWords=getDueWordPool();
+  reviewDueTotal=dueWords.length;
+  if(reviewDueTotal===0){
+    reviewActive=false;
+    reviewPoolActive=false;
+    updateBreadcrumb();
+    showToast('🎉 今日无待复习单词!');
+    return;
+  }
+  reviewActive=true;
+  reviewPoolActive=true;
+  reviewHandledKeys={};
+  reviewStartTime=Date.now();
+  reviewKnownCount=0;
+  reviewLearningCount=0;
+  cardFilter='review';
+  document.querySelectorAll('.filter-tab').forEach(b=>b.classList.toggle('active',b.dataset.filter==='review'));
+  updateBreadcrumb();
+  buildFilteredWords();
+  if(currentMode!=='flashcard') switchMode('flashcard');
+  else renderCard();
+  document.getElementById('reviewProgress').style.display='flex';
+  document.getElementById('rvTotal').textContent=reviewDueTotal;
+  document.getElementById('rvDone').textContent='0';
+  document.getElementById('rvLeft').textContent=reviewDueTotal;
+  document.getElementById('rvTimer').textContent='⏱ 0:00';
+  if(reviewTimer) clearInterval(reviewTimer);
+  reviewTimer=setInterval(updateReviewTimer,1000);
+  updateStats();
+  showToast('📅 开始今日待复习: '+reviewDueTotal+' 词');
+}
+
+function exitReview(){
+  if(reviewTimer){clearInterval(reviewTimer);reviewTimer=null;}
+  reviewActive=false;
+  reviewPoolActive=false;
+  reviewHandledKeys={};
+  document.getElementById('reviewProgress').style.display='none';
+  if(currentMode==='review-spelling'){
+    switchMode('flashcard');
+  }
+  setFilter('all');
+  updateStats();
+  showToast('已退出复习模式');
+}
+
 // ============ INIT ============
+enhanceReviewUi();
+ensureWordMeta();
 buildSearchIndex();
 loadStatuses();
 initStatuses();
