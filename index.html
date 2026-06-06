@@ -260,6 +260,7 @@ kbd.active-key{border-color:var(--gold);background:rgba(226,168,71,0.15);color:v
 
 .review-btn{padding:8px 12px;border-radius:14px;border:1px solid rgba(255,255,255,0.1);background:rgba(226,168,71,0.08);color:var(--gold-bright);font-family:var(--ff-ui);font-size:12px;cursor:pointer;transition:all var(--t-s);white-space:nowrap;display:inline-flex;align-items:center;gap:7px}
 .review-btn:hover{background:rgba(226,168,71,0.18);transform:translateY(-1px);box-shadow:0 4px 12px var(--gold-glow)}
+.review-btn.has-due{background:rgba(226,168,71,0.14);border-color:rgba(245,201,109,0.38);box-shadow:0 0 0 1px rgba(245,201,109,0.08),0 8px 24px rgba(226,168,71,0.14)}
 .review-btn .rv-count{background:var(--gold);color:var(--bg-deep);border-radius:11px;padding:2px 8px;font-size:12px;font-weight:600}
 .review-progress{display:none;align-items:center;gap:16px;font-size:12px;color:var(--text-sec);padding:6px 16px;border-radius:12px;background:rgba(226,168,71,0.06);border:1px solid var(--gold-border)}
 .review-progress .rv-timer{color:var(--gold-bright);font-family:var(--ff-mono)}
@@ -3568,8 +3569,16 @@ function updateStats() {
   document.getElementById('statLearning').textContent=s.learning;
   document.getElementById('statTotal').textContent=s.total;
   var due=getDueCount(currentSection);
+  var totalDue=getTotalDueCount();
   var dueEl=document.getElementById('statDue');
   if(dueEl){dueEl.textContent=due;dueEl.parentElement.style.display='';}
+  var reviewCountEl=document.getElementById('reviewCount');
+  if(reviewCountEl) reviewCountEl.textContent=totalDue;
+  var reviewBtnEl=document.getElementById('reviewBtn');
+  if(reviewBtnEl){
+    reviewBtnEl.title=totalDue>0?'今日待复习 '+totalDue+' 个单词':'今日没有待复习单词';
+    reviewBtnEl.classList.toggle('has-due',totalDue>0);
+  }
   // Update review filter button with count
   var reviewBtns=document.querySelectorAll('[data-filter=\"review\"]');
   for(var i=0;i<reviewBtns.length;i++) reviewBtns[i].textContent='🔁待复习'+(due>0?' ('+due+')':'');
