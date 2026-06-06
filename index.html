@@ -3467,6 +3467,8 @@ let spellIndex = 0, spellCorrect = 0, spellTotal = 0, spellWords = [], spellFilt
 let reviewActive = false, reviewStartTime = 0, reviewDueTotal = 0, reviewKnownCount = 0, reviewLearningCount = 0, reviewTimer = null;
 let reviewPoolActive = false;
 let reviewHandledKeys = {};
+let dailyReviewSnapshot = { date:'', keys:[] };
+let dailyReviewSnapshotLoaded = false;
 
 function currentCategory() { return sections[currentSection].categories[currentCategoryIndex]; }
 
@@ -3518,6 +3520,21 @@ function initStatuses() {
   try{spellingErrors=JSON.parse(localStorage.getItem('spelling_errors')||'{}');}catch(e){spellingErrors={};}
 }
 // Review helpers
+function loadDailyReviewSnapshot(){
+  if(dailyReviewSnapshotLoaded) return;
+  dailyReviewSnapshotLoaded = true;
+  try{
+    var saved = JSON.parse(localStorage.getItem('daily_review_snapshot_v1')||'null');
+    if(saved && typeof saved.date==='string' && Array.isArray(saved.keys)){
+      dailyReviewSnapshot = saved;
+    }
+  }catch(e){
+    dailyReviewSnapshot = { date:'', keys:[] };
+  }
+}
+function saveDailyReviewSnapshot(){
+  localStorage.setItem('daily_review_snapshot_v1', JSON.stringify(dailyReviewSnapshot));
+}
 function updateReview(word,known){
   var sid=word._sectionId||currentSection; if(!wordStatuses[sid]) wordStatuses[sid]={};
   var entry=wordStatuses[sid][word.word];
@@ -3547,9 +3564,7 @@ function getDueCount(sid){
   return count;
 }
 function getTotalDueCount(){
-  var total=0;
-  for(var sid in sections) total+=getDueCount(sid);
-  return total;
+  return getDueWordPool().length;
 }
 function ensureWordMeta(){
   for(var sid in sections){
@@ -3567,7 +3582,7 @@ function ensureWordMeta(){
 function getWordKey(word){
   return [word._sectionId||currentSection,word._catIdx||0,word._wordIdx||0,word.word||''].join('|');
 }
-function getDueWordPool(){
+function getDynamicDueWordPool(){
   ensureWordMeta();
   var today=todayStr(),list=[];
   for(var sid in sections){
@@ -3578,6 +3593,39 @@ function getDueWordPool(){
         if(w._nextReview&&w._nextReview<=today&&w.status==='known') list.push(w);
       }
     }
+  }
+  return list;
+}
+function getWordByKey(key){
+  if(!key) return null;
+  var parts=key.split('|');
+  var sid=parts[0];
+  var catIdx=parseInt(parts[1],10);
+  var wordIdx=parseInt(parts[2],10);
+  if(!sections[sid]||!sections[sid].categories[catIdx]) return null;
+  return sections[sid].categories[catIdx].words[wordIdx]||null;
+}
+function ensureDailyReviewSnapshot(forceRefresh){
+  loadDailyReviewSnapshot();
+  ensureWordMeta();
+  var today=todayStr();
+  if(forceRefresh||dailyReviewSnapshot.date!==today||!Array.isArray(dailyReviewSnapshot.keys)){
+    var dueWords=getDynamicDueWordPool();
+    dailyReviewSnapshot={ date:today, keys:dueWords.map(getWordKey) };
+    saveDailyReviewSnapshot();
+  }
+  return dailyReviewSnapshot;
+}
+function getDueWordPool(){
+  var snapshot=ensureDailyReviewSnapshot(false);
+  var list=[];
+  for(var i=0;i<snapshot.keys.length;i++){
+    var word=getWordByKey(snapshot.keys[i]);
+    if(word) list.push(word);
+  }
+  if(list.length!==snapshot.keys.length){
+    dailyReviewSnapshot.keys=list.map(getWordKey);
+    saveDailyReviewSnapshot();
   }
   return list;
 }
