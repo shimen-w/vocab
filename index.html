@@ -263,6 +263,15 @@ kbd.active-key{border-color:var(--gold);background:rgba(226,168,71,0.15);color:v
 .spell-result.correct{color:var(--green)}
 .spell-result.wrong{color:var(--red)}
 .spell-stats{font-size:12px;color:var(--text-muted);margin-top:12px}
+.spell-auto-row{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:14px;font-size:12px;color:var(--text-muted);user-select:none}
+.spell-auto-row input[type=checkbox]{display:none}
+.spell-auto-toggle{width:36px;height:20px;background:rgba(255,255,255,0.1);border-radius:10px;cursor:pointer;position:relative;transition:all var(--t-s);flex-shrink:0}
+.spell-auto-toggle::after{content:'';position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:var(--text-muted);transition:all var(--t-s)}
+.spell-auto-row input:checked+.spell-auto-toggle{background:var(--gold-dim)}
+.spell-auto-row input:checked+.spell-auto-toggle::after{left:18px;background:var(--bg-deep)}
+.spell-next-btn{display:none;background:var(--gold-dim);border:none;color:var(--bg-deep);padding:8px 20px;border-radius:var(--r-sm);cursor:pointer;font-family:var(--ff-ui);font-size:13px;font-weight:500;margin-top:14px;transition:all var(--t-s)}
+.spell-next-btn:hover{background:var(--gold);transform:translateY(-1px)}
+.spell-next-btn.show{display:inline-block}
 .spell-filter-row{display:flex;gap:6px;justify-content:center;margin-bottom:16px}
 .spell-mode-label{display:inline-flex;align-items:center;justify-content:center;margin-bottom:14px;padding:7px 14px;border-radius:999px;border:1px solid rgba(245,201,109,0.2);background:rgba(226,168,71,0.08);color:var(--gold-bright);font-size:12px;font-family:var(--ff-ui);letter-spacing:.02em}
 
@@ -451,6 +460,12 @@ kbd.active-key{border-color:var(--gold);background:rgba(226,168,71,0.15);color:v
           </div>
           <div class="spell-result" id="spellResult"></div>
           <div class="spell-stats" id="spellStats">正确 0 / 总 0</div>
+          <div class="spell-auto-row">
+            <input type="checkbox" id="spellAutoToggle" checked onchange="toggleSpellAuto()">
+            <label class="spell-auto-toggle" for="spellAutoToggle"></label>
+            <span>自动跳转</span>
+          </div>
+          <button class="spell-next-btn" id="spellNextBtn" onclick="nextSpellWord()">下一个 &#9654;</button>
         </div>
       </div>
     </div>
@@ -3529,6 +3544,9 @@ function initStatuses() {
   }
   // Load spelling errors
   try{spellingErrors=JSON.parse(localStorage.getItem('spelling_errors')||'{}');}catch(e){spellingErrors={};}
+  // Load auto-advance preference
+  var aa=localStorage.getItem('spell_auto_advance');
+  if(aa==='0'){spellAutoAdvance=false;document.getElementById('spellAutoToggle').checked=false;}
 }
 // Review helpers
 function loadDailyReviewSnapshot(){
@@ -4193,6 +4211,7 @@ function showSpellWord(){
     document.getElementById('spellHint').textContent='';
     document.getElementById('spellInput').style.display='none';
     document.getElementById('spellBtn').style.display='none';
+    document.getElementById('spellNextBtn').classList.remove('show');
     if(spellCorrect===spellTotal) triggerConfetti();
     return;
   }
@@ -4205,6 +4224,7 @@ function showSpellWord(){
   document.getElementById('spellInput').value='';
   document.getElementById('spellInput').style.display='';
   document.getElementById('spellBtn').style.display='';
+  document.getElementById('spellNextBtn').classList.remove('show');
   document.getElementById('spellInput').focus();
   // Auto-speak after short delay
   setTimeout(()=>speakSpellWord(),600);
@@ -4463,7 +4483,23 @@ function checkSpelling(){
   }
   document.getElementById('spellStats').textContent=`正确 ${spellCorrect} / 总 ${spellTotal} (${Math.round(spellCorrect/spellTotal*100)}%)`;
   spellIndex++;
-  setTimeout(()=>showSpellWord(),1000);
+  if(spellAutoAdvance){
+    setTimeout(()=>showSpellWord(),1000);
+  }else{
+    document.getElementById('spellInput').style.display='none';
+    document.getElementById('spellBtn').style.display='none';
+    document.getElementById('spellNextBtn').classList.add('show');
+  }
+}
+
+let spellAutoAdvance=true;
+function toggleSpellAuto(){
+  spellAutoAdvance=document.getElementById('spellAutoToggle').checked;
+  localStorage.setItem('spell_auto_advance',spellAutoAdvance?'1':'0');
+}
+function nextSpellWord(){
+  document.getElementById('spellNextBtn').classList.remove('show');
+  showSpellWord();
 }
 
 function startReview(){
